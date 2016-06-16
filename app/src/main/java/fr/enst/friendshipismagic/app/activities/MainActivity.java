@@ -1,8 +1,10 @@
+package fr.enst.friendshipismagic.app.activities;
+
 import android.app.Activity;
 import android.os.Bundle;
 
 
-class MainActivity extends Activity {
+public class MainActivity extends Activity {
 
 
     @Override

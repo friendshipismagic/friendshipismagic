@@ -6,7 +6,7 @@
     <application android:label="Le jeu">
 
         <activity
-            android:name="activities.MainActivity"
+            android:name=".app.activities.MainActivity"
             android:label="Le jeu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
