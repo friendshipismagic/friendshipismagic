@@ -25,6 +25,7 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+        abortOnError false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
