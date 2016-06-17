@@ -6,30 +6,26 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     
-    dataBinding {
-        enabled = true
-    }
-
-    
-    defaultConfig {
+    defaultConfig.with {
         applicationId "fr.enst.friendshipismagic.app"
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode getVersionCodeFromManifest()
+        minSdkVersion.apiLevel 15
+        targetSdkVersion.apiLevel 23
+        versionCode 1 //getVersionCodeFromManifest()
         versionName "1.0.0"
-        ndk {
-            moduleName "native"
-            stl "c++_shared"
-            cFlags "-std=c++11 -fexceptions"
-        }
     }
 
-    productFlavors {
-        arm {
-            versionCode Integer.parseInt("1"+defaultConfig.versionCode)
-            ndk {
-                abiFilter "armeabi"
-            }
+    ndk {
+        moduleName "native-activity"
+        stl "c++_shared"
+        cppFlags.add("-std=c++11")
+        cppFlags.add("-fexceptions")
+        ldLibs.addAll(['log', 'android'])
+    }
+
+
+    abis {
+        create("armeabi") {
+
         }
     }
     sources {
@@ -37,6 +33,14 @@ android {
             java {
                 source {
                     srcDir "src/main/java"
+                }
+            }
+            jni {
+                source {
+                    srcDir "src/main/cpp"
+                }
+                dependencies {
+                    //project ':nativeactivity' linkage 'static'
                 }
             }
         }
@@ -52,27 +56,23 @@ android {
         }
     }
 
-    lintOptions {
-        disable 'InvalidPackage'
-        abortOnError false
-    }
-    compileOptions {
+/*    compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
+    }*/
 }}
 
 dependencies {
     //compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile fileTree(dir: '../libs', include: '*.jar')
+    compile fileTree(include: '*.jar', dir: '../libs')
     //compile fileTree(dir: '../libs', include: '*.so')
 }
 
-def getVersionCodeFromManifest() {
+/*def getVersionCodeFromManifest() {
     def manifestFile = file(android.sourceSets.main.manifest.srcFile)
     def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
     def matcher = pattern.matcher(manifestFile.getText())
     matcher.find()
     return Integer.parseInt(matcher.group(1))
-}
+}*/

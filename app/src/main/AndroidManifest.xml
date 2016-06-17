@@ -3,11 +3,17 @@
     package="fr.enst.friendshipismagic">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <application android:label="Le jeu">
+    <application 
+        android:label="Le jeu"
+        android:allowBackup="false"
+        android:hasCode="false">
 
         <activity
-            android:name=".app.activities.MainActivity"
+            android:name="android.app.NativeActivity"
             android:label="Le jeu">
+            <meta-data 
+                android:name="android.app.lib_name"
+                android:value="native-activity" /> 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
