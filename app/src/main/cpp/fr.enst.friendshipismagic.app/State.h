@@ -1,25 +1,54 @@
 #pragma once
+#include "ResourceHolder.h"
+#include <map>
+#include <vector>
+#include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
+
+class StateStack;
+
+namespace States
+{
+    enum ID
+    {
+        Title,
+        Menu,
+        Pause,
+        Game
+    };
+}
 
 class State
 {
     public:
-        typedef std::unique_ptr<State> Ptr;
-        struct Context { };
+
+        struct Context
+        {
+            Context(sf::RenderWindow& win, TextureHolder& textu, FontHolder& fon)
+            {
+                window = &win;
+                textures = &textu;
+                fonts = &fon;
+            }
+
+            sf::RenderWindow* window;
+            TextureHolder* textures;
+            FontHolder* fonts;
+        };
 
     public:
-        State(StateStack& stack, Context context);
+        State(StateStack& stack, State::Context context);
         virtual ~State();
         virtual void draw() = 0;
         virtual bool update(sf::Time dt) = 0;
         virtual bool handleEvent(const sf::Event& event) = 0;
+        virtual void init() = 0;
 
     protected:
         void requestStackPush(States::ID stateID);
         void requestStackPop();
         void requestStateClear();
         Context getContext() const;
-
-    private:
         StateStack* mStack;
         Context mContext;
 };

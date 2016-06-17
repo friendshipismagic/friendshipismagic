@@ -1,6 +1,10 @@
 #pragma once
+#include "State.h"
+#include <SFML/System.hpp>
+#include <map>
+#include <vector>
 
-class StateStack : private sf::NonCopyable
+class StateStack
 {
     public:
         enum Action
@@ -11,10 +15,9 @@ class StateStack : private sf::NonCopyable
         };
 
     public:
-        explicit StateStack(State::Context context);
+        StateStack(State::Context context);
 
-        template <typename T>
-        void registerState(States::ID stateID);
+        void registerState(States::ID stateID, State*);
 
         void update(sf::Time dt);
         void draw();
@@ -25,7 +28,7 @@ class StateStack : private sf::NonCopyable
         bool isEmpty() const;
 
     private:
-        State::Ptr createState(States::ID stateID);
+        State* createState(States::ID stateID);
         void applyPendingChanges();
 
     private:
@@ -36,17 +39,10 @@ class StateStack : private sf::NonCopyable
         };
 
     private:
-        std::vector<State::Ptr> mStack;
+        std::vector<State*> mStack;
         std::vector<PendingChange> mPendingList;
         State::Context mContext;
-        std::map<States::ID, std::function<State::Ptr()> > mFactories;
+        std::map<States::ID, State*> mFactories;
 };
 
-template <typename T>
-void StateStack::registerState(States::ID stateID)
-{
-    mFactories[stateID] = [this] ()
-    {
-        return State::Ptr(new T(*this, mContext));
-    };
-}
+
