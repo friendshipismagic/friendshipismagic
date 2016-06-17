@@ -1,5 +1,7 @@
-apply plugin: 'com.android.application'
+import java.util.regex.Pattern
+apply plugin: 'com.android.model.application'
 
+model {
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -7,19 +9,46 @@ android {
     dataBinding {
         enabled = true
     }
+
     
     defaultConfig {
         applicationId "fr.enst.friendshipismagic.app"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
+        versionCode getVersionCodeFromManifest()
         versionName "1.0.0"
+        ndk {
+            moduleName "native"
+            stl "c++_shared"
+            cFlags "-std=c++11 -fexceptions"
+        }
     }
+
+    productFlavors {
+        arm {
+            versionCode Integer.parseInt("1"+defaultConfig.versionCode)
+            ndk {
+                abiFilter "armeabi"
+            }
+        }
+    }
+    sources {
+        main {
+            java {
+                source {
+                    srcDir "src/main/java"
+                }
+            }
+        }
+    }
+
+    //jni.source.srcDir "../lib
+    //jniLibs.srcDirs = ['../libs' ]
+
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -28,14 +57,22 @@ android {
         abortOnError false
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-}
+}}
 
 dependencies {
     //compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile fileTree(dir: '../libs', include: '*.jar')
+    //compile fileTree(dir: '../libs', include: '*.so')
 }
 
+def getVersionCodeFromManifest() {
+    def manifestFile = file(android.sourceSets.main.manifest.srcFile)
+    def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
+    def matcher = pattern.matcher(manifestFile.getText())
+    matcher.find()
+    return Integer.parseInt(matcher.group(1))
+}

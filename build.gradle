@@ -4,13 +4,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0+'
+        classpath 'com.android.tools.build:gradle-experimental:0.8.0-alpha3'
     }
-}
-
-allprojects {
-    apply plugin: 'eclipse'
-    group = 'fr.enst.friendshipismagic'
 }
 
 subprojects {
@@ -20,7 +15,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.12'
+    gradleVersion = '2.11'
 }
 
 
