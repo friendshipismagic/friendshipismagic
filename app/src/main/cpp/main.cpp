@@ -1,10 +1,24 @@
 #include <android/log.h>
-#include <android_native_app_glue.h>
+#include <SFML/Graphics.hpp>
 
 
-void android_main(struct android_app* state) {
+int main(int argc, char** argv)
+{
 
-    
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "");
+    sf::Event event;
+
+
+    while(window.isOpen()) {
+        while(window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+
+        window.clear();
+        window.display();
+    }
 
 }
 

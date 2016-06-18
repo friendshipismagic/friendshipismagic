@@ -10,6 +10,15 @@ buildscript {
 
 subprojects {
     repositories {
+//        libs(PrebuiltLibraries) {          yourlib {
+//                headers.srcDir "src/main/jni/prebuilts/include"
+//                binaries.withType(SharedLibraryBinary) {
+//                    sharedLibraryFile = file("src/main/jni/prebuilts/${targetPlatform.getName()}/libyourlib.so")
+//                }
+//            }
+//        }
+            
+
         mavenCentral()
     }
 }

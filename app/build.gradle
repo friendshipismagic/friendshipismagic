@@ -19,6 +19,7 @@ android {
         stl "c++_shared"
         cppFlags.add("-std=c++11")
         cppFlags.add("-fexceptions")
+        cppFlags.add("-I src/")
         ldLibs.addAll(['log', 'android'])
     }
 
@@ -40,6 +41,10 @@ android {
                     srcDir "src/main/cpp"
                 }
                 dependencies {
+                    library "sfml-graphics" linkage "shared"
+                    library "sfml-window" linkage "shared"
+                    library "sfml-network" linkage "shared"
+                    library "sfml-system" linkage "shared"
                     //project ':nativeactivity' linkage 'static'
                 }
             }
