@@ -1,7 +1,8 @@
 {
 "resources":
 [
- 	    {"name":"Skull","filename":"Graphics/skull.png"}
+	{"name":"Skull","filename":"Graphics/skull.png"},
+	{"name":"Skeleton","filename":"Graphics/skeleton.png"}
 	    
 ]
 }

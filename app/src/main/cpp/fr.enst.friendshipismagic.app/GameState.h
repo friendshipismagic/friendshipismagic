@@ -18,4 +18,5 @@ class GameState: public State
         virtual void draw();
         virtual bool update(sf::Time dt);
         virtual bool handleEvent(const sf::Event& event);
+        void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
 };

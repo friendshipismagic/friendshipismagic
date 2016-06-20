@@ -19,16 +19,38 @@ void GameState::init()
 
 bool GameState::handleEvent(const sf::Event& event)
 {
-    if (event.type == sf::Event::KeyPressed)
+    switch (event.type)
     {
-        requestStackPop();
-        requestStackPush(States::Game);
+        case sf::Event::KeyPressed:
+            handlePlayerInput(event.key.code, true);
+            break;
+        case sf::Event::KeyReleased:
+            handlePlayerInput(event.key.code, false);
+            break;
+        default:
+            break;
     }
 
     if(event.type == sf::Event::Closed)
         requestStackPop();
 
     return true;
+}
+
+void GameState::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
+{
+    if (key==sf::Keyboard::Escape && isPressed)
+    {
+        requestStackPop();
+    }
+    if (key==sf::Keyboard::Right)
+    {
+        mWorld.setRight(isPressed);
+    }
+    if (key==sf::Keyboard::Left)
+    {
+        mWorld.setLeft(isPressed);
+    }
 }
 
 bool GameState::update(sf::Time dt)
