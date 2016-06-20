@@ -5,10 +5,10 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := friendshipismagic
 
 LOCAL_SRC_FILES := main.cpp \
-	Application.cpp \
-	StateStack.cpp \
-	TitleState.cpp \
-	State.cpp \
+	application.cpp \
+	statestack.cpp \
+	titlestate.cpp \
+	state.cpp \
 	jsoncpp.cpp
 
 LOCAL_SHARED_LIBRARIES := sfml-system
