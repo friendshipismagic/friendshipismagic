@@ -1,2 +1,0 @@
-#include <android/log.h>
-

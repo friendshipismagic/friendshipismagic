@@ -1,0 +1,49 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+apply plugin: 'com.android.model.library'
+
+model {
+    android {
+        compileSdkVersion rootProject.ext.compileSdkVersion
+        buildToolsVersion rootProject.ext.buildToolsVersion
+
+        defaultConfig.with {
+            minSdkVersion.apiLevel = 16
+            targetSdkVersion.apiLevel = 23
+        }
+    }
+
+    android.ndk {
+        moduleName = "friendshipismagic"
+        ldLibs.addAll(['log'])
+        cppFlags.add("-std=c++11")
+        cppFlags.add("-fexceptions")
+        abiFilters.add("armabi")
+        abiFilters.add("armabi-v7a")
+        platformVersion = 15
+        ldLibs.addAll(['log', 'android'])
+        cppFlags.add("-fexceptions")
+        cppFlags.add("-I src/")
+    }
+
+}
+
+task ndkBuild(type: Exec) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        commandLine 'ndk-build.cmd', '-C', file('src/main').absolutePath
+    } else {
+        commandLine 'ndk-build', '-C', file('src/main').absolutePath
+    }
+}
+ 
+tasks.all {
+	task ->
+	if (task.name.startsWith('compile') && task.name.contains('MainC')) {
+		task.enabled = false
+	}
+	if (task.name.startsWith('link')) {
+		task.enabled = false
+	}
+	if (task.name.endsWith('SharedLibrary') ) {
+		task.dependsOn ndkBuild
+	}
+}
