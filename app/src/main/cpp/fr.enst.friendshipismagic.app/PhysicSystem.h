@@ -5,6 +5,7 @@
 #include "State.h"
 #include "Player.h"
 #include "SystemProvider.h"
+#include "myContactListener.h"
 
 class PhysicSystem: public System
 {
@@ -21,6 +22,7 @@ class PhysicSystem: public System
         b2World mWorld;
         int scale;
         Player mPlayer;
+        MyContactListener* jumpListener;
         const sf::Vector2f errorPos;
 
         //Position component
@@ -29,5 +31,11 @@ class PhysicSystem: public System
 
         //Body component
         std::vector<b2Body*> mBodies;
+
+    public:
+
+        bool mRight;
+        bool mLeft;
+        bool mJump;
 
 };

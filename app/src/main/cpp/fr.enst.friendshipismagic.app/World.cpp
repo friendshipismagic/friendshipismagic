@@ -7,7 +7,7 @@ World::World(State::Context* context)
 , left(false)
 , x(0)
 {
-    PhysicSystem* physics =  new PhysicSystem(context);
+    physics =  new PhysicSystem(context);
     mSystems.push_back(physics);
 
     graphics = new GraphicSystem(context, physics);
@@ -18,10 +18,9 @@ World::World(State::Context* context)
 
 void World::update(sf::Time dt)
 {
-    if (right)
-        x += dt.asSeconds()*50;
-    if (left)
-        x -= dt.asSeconds()*50;
+    physics->mRight = right;
+    physics->mLeft = left;
+    physics->mJump = jump;
 
     for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
     {

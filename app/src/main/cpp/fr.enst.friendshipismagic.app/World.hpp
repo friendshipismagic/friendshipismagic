@@ -16,12 +16,15 @@ class World
 
         void setLeft(bool);
         void setRight(bool);
+        void setJump(bool b) { jump = b;};
     private:
 
         std::vector<System*> mSystems;
         GraphicSystem* graphics;
+        PhysicSystem* physics;
         bool right;
         bool left;
+        bool jump;
         float x;
 
 };

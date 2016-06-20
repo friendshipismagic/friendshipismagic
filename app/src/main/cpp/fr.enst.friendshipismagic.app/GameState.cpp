@@ -51,6 +51,10 @@ void GameState::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
     {
         mWorld.setLeft(isPressed);
     }
+    if (key==sf::Keyboard::Space)
+    {
+        mWorld.setJump(isPressed);
+    }
 }
 
 bool GameState::update(sf::Time dt)

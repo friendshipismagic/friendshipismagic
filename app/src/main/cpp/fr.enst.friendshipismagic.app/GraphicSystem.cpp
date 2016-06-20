@@ -10,12 +10,20 @@ GraphicSystem::GraphicSystem(State::Context* context, PhysicSystem* physics)
     sf::Sprite s;
     s.setTexture(*t);
     mSprites.push_back(s);
+
+    t = context->textures->get("Floor");
+    sf::Sprite floor;
+    floor.setTexture(*t);
+    mSprites.push_back(floor);
+    mSprites.push_back(floor);
+    mSprites.push_back(floor);
 }
 
 void GraphicSystem::update(sf::Time dt)
 {
     for (unsigned int i = 0; i < mSprites.size(); i++)
     {
+        mSprites[i].setOrigin(mSprites[i].getTextureRect().width/2, mSprites[i].getTextureRect().height/2);
         mSprites[i].setPosition(mPhysics->getPosition(i));
     }
 }

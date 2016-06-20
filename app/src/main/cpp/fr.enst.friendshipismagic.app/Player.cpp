@@ -11,7 +11,7 @@ Player::Player(b2World* world, float x, float y)
 	mBodyDef.position.Set(x, y);
 
 	b2PolygonShape mBox;
-	mBox.SetAsBox(0.2f, 0.3f);
+	mBox.SetAsBox(0.25f, 0.3445f);
 
 	b2FixtureDef mFixtureDef;
 	mFixtureDef.shape = &mBox;
