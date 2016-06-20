@@ -25,7 +25,7 @@ void Application::processInput()
     sf::Event event;
     while (mWindow->pollEvent(event))
     {
-        mStateStack.handleEvent(event);
+        //mStateStack.handleEvent(event);
     }
 }
 
@@ -37,7 +37,7 @@ void Application::update(sf::Time dt)
 void Application::draw()
 {
     mWindow->clear();
-    mStateStack.draw();
+    //mStateStack.draw();
     mWindow->display();
 }
 
