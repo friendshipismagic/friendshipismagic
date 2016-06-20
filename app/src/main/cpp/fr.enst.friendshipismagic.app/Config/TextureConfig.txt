@@ -1,0 +1,7 @@
+{
+"resources":
+[
+ 	    {"name":"Skull","filename":"Graphics/skull.png"}
+	    
+]
+}
