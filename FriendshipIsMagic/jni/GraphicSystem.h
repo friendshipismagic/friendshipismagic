@@ -1,9 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "System.h"
-#include "State.h"
-#include "SystemProvider.h"
-#include "PhysicSystem.h"
+#include "system.h"
+#include "state.h"
+#include "systemprovider.h"
+#include "physicsystem.h"
 
 class GraphicSystem: public System
 {

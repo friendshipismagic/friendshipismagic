@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
-#include "ResourceHolder.h"
-#include "State.h"
-#include "Application.h"
+#include "resourceholder.h"
+#include "state.h"
+#include "application.h"
 
 int main()
 {

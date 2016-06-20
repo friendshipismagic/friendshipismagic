@@ -1,11 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
-#include "System.h"
-#include "State.h"
-#include "Player.h"
-#include "SystemProvider.h"
-#include "myContactListener.h"
+#include "system.h"
+#include "state.h"
+#include "player.h"
+#include "systemprovider.h"
+#include "mycontactlistener.h"
 
 class PhysicSystem: public System
 {

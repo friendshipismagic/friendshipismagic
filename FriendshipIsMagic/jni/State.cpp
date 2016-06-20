@@ -1,5 +1,5 @@
-#include "State.h"
-#include "Statestack.h"
+#include "state.h"
+#include "statestack.h"
 
 State::State(StateStack& mystack, Context context)
 : mStack(&mystack)

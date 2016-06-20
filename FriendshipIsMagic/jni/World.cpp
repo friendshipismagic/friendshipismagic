@@ -1,5 +1,5 @@
-#include "World.hpp"
-#include "PhysicSystem.h"
+#include "world.hpp"
+#include "physicsystem.h"
 
 World::World(State::Context* context)
 : mSystems()

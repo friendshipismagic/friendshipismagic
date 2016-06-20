@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "player.h"
 #include <iostream>
 
 Player::Player(b2World* world, float x, float y)

@@ -2,9 +2,9 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include "system.h"
-#include "SystemProvider.h"
-#include "State.h"
-#include "GraphicSystem.h"
+#include "systemprovider.h"
+#include "state.h"
+#include "graphicsystem.h"
 
 class World
 {

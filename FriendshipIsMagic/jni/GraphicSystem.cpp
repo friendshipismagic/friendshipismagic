@@ -1,4 +1,4 @@
-#include "GraphicSystem.h"
+#include "graphicsystem.h"
 
 GraphicSystem::GraphicSystem(State::Context* context, PhysicSystem* physics)
 : mContext(context)
