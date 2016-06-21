@@ -1,13 +1,15 @@
 #include "Bloc.h"
 #include <iostream>
 
-Bloc::Bloc(b2World* world, float x, float y, float width, float height, float rotation)
+Bloc::Bloc(b2World* world, float x, float y, float width, float height, float rotation, bool isDynamic)
 : mPos(sf::Vector2f({x,y}))
 , mBody()
 {
     b2BodyDef mBodyDef;
 	mBodyDef.position.Set(x, y);
 	mBodyDef.angle = (rotation);
+	if (isDynamic)
+        mBodyDef.type = b2_dynamicBody;
 
 	b2PolygonShape mBox;
 	mBox.SetAsBox(width, height);

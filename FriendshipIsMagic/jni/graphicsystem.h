@@ -9,20 +9,22 @@ class GraphicSystem: public System
 {
     public:
 
-        GraphicSystem(State::Context* context, PhysicSystem* physics);
+        GraphicSystem(State::Context context, PhysicSystem* physics);
         virtual void update(sf::Time dt);
         void draw();
         void setPositionProvider(PositionProvider* pos);
 
+        //Entity creation
+        void insertSprite(int entity, std::string id, float rotation, float w, float h);
+
     private:
 
-        State::Context* mContext;
+        State::Context mContext;
         sf::RenderWindow* mWindow;
         sf::Sprite* background;
 
         //Sprite component
         std::map<int, sf::Sprite> mSprites;
-        void insertSprite(int entity, std::string id, float rotation);
 
         PositionProvider* mPositionProvider;
         PhysicSystem* mPhysics;

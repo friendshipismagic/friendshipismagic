@@ -1,13 +1,13 @@
 #include "InputSystem.h"
 
-InputSystem::InputSystem(State::Context* context)
+InputSystem::InputSystem(State::Context context)
 : mContext(context)
 , mInputs()
 {
     mInputs.insert(std::make_pair(Input::jump, false));
     mInputs.insert(std::make_pair(Input::right, false));
     mInputs.insert(std::make_pair(Input::left, false));
-
+    mInputs.insert(std::make_pair(Input::fire, false));
 }
 
 void InputSystem::handleEvent(const sf::Event& event)
@@ -38,6 +38,10 @@ void InputSystem::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
     if (key==sf::Keyboard::Space)
     {
         mInputs[Input::jump] = isPressed;
+    }
+    if (key==sf::Keyboard::X)
+    {
+        mInputs[Input::fire] = isPressed;
     }
 }
 

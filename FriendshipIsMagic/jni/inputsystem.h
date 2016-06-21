@@ -5,13 +5,13 @@
 #include "SystemProvider.h"
 
 
-enum Input { right, left, jump };
+enum Input { right, left, jump, fire };
 
 class InputSystem: public System
 {
     public:
 
-        InputSystem(State::Context* context);
+        InputSystem(State::Context context);
         virtual void update(sf::Time dt);
         void handleEvent(const sf::Event& event);
         bool getInputState(Input);
@@ -22,6 +22,6 @@ class InputSystem: public System
 
     private:
 
-        State::Context* mContext;
+        State::Context mContext;
         std::map<Input, bool> mInputs;
 };

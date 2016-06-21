@@ -4,7 +4,7 @@ GameState::GameState(StateStack& mystack, State::Context context)
 : State(mystack, context)
 , mFont()
 , mText()
-, mWorld(&context)
+, mWorld(context)
 {
     mFont = mContext.fonts->get("font");
     mText.setFont(*mFont);

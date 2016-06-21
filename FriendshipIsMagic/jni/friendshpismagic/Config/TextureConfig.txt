@@ -4,6 +4,7 @@
 	{"name":"Skull","filename":"Graphics/skull.png"},
 	{"name":"Skeleton","filename":"Graphics/skeleton.png"},
 	{"name":"Floor","filename":"Graphics/floor.png"},
+	{"name":"Floor2","filename":"Graphics/floor2.png"},
 	{"name":"Background","filename":"Graphics/background.png"}  
 ]
 }
