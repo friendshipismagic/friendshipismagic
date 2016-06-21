@@ -1,17 +1,18 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
-#include "system.h"
-#include "state.h"
-#include "player.h"
-#include "systemprovider.h"
-#include "mycontactlistener.h"
+#include "System.h"
+#include "State.h"
+#include "Player.h"
+#include "SystemProvider.h"
+#include "myContactListener.h"
+#include "InputSystem.h"
 
 class PhysicSystem: public System
 {
     public:
 
-        PhysicSystem(State::Context* context);
+        PhysicSystem(State::Context* context, InputSystem* inputs);
         virtual void update(sf::Time dt);
         const sf::Vector2f& getPosition(unsigned int index);
         PositionProvider* getPositionProvider() { return mPositionProvider; };
@@ -19,6 +20,7 @@ class PhysicSystem: public System
     private:
 
         State::Context* mContext;
+        InputSystem* inputs;
         b2World mWorld;
         int scale;
         Player mPlayer;

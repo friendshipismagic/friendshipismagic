@@ -1,13 +1,13 @@
-#include "player.h"
+#include "Player.h"
 #include <iostream>
 
 Player::Player(b2World* world, float x, float y)
 : mPos(sf::Vector2f({x,y}))
 , mBody()
 {
-    b2BodyDef mBodyDef; // def du joueur
-    mBodyDef.type = b2_dynamicBody; // le joueur est un corps dynamique
-    mBodyDef.fixedRotation = true; // ULTRA IMPORTANT SINON LES COLLISIONS FONT ROTATER LE PLAYER !!!
+    b2BodyDef mBodyDef; // Player's body def
+    mBodyDef.type = b2_dynamicBody; // The player's body is dynamic
+    mBodyDef.fixedRotation = true; // Very important to avoid weird behaviours
 	mBodyDef.position.Set(x, y);
 
 	b2PolygonShape mBox;

@@ -2,9 +2,10 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include "system.h"
-#include "systemprovider.h"
-#include "state.h"
-#include "graphicsystem.h"
+#include "SystemProvider.h"
+#include "State.h"
+#include "GraphicSystem.h"
+#include "InputSystem.h"
 
 class World
 {
@@ -13,18 +14,13 @@ class World
         World(State::Context* context);
         void update(sf::Time dt);
         void draw();
+        void handleEvent(const sf::Event& event);
 
-        void setLeft(bool);
-        void setRight(bool);
-        void setJump(bool b) { jump = b;};
     private:
 
         std::vector<System*> mSystems;
         GraphicSystem* graphics;
         PhysicSystem* physics;
-        bool right;
-        bool left;
-        bool jump;
-        float x;
+        InputSystem* inputs;
 
 };

@@ -2,7 +2,8 @@
 "resources":
 [
 	{"name":"Skull","filename":"Graphics/skull.png"},
-	{"name":"Skeleton","filename":"Graphics/skeleton.png"}
-	    
+	{"name":"Skeleton","filename":"Graphics/skeleton.png"},
+	{"name":"Floor","filename":"Graphics/floor.png"},
+	{"name":"Background","filename":"Graphics/background.png"}  
 ]
 }

@@ -1,4 +1,4 @@
-#include "gamestate.h"
+#include "GameState.h"
 
 GameState::GameState(StateStack& mystack, State::Context context)
 : State(mystack, context)
@@ -19,42 +19,20 @@ void GameState::init()
 
 bool GameState::handleEvent(const sf::Event& event)
 {
-    switch (event.type)
+    mWorld.handleEvent(event);
+
+    if(event.type == sf::Event::KeyReleased)
     {
-        case sf::Event::KeyPressed:
-            handlePlayerInput(event.key.code, true);
-            break;
-        case sf::Event::KeyReleased:
-            handlePlayerInput(event.key.code, false);
-            break;
-        default:
-            break;
+        if (event.key.code == sf::Keyboard::Escape)
+        {
+            requestStackPop();
+        }
     }
 
     if(event.type == sf::Event::Closed)
         requestStackPop();
 
     return true;
-}
-
-void GameState::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
-{
-    if (key==sf::Keyboard::Escape && isPressed)
-    {
-        requestStackPop();
-    }
-    if (key==sf::Keyboard::Right)
-    {
-        mWorld.setRight(isPressed);
-    }
-    if (key==sf::Keyboard::Left)
-    {
-        mWorld.setLeft(isPressed);
-    }
-    if (key==sf::Keyboard::Space)
-    {
-        mWorld.setJump(isPressed);
-    }
 }
 
 bool GameState::update(sf::Time dt)

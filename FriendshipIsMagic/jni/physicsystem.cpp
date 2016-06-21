@@ -2,16 +2,9 @@
 #include "Bloc.h"
 #include <functional>
 
-const sf::Vector2f& PhysicSystem::getPosition(unsigned int index)
-{
-    if (index < mPositions.size())
-        return mPositions[index];
-
-    return errorPos;
-}
-
-PhysicSystem::PhysicSystem(State::Context* context)
+PhysicSystem::PhysicSystem(State::Context* context, InputSystem* inputs)
 : mContext(context)
+, inputs(inputs)
 , mWorld(b2Vec2{0.f,10.f})
 , scale(100)
 , mPlayer(&mWorld, 1, 1)
@@ -50,6 +43,9 @@ PhysicSystem::PhysicSystem(State::Context* context)
 void PhysicSystem::update(sf::Time dt)
 {
     b2Body* mPlayerBody = mBodies[0];
+    bool mRight = inputs->getInputState(Input::right);
+    bool mLeft = inputs->getInputState(Input::left);
+    bool mJump = inputs->getInputState(Input::jump);
 
     if (mRight)
     {
@@ -89,4 +85,11 @@ void PhysicSystem::update(sf::Time dt)
     }
 }
 
+const sf::Vector2f& PhysicSystem::getPosition(unsigned int index)
+{
+    if (index < mPositions.size())
+        return mPositions[index];
+
+    return errorPos;
+}
 

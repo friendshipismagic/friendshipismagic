@@ -1,13 +1,13 @@
-#include "world.hpp"
-#include "physicsystem.h"
+#include "World.hpp"
+#include "PhysicSystem.h"
 
 World::World(State::Context* context)
 : mSystems()
-, right(false)
-, left(false)
-, x(0)
 {
-    physics =  new PhysicSystem(context);
+    inputs = new InputSystem(context);
+    mSystems.push_back(inputs);
+
+    physics =  new PhysicSystem(context, inputs);
     mSystems.push_back(physics);
 
     graphics = new GraphicSystem(context, physics);
@@ -16,12 +16,13 @@ World::World(State::Context* context)
     graphics->setPositionProvider(physics->getPositionProvider());
 }
 
+void World::handleEvent(const sf::Event& event)
+{
+    inputs->handleEvent(event);
+}
+
 void World::update(sf::Time dt)
 {
-    physics->mRight = right;
-    physics->mLeft = left;
-    physics->mJump = jump;
-
     for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
     {
         (*itr)->update(dt);
@@ -33,12 +34,3 @@ void World::draw()
     graphics->draw();
 }
 
-void World::setRight(bool b)
-{
-    right = b;
-}
-
-void World::setLeft(bool b)
-{
-    left = b;
-}

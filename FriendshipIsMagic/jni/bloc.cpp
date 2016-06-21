@@ -1,4 +1,4 @@
-#include "bloc.h"
+#include "Bloc.h"
 #include <iostream>
 
 Bloc::Bloc(b2World* world, float x, float y)
