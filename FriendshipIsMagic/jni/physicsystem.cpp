@@ -1,5 +1,5 @@
-#include "PhysicSystem.h"
-#include "Bloc.h"
+#include "physicsystem.h"
+#include "bloc.h"
 #include <functional>
 
 PhysicSystem::PhysicSystem(State::Context context, InputSystem* inputs)
