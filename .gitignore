@@ -40,3 +40,10 @@ captures/
 *.jks
 /.idea/
 libs/*.jar
+
+*.dll
+*.png
+*.ttf
+*.o
+*.db
+*.svg

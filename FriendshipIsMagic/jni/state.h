@@ -1,5 +1,5 @@
 #pragma once
-#include "resourceholder.h"
+#include "ResourceHolder.h"
 #include <map>
 #include <vector>
 #include <SFML/System.hpp>

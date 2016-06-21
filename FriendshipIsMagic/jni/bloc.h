@@ -5,7 +5,7 @@
 class Bloc
 {
     public:
-        Bloc(b2World* world, float x, float y);
+        Bloc(b2World* world, float x, float y, float width, float height, float rotation, bool isDynamic);
         sf::Vector2f getPos();
         b2Body* getBody();
         void setPos(sf::Vector2f);

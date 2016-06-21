@@ -1,5 +1,5 @@
 #pragma once
-#include "state.h"
+#include "State.h"
 #include <SFML/System.hpp>
 #include <map>
 #include <vector>

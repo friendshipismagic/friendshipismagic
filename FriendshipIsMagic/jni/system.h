@@ -3,9 +3,18 @@
 
 namespace Systems
 {
+    enum Component
+    {
+        POSITION = 1,
+        BODY = 2,
+        SPRITE = 4
+
+    };
+
     enum Mask
     {
-
+        PHYSIC = POSITION & BODY,
+        GRAPHIC = POSITION & SPRITE
     };
 };
 
