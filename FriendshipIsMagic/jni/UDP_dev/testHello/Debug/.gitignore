@@ -1,0 +1,4 @@
+*.mk
+*.dylib
+/makefile
+/testHello

@@ -1,0 +1,14 @@
+// Commands list
+{
+    "CommandList" :[
+    	"go" : {
+    		"id" : 1,
+    		"doc" : "go elsewhere"
+    	},
+    	"healthPotion",
+    	"bow",
+    	"coins",
+    	"arrows"
+    ]
+    
+}

@@ -1,0 +1,16 @@
+// Configuration options
+{
+    // Default encoding for text
+    "firstName" : "John",
+    "lastName" : "Do",
+    "position" : { "posX" : 28, "posY" : 35 },
+    
+    "inventory" :[
+    	"sword",
+    	"healthPotion",
+    	"bow",
+		"coins",
+    	"arrows"
+    ]
+    
+}
