@@ -42,7 +42,9 @@ void UDPtestClass::testRoutine(){
 			udpServer.send(pkt);
 			std::this_thread::sleep_for (std::chrono::milliseconds(500));
 	}
-	while(1){
+
+	//boucle qui attend 2sec
+	for (int i =0; i<2000;i++){
 
 		if(packetBuf.empty() == false){
 			//std::cout<< "not empty"<<std::endl;
@@ -52,7 +54,6 @@ void UDPtestClass::testRoutine(){
 			pkt >> str;
 			std::cout << "Popped from buf :" << str << std::endl;
 		}
-
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 

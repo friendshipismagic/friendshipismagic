@@ -26,7 +26,7 @@ public:
 	UDPAgent(int port, sf::IpAddress ipAddr, int destPort);
 	virtual ~UDPAgent();
 
-	//***** Function to call after creating ServerThread object
+	//***** Function to call after creating UDPAgent object
 	void	start();
 
 	//***** Set the thread period (in ms)
@@ -51,7 +51,6 @@ public:
 private:
 	sf::UdpSocket listener;
 	bool mode;
-	bool connected;
 	bool running;
 	int period = DEFAULT_PERIODE;
 	std::thread the_thread;

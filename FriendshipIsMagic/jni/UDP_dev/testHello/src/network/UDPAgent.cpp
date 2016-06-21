@@ -16,7 +16,7 @@
  */
 UDPAgent::UDPAgent(int srcPort):the_thread() {
 	mode = Mode::Server;
-	connected = false;
+
 	running = false;
 	listener.setBlocking(false);
 	// lie la socket à un port
@@ -32,7 +32,6 @@ UDPAgent::UDPAgent(int srcPort):the_thread() {
  */
 UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):the_thread() {
 	mode = Mode::Client;
-	connected = false;
 	mDestIPAddr = ipAddr;
 	running = false;
 	listener.setBlocking(false);
