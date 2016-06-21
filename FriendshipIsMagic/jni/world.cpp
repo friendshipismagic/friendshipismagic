@@ -1,18 +1,17 @@
-#include "world.hpp"
+#include "world.h"
 #include "physicsystem.h"
 #include <string.h>
 
 World::World(State::Context context)
-: cpt(0)
-, mSystems()
+: mSystems()
 {
-    inputs = new InputSystem(context);
+    inputs = new InputSystem(this, context);
     mSystems.push_back(inputs);
 
-    physics =  new PhysicSystem(context, inputs);
+    physics =  new PhysicSystem(this, context, inputs);
     mSystems.push_back(physics);
 
-    graphics = new GraphicSystem(context, &physics);
+    graphics = new GraphicSystem(this, context, physics);
     mSystems.push_back(graphics);
 
     graphics->setPositionProvider(physics->getPositionProvider());
@@ -29,9 +28,6 @@ void World::update(sf::Time dt)
     {
         (*itr)->update(dt);
     }
-
-    if (physics->fire)
-        createEntity(Systems::GRAPHIC, "re");
 }
 
 void World::draw()
@@ -41,17 +37,27 @@ void World::draw()
 
 void World::createEntity(Systems::Mask mask, std::string fileName)
 {
-    int entity = cpt + 4;
-    graphics->insertSprite(entity, "Skull", 0, 20, 20);
+    int entity = mMasks.size(); //This id is not own by anyone, so we can provide it for the new Entity
+    mMasks.push_back(mask); //We add the entity's mask in the vector
 
-    b2Body* missile = physics->createBody((physics->getPosition(0).x+50)/100, physics->getPosition(0).y/100, 0.1f, 0.1f, 0, true);
-    missile->SetBullet(true);
-    missile->SetGravityScale(0);
+    if ((mask & Systems::Component::BODY) == Systems::Component::BODY)
+    {
+        b2Body* missile = physics->createBody((physics->getPosition(0).x+50)/100, physics->getPosition(0).y/100, 0.1f, 0.1f, 0, true);
+        missile->SetBullet(true);
+        missile->SetGravityScale(0);
 
-    physics->insertPosition(entity, missile->GetPosition());
-    physics->insertBody(entity, missile);
+        physics->insertPosition(entity, missile->GetPosition());
+        physics->insertBody(entity, missile);
 
-    missile->SetLinearVelocity(b2Vec2({5.f, 0.f}));
+        missile->SetLinearVelocity(b2Vec2({5.f, 0.f}));
+    }
+    if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
+    {
 
-    cpt++;
+    }
+    if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
+    {
+        graphics->insertSprite(entity, "Bullet", 0, 20, 20);
+    }
+
 }

@@ -8,15 +8,16 @@
 #include "mycontactlistener.h"
 #include "inputsystem.h"
 
+class World;
+
 class PhysicSystem: public System
 {
     public:
 
-        PhysicSystem(State::Context context, InputSystem* inputs);
+        PhysicSystem(World* world, State::Context context, InputSystem* inputs);
         virtual void update(sf::Time dt);
         const sf::Vector2f& getPosition(unsigned int index);
         PositionProvider* getPositionProvider() { return mPositionProvider; };
-        bool fire;
 
         void insertPosition(int entity, b2Vec2 pos);
         void insertBody(int entity, b2Body* body);
@@ -25,6 +26,7 @@ class PhysicSystem: public System
     private:
 
         State::Context mContext;
+        World* mGameWorld;
         InputSystem* inputs;
         b2World mWorld;
         int scale;

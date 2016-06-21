@@ -5,16 +5,18 @@ namespace Systems
 {
     enum Component
     {
-        POSITION = 1,
-        BODY = 2,
-        SPRITE = 4
+        NONE = 0,
+        POSITION = 1 << 0,
+        BODY = 1 << 1,
+        SPRITE = 1 << 2
 
     };
 
     enum Mask
     {
-        PHYSIC = POSITION & BODY,
-        GRAPHIC = POSITION & SPRITE
+        PHYSIC = POSITION | BODY,
+        GRAPHIC = POSITION | SPRITE,
+        BULLET = BODY | SPRITE
     };
 };
 

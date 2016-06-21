@@ -10,13 +10,13 @@ class GraphicSystem : public System
     public:
 
         GraphicSystem(State::Context* context, PhysicSystem* physics);
+
         virtual void update(sf::Time dt);
         void draw();
         void setPositionProvider(PositionProvider* pos);
 
     private:
 
-        State::Context* mContext;
         sf::RenderWindow* mWindow;
         sf::Sprite* background;
 

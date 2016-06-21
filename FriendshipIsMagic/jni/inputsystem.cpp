@@ -1,7 +1,8 @@
 #include "inputsystem.h"
 
-InputSystem::InputSystem(State::Context context)
+InputSystem::InputSystem(World* world, State::Context context)
 : mContext(context)
+, mWorld(world)
 , mInputs()
 {
     mInputs.insert(std::make_pair(Input::jump, false));

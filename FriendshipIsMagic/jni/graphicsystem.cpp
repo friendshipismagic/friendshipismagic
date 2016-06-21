@@ -1,8 +1,10 @@
 #include "graphicsystem.h"
 
-GraphicSystem::GraphicSystem(State::Context* context, PhysicSystem* physics)
+
+GraphicSystem::GraphicSystem(World* world, State::Context context, PhysicSystem* physics)
 : mContext(context)
-, mWindow(context->window)
+, mWorld(world)
+, mWindow(context.window)
 , mSprites()
 , mPhysics(physics)
 {

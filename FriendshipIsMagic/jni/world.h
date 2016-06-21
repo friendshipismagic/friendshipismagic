@@ -21,7 +21,6 @@ class World
 
     private:
 
-        int cpt;
         std::vector<Systems::Mask> mMasks;
         std::vector<System*> mSystems;
         GraphicSystem * graphics;

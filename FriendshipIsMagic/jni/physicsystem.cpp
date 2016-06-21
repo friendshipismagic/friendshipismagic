@@ -1,9 +1,11 @@
 #include "physicsystem.h"
 #include "bloc.h"
 #include <functional>
+#include "world.h"
 
-PhysicSystem::PhysicSystem(State::Context context, InputSystem* inputs)
+PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* inputs)
 : mContext(context)
+, mGameWorld(world)
 , inputs(inputs)
 , mWorld(b2Vec2{0.f,10.f})
 , scale(100)
@@ -36,8 +38,6 @@ PhysicSystem::PhysicSystem(State::Context context, InputSystem* inputs)
 
     std::function<const sf::Vector2f&(unsigned int index)> posFunction = [this](unsigned int index) { return getPosition(index);};
     mPositionProvider = new PositionProvider(&posFunction);
-
-    fire = false;
 }
 
 void PhysicSystem::update(sf::Time dt)
@@ -75,19 +75,8 @@ void PhysicSystem::update(sf::Time dt)
     }
     if (mFire)
     {
-
-
-       /* b2Body* missile = createBody(mPositions[0].x/scale, mPositions[0].y/scale, 0.1f, 0.1f, 0, true);
-        missile->SetBullet(true);
-        missile->SetGravityScale(0);
-
-        insertPosition(4, missile->GetPosition());
-        insertBody(4, missile);
-
-        missile->SetLinearVelocity(b2Vec2({5.f, 0.f}));*/
+        mGameWorld->createEntity(Systems::BULLET,"");
     }
-
-    fire = mFire;
 
     float32 timeStep = 1.0f / 60.0f;
     int32 velocityIterations = 8;
