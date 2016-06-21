@@ -11,30 +11,27 @@ PhysicSystem::PhysicSystem(State::Context* context, InputSystem* inputs)
 , errorPos(sf::Vector2f({-1, -1}))
 , mPositions()
 , mBodies()
-, mRight(false)
-, mLeft(false)
-, mJump(false)
 {
     jumpListener = new MyContactListener();
     mWorld.SetContactListener(jumpListener);
 
-    mPositions.push_back(mPlayer.getPos());
-    mBodies.push_back(mPlayer.getBody());
+    insertPosition(0, mPlayer.getPos());
+    insertBody(0, mPlayer.getBody());
 
-    Bloc floor(&mWorld, 1, 5);
+    Bloc floor(&mWorld, 1, 5, 0.5f, 0.5f, 20);
 
-    mPositions.push_back(floor.getPos());
-    mBodies.push_back(floor.getBody());
+    insertPosition(1, floor.getPos());
+    insertBody(1, floor.getBody());
 
-    Bloc floor2(&mWorld, 3, 5);
+    Bloc floor2(&mWorld, 3, 5, 0.5f, 0.5f, 0);
 
-    mPositions.push_back(floor2.getPos());
-    mBodies.push_back(floor2.getBody());
+    insertPosition(2, floor2.getPos());
+    insertBody(2, floor2.getBody());
 
-    Bloc floor3(&mWorld, 5, 5);
+    Bloc floor3(&mWorld, 5, 5, 0.5f, 0.5f, 0);
 
-    mPositions.push_back(floor3.getPos());
-    mBodies.push_back(floor3.getBody());
+    insertPosition(3, floor3.getPos());
+    insertBody(3, floor3.getBody());
 
     std::function<const sf::Vector2f&(unsigned int index)> posFunction = [this](unsigned int index) { return getPosition(index);};
     mPositionProvider = new PositionProvider(&posFunction);
@@ -93,3 +90,12 @@ const sf::Vector2f& PhysicSystem::getPosition(unsigned int index)
     return errorPos;
 }
 
+void PhysicSystem::insertBody(int entity, b2Body* body)
+{
+    mBodies.insert(std::make_pair(entity, body));
+}
+
+void PhysicSystem::insertPosition(int entity, sf::Vector2f pos)
+{
+    mPositions.insert(std::make_pair(entity, pos));
+}

@@ -21,7 +21,8 @@ class GraphicSystem: public System
         sf::Sprite* background;
 
         //Sprite component
-        std::vector<sf::Sprite> mSprites;
+        std::map<int, sf::Sprite> mSprites;
+        void insertSprite(int entity, std::string id, float rotation);
 
         PositionProvider* mPositionProvider;
         PhysicSystem* mPhysics;

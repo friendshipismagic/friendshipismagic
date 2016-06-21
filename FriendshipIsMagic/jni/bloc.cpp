@@ -1,15 +1,16 @@
 #include "Bloc.h"
 #include <iostream>
 
-Bloc::Bloc(b2World* world, float x, float y)
+Bloc::Bloc(b2World* world, float x, float y, float width, float height, float rotation)
 : mPos(sf::Vector2f({x,y}))
 , mBody()
 {
     b2BodyDef mBodyDef;
 	mBodyDef.position.Set(x, y);
+	mBodyDef.angle = (rotation);
 
 	b2PolygonShape mBox;
-	mBox.SetAsBox(0.5f, 0.5f);
+	mBox.SetAsBox(width, height);
 
 	b2FixtureDef mFixtureDef;
 	mFixtureDef.shape = &mBox;

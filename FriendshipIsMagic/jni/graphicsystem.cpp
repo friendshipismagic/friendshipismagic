@@ -11,17 +11,11 @@ GraphicSystem::GraphicSystem(State::Context* context, PhysicSystem* physics)
     background->setTexture(*t);
     background->setPosition(-100, 0);
 
-    t = context->textures->get("Skeleton");
-    sf::Sprite s;
-    s.setTexture(*t);
-    mSprites.push_back(s);
+    insertSprite(0, "Skeleton", 0);
 
-    t = context->textures->get("Floor");
-    sf::Sprite floor;
-    floor.setTexture(*t);
-    mSprites.push_back(floor);
-    mSprites.push_back(floor);
-    mSprites.push_back(floor);
+    insertSprite(1, "Floor", -20);
+    insertSprite(2, "Floor", 0);
+    insertSprite(3, "Floor", 0);
 }
 
 void GraphicSystem::update(sf::Time dt)
@@ -37,13 +31,26 @@ void GraphicSystem::draw()
 {
     mWindow->draw(*background);
 
-    for(sf::Sprite sprite: mSprites)
+    for(std::pair<const int, sf::Sprite> sprite: mSprites)
     {
-        mWindow->draw(sprite);
+        mWindow->draw(sprite.second);
     }
 }
 
 void GraphicSystem::setPositionProvider(PositionProvider* pos)
 {
     mPositionProvider = pos;
+}
+
+void GraphicSystem::insertSprite(int entity, std::string id, float rotation)
+{
+    sf::Texture* t = mContext->textures->get(id);
+    sf::Sprite sprite;
+    sprite.setTexture(*t);
+    float width = sprite.getTextureRect().width;
+    float height = sprite.getTextureRect().height;
+    sprite.setOrigin(width/2, height/2);
+    sprite.setRotation(rotation);
+
+    mSprites.insert(std::make_pair(entity, sprite));
 }

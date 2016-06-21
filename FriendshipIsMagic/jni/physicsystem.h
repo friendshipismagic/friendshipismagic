@@ -28,16 +28,11 @@ class PhysicSystem: public System
         const sf::Vector2f errorPos;
 
         //Position component
-        std::vector<sf::Vector2f> mPositions;
+        std::map<int, sf::Vector2f> mPositions;
+        void insertPosition(int entity, sf::Vector2f pos);
         PositionProvider* mPositionProvider;
 
         //Body component
-        std::vector<b2Body*> mBodies;
-
-    public:
-
-        bool mRight;
-        bool mLeft;
-        bool mJump;
-
+        std::map<int, b2Body*> mBodies;
+        void insertBody(int entity, b2Body* body);
 };
