@@ -25,8 +25,8 @@ MonsterController::~MonsterController() {
 	// TODO Auto-generated destructor stub
 }
 
-void MonsterController::storePath(int mobID, PreviousInterface& previous){
-	monsterPath = make_pair(&previous, mobID);
+void MonsterController::storePath(Monster& monster, PreviousInterface& previous){
+	monsterPath = make_pair(&previous, &monster);
 }
 
 void MonsterController::setCurrentAndNext(pair<int,int> current, pair<int,int> next){

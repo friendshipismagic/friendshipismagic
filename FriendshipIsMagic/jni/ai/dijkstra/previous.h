@@ -9,13 +9,14 @@
 #define DIJKSTRA_PREVIOUS_H_
 
 #include "../dijkstrainterface/previousinterface.h"
-class VertexInterface;
 #include <vector>
 #include <tr1/unordered_map>
 
 using namespace std::tr1;
+class VertexInterface;
 
 class Previous : public PreviousInterface {
+
 
 private:
 	unordered_map<VertexInterface*, VertexInterface*> previous;
