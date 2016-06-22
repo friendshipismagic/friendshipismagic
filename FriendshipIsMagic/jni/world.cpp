@@ -74,8 +74,13 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
         missile->SetGravityScale(body["gravityScale"].asFloat());
         missile->SetLinearVelocity(b2Vec2({body["vx"].asFloat(), body["vy"].asFloat()}));
 
-        physics->insertPosition(entity, missile->GetPosition());
-        physics->insertBody(entity, missile);
+        physics->insertPosition(entity, newBody->GetPosition());
+        physics->insertBody(entity, newBody);
+    }
+    if ((mask & Systems::Component::SENSOR) == Systems::Component::SENSOR)
+    {
+        Json::Value sensor = components["sensor"];
+        physics->addSensor(entity, sensor["ID"].asInt());
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {

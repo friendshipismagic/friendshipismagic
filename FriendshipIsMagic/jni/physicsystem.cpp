@@ -131,3 +131,31 @@ b2Body* PhysicSystem::createBody(float x, float y, float width, float height, fl
     return mBody;
 }
 
+void PhysicSystem::addSensor(int entity,int sensorID)
+{
+    b2PolygonShape mBox;
+    mBox.SetAsBox(0.06, 0.2, b2Vec2(0,0.3), 0);
+
+	b2FixtureDef mFixtureDef;
+	mFixtureDef.shape = &mBox;
+	mFixtureDef.density = 0.0f;
+	mFixtureDef.friction = 0.f;
+	mFixtureDef.restitution = 0.f;
+    mFixtureDef.isSensor = true;
+
+    b2Fixture* footSensorFixture = mBodies[entity]->CreateFixture(&mFixtureDef);
+    footSensorFixture->SetUserData( (void*)sensorID );
+}
+
+void PhysicSystem::deleteBody(int entity)
+{
+    b2Body* body = mBodies[entity];
+    mWorld.DestroyBody(body);
+    mBodies.erase(entity);
+}
+
+
+void PhysicSystem::deletePosition(int entity)
+{
+    mPositions.erase(entity);
+}

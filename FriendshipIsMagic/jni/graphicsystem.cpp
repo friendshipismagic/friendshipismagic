@@ -1,6 +1,5 @@
 #include "graphicsystem.h"
 
-
 GraphicSystem::GraphicSystem(World* world, State::Context context, PhysicSystem* physics)
 : mContext(context)
 , mWorld(world)

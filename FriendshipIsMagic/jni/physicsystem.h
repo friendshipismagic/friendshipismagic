@@ -23,6 +23,11 @@ class PhysicSystem: public System
         void insertBody(int entity, b2Body* body);
         b2Body* createBody( float x, float y, float width, float height, float rotation, bool isDynamic);
 
+        void addSensor(int entity, int sensorID);
+
+        void deleteBody(int entity);
+        void deletePosition(int entity);
+
     private:
 
         State::Context mContext;
