@@ -8,10 +8,8 @@
 #include "previous.h"
 
 #include<vector>
-#include "../dijkstrainterface/previousinterface.h"
+
 #include "../dijkstrainterface/vertexinterface.h"
-#include <assert.h>
-#include <iostream>
 
 using namespace std;
 
@@ -27,14 +25,13 @@ Previous::~Previous() {
 void Previous::setValue(VertexInterface* vertex, VertexInterface* value){
 	//setting the result for a vertex
 	previous.insert(make_pair(vertex, value));
-	//std::cout << previous.size() << std::endl;
 }
 
 VertexInterface* Previous::getValue(VertexInterface* vertex){
 	//returns the value for a vertex or null if this value has not been set
-	std::cout << "get" << std::endl;
 	auto x = previous.find(vertex);
-	assert (x != previous.end());
+	if (x == previous.end())
+		return nullptr;
 	return x->second;
 }
 
@@ -42,10 +39,10 @@ vector<VertexInterface*> Previous::getShortestPathTo(VertexInterface* vertex, Ve
 	//returns the shortest path from the root to a vertex
 		vector<VertexInterface*> path;
 		while(vertex != nullptr && path.size()<1000)
-        {
-            path.push_back(vertex);
-            vertex = getValue(vertex);
-        }
+			{
+				path.push_back(vertex);
+				vertex = getValue(vertex);
+			}
 		path.push_back(r);
 		return path;
 }
