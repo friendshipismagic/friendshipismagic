@@ -40,7 +40,7 @@ private:
 	EventSpeaker& operator=(const EventSpeaker& yRef);
 };
 
-using UDPSpeaker = EventSpeaker<std::shared_ptr<sf::Packet> >;
+using UDPSpeaker = EventSpeaker<sf::Packet>;
 
 #include "EventSpeaker.inl"
 #endif /* EVENTSPEAKER_H_ */

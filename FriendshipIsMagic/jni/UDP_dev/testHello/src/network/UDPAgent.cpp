@@ -78,7 +78,7 @@ bool UDPAgent::send(sf::Packet pkt){
 
 //***** The function runned by the_thread
 void UDPAgent::AgentRoutine(){
-	auto pkt = std::make_shared<sf::Packet>();
+
 
 	string str;
 	sf::Socket::Status st;
@@ -87,6 +87,10 @@ void UDPAgent::AgentRoutine(){
 	while (running) {
 		//std::cout << "Hello from thread!\n";
 
+        if (mLastPacketIsRead)
+            mLastPacket = std::make_shared<sf::Packet>();
+            
+        auto& pkt = mLastPacket;
 		// socket UDP:
 		st = listener.receive(*pkt, tmpIP, tmpPort);
 		switch(st){
@@ -98,7 +102,17 @@ void UDPAgent::AgentRoutine(){
 				}
 				//pkt >> str;
 				//agentPrintLn("Received : "+str);
-				notifyObservers(pkt);
+                if(!(*pkt))
+                    std::cout <<"packet not complete" << std::endl;
+                else {
+                    std::cout <<"packet complete" << std::endl;
+                    mLastPacketIsRead = false;
+                    sf::Packet p = *pkt;
+                    int instruction; 
+                    p >> instruction;
+                    std::cout << "[[[" << instruction << "]]]" << std::endl;
+                    notifyObservers(*pkt);
+                }
 				break;
             case sf::Socket::Partial:
                 std::cout << "§§§§§§§§§ PARTIAL £££££££££" << std::endl;

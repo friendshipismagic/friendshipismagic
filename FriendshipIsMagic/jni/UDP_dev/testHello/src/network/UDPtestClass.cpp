@@ -69,12 +69,12 @@ void UDPtestClass::testRoutine(PacketCommand& cmd){
 		if(packetBuf.empty() == false){
 			//std::cout<< "not empty"<<std::endl;
 
-			auto pkt_ptr = packetBuf.front();
+			auto pkt = packetBuf.front();
 			packetBuf.pop();
 			queueMutex.unlock();
 
 			std::cout << "Receive n° " << i << " : " << std::flush;
-			cmd.interpret(*pkt_ptr);
+			cmd.interpret(pkt);
 			//string str;
 			//pkt >> str;
 			//std::cout << "Popped from buf :" << str << std::endl;
@@ -89,7 +89,7 @@ void UDPtestClass::testRoutine(PacketCommand& cmd){
 }
 
 
-void UDPtestClass::notify(std::shared_ptr<sf::Packet> pkt){
+void UDPtestClass::notify(sf::Packet pkt){
 	//std::cout << "notify appelé" << std::endl;
 	/*
 	std::string str;

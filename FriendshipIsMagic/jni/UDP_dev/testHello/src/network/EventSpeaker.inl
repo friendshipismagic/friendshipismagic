@@ -53,7 +53,7 @@ template<typename T>
 bool EventSpeaker<T>::notifyObservers(T pkt)
 {
 	for(auto const& eventListener: m_ObserverVec) {
-		eventListener->notify(pkt);
+		eventListener->notify(pkt); 
 	}
 
 	//for_each(m_ObserverVec.begin(), m_ObserverVec.end(), Notify(this));

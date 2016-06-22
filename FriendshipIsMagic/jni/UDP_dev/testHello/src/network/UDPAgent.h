@@ -51,6 +51,8 @@ public:
 
 private:
 	sf::UdpSocket listener;
+    bool mLastPacketIsRead=true;
+    std::shared_ptr<sf::Packet> mLastPacket;
 	bool mode;
 	bool running;
 	int period = DEFAULT_PERIODE;

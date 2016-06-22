@@ -36,7 +36,7 @@ private:
 
 };
 
-using UDPListener = EventListener<std::shared_ptr<sf::Packet> >;
+using UDPListener = EventListener<sf::Packet> ;
 #include "EventListener.inl"
 #endif /* EVENTLISTENER_H_ */
 

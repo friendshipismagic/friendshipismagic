@@ -19,11 +19,11 @@
 
 class UDPtestClass : public UDPListener {
 public:
-	void notify(std::shared_ptr<sf::Packet> pkt) override;
+	void notify(sf::Packet pkt) override;
 	void testRoutine(PacketCommand& cmd);
 private:
 	sf::Mutex queueMutex;
-	std::queue<std::shared_ptr<sf::Packet>> packetBuf ;
+	std::queue<sf::Packet> packetBuf ;
 };
 
 #endif /* UDPTESTCLASS_H_ */
