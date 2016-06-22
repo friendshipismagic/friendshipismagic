@@ -1,4 +1,5 @@
 #include "titlestate.h"
+#include <iostream>
 
 TitleState::TitleState(StateStack& mystack, Context context)
 : State(mystack, context)
@@ -11,28 +12,52 @@ TitleState::TitleState(StateStack& mystack, Context context)
     mText.setFont(*mFont);
     mText.setPosition(250.,300.);
     mText.setString("press any button");
-    mBackgroundSprite.setTexture(*getContext().textures->get("menu/main/background"));
 }
 
 void TitleState::init()
 {
     mTextEffectTime = sf::Time::Zero;
     mSettingsSprite.setTexture(*getContext().textures->get("icons/settings"));
-    
+    mBackgroundSprite.setTexture(*getContext().textures->get("menu/main/background"));
+
+    updateRatio();
+}
+
+void TitleState::updateRatio() {
+  
+    sf::Vector2<unsigned int> screenSize = getContext().window->getSize();
+    //sf::Vector2f screenSize = mView.getSize(); 
+
+    sf::FloatRect bgRect = mBackgroundSprite.getLocalBounds();
+    mBackgroundSprite.setScale(screenSize.x/bgRect.width, screenSize.y/bgRect.height); 
+
+    std::cout << "update ratio" << std::endl;
 }
 
 bool TitleState::handleEvent(const sf::Event& event)
 {
-    if (event.type == sf::Event::KeyPressed ||
-            event.type == sf::Event::TouchBegan)
-    {
-        requestStackPop();
-        requestStackPush(States::Game);
+    switch(event.type) {
+        case sf::Event::TouchBegan:
+        case sf::Event::MouseButtonPressed:
+//        case sf::Event::KeyPressed:
+            requestStackPop();
+            requestStackPush(States::Game);
+            break;
+
+        case sf::Event::Closed:
+            requestStackPop();
+            break;
+
+        case sf::Event::Resized:
+            {
+                sf::View view;
+                view.setSize(event.size.width, event.size.height); // TODO portable
+                //updateRatio();
+            } break;
+
+        default:
+            break;
     }
-
-    if(event.type == sf::Event::Closed)
-        requestStackPop();
-
     return true;
 }
 

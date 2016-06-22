@@ -4,15 +4,19 @@
 
 class TitleState: public State
 {
-	private:
+    private:
 
-         sf::Font* mFont;
-         sf::Time mTextEffectTime;
-         sf::Text mText;
-         bool mShowText;
+        sf::View mView;
 
-         sf::Sprite mBackgroundSprite;
-         sf::Sprite mSettingsSprite;
+        sf::Font* mFont;
+        sf::Time mTextEffectTime;
+        sf::Text mText;
+        bool mShowText;
+
+        sf::Sprite mBackgroundSprite;
+        sf::Sprite mSettingsSprite;
+
+        void updateRatio();
 
     public:
 
