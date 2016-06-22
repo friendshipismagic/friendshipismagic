@@ -22,7 +22,6 @@ public:
 	std::vector<VertexInterface*> getAllVertices() override;
 	int getWeight(VertexInterface* src, VertexInterface* dst) override;
 	std::pair<unsigned int, unsigned int> MatrixToCoordinates(unsigned int S);
-private:
 	vector<char> mChar;
 	vector<VertexInterface*> mVertices;
 	unsigned int lengthX;
