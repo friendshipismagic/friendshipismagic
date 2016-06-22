@@ -1,0 +1,7 @@
+{
+"components":
+{
+"sprite":{"texture":"Bullet", "width":20, "height":20, "rotation":0},
+"body":{"isBullet":true, "width":0.1, "height":0.1, "rotation":0, "isDynamic":true, "vx":5, "vy":0, "gravityScale":0}
+}
+}

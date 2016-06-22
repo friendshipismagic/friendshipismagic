@@ -17,7 +17,7 @@ class World
         void draw();
         void handleEvent(const sf::Event& event);
 
-        void createEntity(Systems::Mask mask, std::string fileName);
+        int createEntity(Systems::Mask mask, std::string fileName);
 
     private:
 

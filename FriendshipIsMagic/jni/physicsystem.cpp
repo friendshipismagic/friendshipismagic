@@ -75,7 +75,7 @@ void PhysicSystem::update(sf::Time dt)
     }
     if (mFire)
     {
-        mGameWorld->createEntity(Systems::BULLET,"");
+        mGameWorld->createEntity(Systems::BULLET,"Entities/bullet.txt");
     }
 
     float32 timeStep = 1.0f / 60.0f;
