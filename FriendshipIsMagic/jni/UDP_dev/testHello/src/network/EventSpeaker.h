@@ -15,6 +15,7 @@
 #include <vector>
 #include <algorithm>
 #include "EventListener.h"
+#include <memory>
 template <typename T> class EventListener;
 
 template <typename T>
@@ -22,9 +23,9 @@ class EventSpeaker {
 public:
 	virtual ~EventSpeaker();		//destructor
 
-	bool AddObserver(EventListener<T>* eventListener);
-	bool RemoveObserver(EventListener<T>* eventListener);
-	bool NotifyObservers(T pkt);
+	bool addObserver(EventListener<T>* eventListener);
+	bool removeObserver(EventListener<T>* eventListener);
+	bool notifyObservers(T pkt);
 
 protected:
 	//constructor is protected because this class is abstract, it’s only meant to be inherited!
@@ -39,7 +40,7 @@ private:
 	EventSpeaker& operator=(const EventSpeaker& yRef);
 };
 
-using UDPSpeaker = EventSpeaker<sf::Packet>;
+using UDPSpeaker = EventSpeaker<std::shared_ptr<sf::Packet> >;
 
 #include "EventSpeaker.inl"
 #endif /* EVENTSPEAKER_H_ */

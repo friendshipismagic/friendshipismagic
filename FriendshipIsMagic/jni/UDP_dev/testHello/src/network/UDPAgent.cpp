@@ -11,21 +11,17 @@
 //-----------------------------------------------------
 
 
+
 /*
  * Create as server
  */
 UDPAgent::UDPAgent(int srcPort):the_thread() {
 	mode = Mode::Server;
-
+	mDestPort = 0;
 	running = false;
 	listener.setBlocking(false);
 	// lie la socket à un port
 	mSrcPort = srcPort;
-	if (listener.bind(mSrcPort) != sf::Socket::Done)
-	{
-	    // erreur...
-		 agentPrintLn("Binding error");
-	}
 }
 /*
  * Create class as client
@@ -38,11 +34,6 @@ UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):the_thread()
 	// lie la socket à un port
 	mSrcPort = srcPort;
 	mDestPort = destPort;
-	if (listener.bind(mSrcPort) != sf::Socket::Done)
-		{
-		    // erreur...
-			 agentPrintLn("Binding error");
-		}
 }
 
 UDPAgent::~UDPAgent() {
@@ -53,6 +44,12 @@ UDPAgent::~UDPAgent() {
 
 //***** Function to call after creating ServerThread object
 void UDPAgent::start() {
+	if (listener.bind(mSrcPort) != sf::Socket::Done)
+	{
+		// erreur...
+		 //agentPrintLn("Binding error");
+		throw UDPException();
+	}
 	// This will start the thread by running the serverRoutine function
 	running  = true;
 	//if(debug)agentPrintLn("Running");
@@ -79,7 +76,8 @@ bool UDPAgent::send(sf::Packet pkt){
 
 //***** The function runned by the_thread
 void UDPAgent::AgentRoutine(){
-	sf::Packet pkt;
+	auto pkt = std::make_shared<sf::Packet>();
+
 	string str;
 	sf::Socket::Status st;
 	unsigned short int tmpPort;
@@ -88,7 +86,7 @@ void UDPAgent::AgentRoutine(){
 		//std::cout << "Hello from thread!\n";
 
 		// socket UDP:
-		st = listener.receive(pkt, tmpIP, tmpPort);
+		st = listener.receive(*pkt, tmpIP, tmpPort);
 		switch(st){
 			case sf::Socket::Done:
 				if(mode == Mode::Server){
@@ -98,7 +96,7 @@ void UDPAgent::AgentRoutine(){
 				}
 				//pkt >> str;
 				//agentPrintLn("Received : "+str);
-				NotifyObservers(pkt);
+				notifyObservers(pkt);
 				break;
 			case sf::Socket::NotReady:
 				//agentPrintLn("Non blocking result");

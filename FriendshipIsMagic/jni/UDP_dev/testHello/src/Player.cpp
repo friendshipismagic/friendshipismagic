@@ -67,9 +67,12 @@ void Player::printInfo(){
 	std::cout << mFirstName << " " << mLastName + "\n";
 }
 
-
-
-
+void Player::setFirstName(std::string newName){
+	this->mFirstName = newName;
+}
+void Player::setLastName(std::string newName){
+	this->mLastName =  newName;
+}
 /*
 template <typename T>
 sf::Packet& operator >>(sf::Packet& packet,  std::vector<T> output)

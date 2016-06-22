@@ -13,7 +13,8 @@
 #include <thread>         // std::this_thread::sleep_for
 #include <chrono>         // std::chrono::seconds
 #include <SFML/Network/Packet.hpp>
-
+#include "UDPException.h"
+#include <memory>
 
 
 

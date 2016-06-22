@@ -10,10 +10,11 @@
 
 #include <map>
 #include <string>
-#include"json/json.h"
-#include"json/json-forwards.h"
+#include"../json/json.h"
+#include"../json/json-forwards.h"
 #include <iostream>
 #include <fstream>
+#include "commandList.h"
 
 template<typename InstructionType, typename Stream>
 class Command {
@@ -21,12 +22,12 @@ class Command {
 		//Command(std::string fileName);
 		//virtual ~Command();
 
-		void setCommand(int instruction, std::function<void(Stream&)>);
+		void setCommand(InstructionType instruction, std::function<void(Stream&)>);
 
 		void interpret(Stream& packet);
 
 	private:
-		std::ifstream mFile;
+		//std::ifstream mFile;
 		std::map<InstructionType, std::function<void(Stream&)> > mStoredCommands;
 };
 

@@ -12,16 +12,17 @@
 #include <SFML/Network/Packet.hpp>
 #include "UDPAgent.h"
 #include <queue>          // std::queue
-
+#include "../command/Command.h"
+#include "../Player.h"
+#include <memory>
 
 class UDPtestClass : public UDPListener {
 public:
-	UDPtestClass();
-	virtual ~UDPtestClass();
-	void Notify(sf::Packet pkt) override;
-	void testRoutine();
+	void notify(std::shared_ptr<sf::Packet> pkt) override;
+	void testRoutine(PacketCommand& cmd);
 private:
-	std::queue<sf::Packet> packetBuf;
+	sf::Mutex queueMutex;
+	std::queue<std::shared_ptr<sf::Packet>> packetBuf;
 };
 
 #endif /* UDPTESTCLASS_H_ */

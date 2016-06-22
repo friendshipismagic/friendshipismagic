@@ -46,9 +46,10 @@ Command<InstructionType, Stream>::~Command() {
 // Adds command to the interpretor
 template<typename InstructionType, typename Stream>
 void Command<InstructionType, Stream>::setCommand(
-	int commandId,
+	InstructionType commandId,
 	std::function<void(Stream&)> command
 ) {
+	//std::cout << "CommandId to store :"<<commandId<< std::endl;
 	mStoredCommands[commandId] = command;
 }
 
@@ -57,8 +58,10 @@ void Command<InstructionType, Stream>::interpret(Stream& packet) {
 	InstructionType commandId;
 	packet >> commandId;
 	auto command = mStoredCommands.find(commandId);
-	if (command != mStoredCommands.end())
+	if (command != mStoredCommands.end()){
+		//std::cout << "CommandId to execute :"<<commandId<< std::endl;
 		(command->second) (packet); // Appel de la commande
+	}
 }
 
 /*

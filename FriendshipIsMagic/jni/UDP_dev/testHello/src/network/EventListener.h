@@ -20,7 +20,7 @@ template<typename T>
 class EventListener {
 public:
 	virtual ~EventListener();		// Destructor
-	virtual void Notify(T pkt){};
+	virtual void notify(T pkt){};
 protected:
 //constructor is protected because this class is abstract, it’s only meant to be inherited!
 	EventListener();
@@ -34,7 +34,7 @@ private:
 
 };
 
-using UDPListener = EventListener<sf::Packet>;
+using UDPListener = EventListener<std::shared_ptr<sf::Packet> >;
 #include "EventListener.inl"
 #endif /* EVENTLISTENER_H_ */
 

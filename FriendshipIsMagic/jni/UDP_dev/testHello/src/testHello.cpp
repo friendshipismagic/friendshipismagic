@@ -8,14 +8,17 @@
 
 #include <iostream>
 
-#include "Command.h"
+#include "command/Command.h"
 #include "Player.h"
 #include "network/UDPtestClass.h"
 #include <thread>         // std::this_thread::sleep_for
 #include <chrono>         // std::chrono::seconds
 
 #include "network/UDPAgent.h"
-//#include "Command2.h"
+#include "command/commandList.h"
+#include "command/packetExplorer.h"
+
+
 using namespace std;
 
 
@@ -39,17 +42,11 @@ using namespace std;
  * le dossier /Library/Frameworks du Mac
  */
 
-sf::Packet& operator <<(sf::Packet& Packet, const Player& player)
-{
-	return Packet << player.mFirstName << player.mLastName << player.mPosX << player.mPosY;// << player.mInventory;
-}
-
-sf::Packet& operator >>(sf::Packet& Packet,  Player& player)
-{
-	return Packet >> player.mFirstName >> player.mLastName >> player.mPosX >> player.mPosY;// >> player.mInventory;
-}
 
 void sayHello(sf::Packet pkt){
+	std::cout << "Hello from main!" << std::endl;
+}
+void printString(sf::Packet pkt){
 	//cout << "Hello!!\n";
 	string str;
 	pkt >> str;
@@ -65,15 +62,23 @@ int main() {
 
 	//Janniaux command
 	PacketCommand cmd;
+
+	cmd.setCommand(SayHelloCommand::id,sayHello);
+	cmd.setCommand(PrintStringCommand::id,printString);
+	cmd.setCommand(SayPlayerInfoCommand::id,sayPlayerInfo);
+
 	sf::Packet pkt;
 	Player player;
-	pkt << 5 << player;
-	cmd.setCommand(5,sayPlayerInfo);
 
-	cmd.interpret(pkt);
+	sf::Packet p = SayPlayerInfoCommand::make(player);
+	cmd.interpret(p);
 
+	//packet >> toto >> titi >> tata;
+	//CommandMessage::check (toto, titi, tata);
+
+	//==========[ UDP test routine ]==========//
 	UDPtestClass test;
-	test.testRoutine();
+	test.testRoutine(cmd);
 
 	return 0;
 }

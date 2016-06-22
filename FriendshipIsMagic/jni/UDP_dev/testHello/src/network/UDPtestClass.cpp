@@ -7,68 +7,95 @@
 
 #include "UDPtestClass.h"
 
-UDPtestClass::UDPtestClass() {
-	// TODO Auto-generated constructor stub
 
-}
+void UDPtestClass::testRoutine(PacketCommand& cmd){
 
-void UDPtestClass::testRoutine(){
+	//*
+
 	//Creating the server
 	UDPAgent udpServer(UDPAgent::DEFAULT_PORT);
-	udpServer.AddObserver(this);
-	udpServer.start();
+	udpServer.addObserver(this);
 
 	//Creating the client
-	UDPAgent udpClient(UDPAgent::DEFAULT_PORT+100,"localhost", UDPAgent::DEFAULT_PORT);
-	udpClient.AddObserver(this);
-	udpClient.start();
+	UDPAgent udpClient(UDPAgent::DEFAULT_PORT+1,"137.194.57.129", UDPAgent::DEFAULT_PORT);
+	//UDPAgent udpClient(UDPAgent::DEFAULT_PORT+100,"localhost", UDPAgent::DEFAULT_PORT);
+	udpClient.addObserver(this);
+
+	try{
+		udpServer.start();
+		udpClient.start();
+	}
+	catch (UDPException& e){
+		std::cout << "Binding error";
+		return;
+	}
 
 
 
-	sf::Packet pkt;
-	pkt <<"Hello from client!";
+
+	Player player;
+	player.setFirstName("from");
+		player.setLastName("Client");
+	sf::Packet pkt = SayPlayerInfoCommand::make(player);
+	//pkt <<"Hello from client!";
+	int i = 0;
 	std::cout <<"======= Sending from client" << std::endl;
-	for(int i =0; i<5; i++){
+	for( i =0; i<5; i++){
 		//std::cout <<"N°" << i+1 << " ";
 		udpClient.send(pkt);
-		std::this_thread::sleep_for (std::chrono::milliseconds(500));
+		std::this_thread::sleep_for (std::chrono::milliseconds(100));
 	}
 
-	pkt  = sf::Packet();
-	pkt <<"Hello from Server!";
+	//pkt  = sf::Packet();
+	//pkt <<"Hello from Server!";
+	player.setFirstName("from");
+	player.setLastName("Server");
+	 pkt = SayPlayerInfoCommand::make(player);
 	std::cout <<"======= Sending from server" << std::endl;
-	for(int i =0; i<5; i++){
+	for(; i<10; i++){
 			//std::cout <<"N°" << i+1 << " ";
 			udpServer.send(pkt);
-			std::this_thread::sleep_for (std::chrono::milliseconds(500));
+			std::this_thread::sleep_for (std::chrono::milliseconds(100));
 	}
 
-	//boucle qui attend 2sec
-	for (int i =0; i<2000;i++){
+	//boucle qui attend 4sec
+	//for (int i =0; i<4000;i++){
+	std::cout << i << " packets to receive"<< std::endl;
+	while(i >0){
 
+		queueMutex.lock();
 		if(packetBuf.empty() == false){
 			//std::cout<< "not empty"<<std::endl;
-			pkt = packetBuf.front();
+
+			auto pkt_ptr = packetBuf.front();
 			packetBuf.pop();
-			string str;
-			pkt >> str;
-			std::cout << "Popped from buf :" << str << std::endl;
+			queueMutex.unlock();
+
+			std::cout << "Receive n° " << i << " : " << std::flush;
+			cmd.interpret(*pkt_ptr);
+			//string str;
+			//pkt >> str;
+			//std::cout << "Popped from buf :" << str << std::endl;
+			i--;
+		} else {
+			queueMutex.unlock();
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 
+	//*/
 }
 
-UDPtestClass::~UDPtestClass() {
-	// TODO Auto-generated destructor stub
-}
-void UDPtestClass::Notify(sf::Packet pkt){
+
+void UDPtestClass::notify(std::shared_ptr<sf::Packet> pkt){
 	//std::cout << "notify appelé" << std::endl;
 	/*
 	std::string str;
 	pkt >> str;
 	std::cout << str << std::endl;
 	*/
+	sf::Lock lockQueue(mutex);
 	//std::cout << "buf filled with one packet" << std::endl;
+
 	packetBuf.push(pkt);
 }
