@@ -9,9 +9,11 @@ TimerSystem::TimerSystem(World* world, State::Context context)
 
 void TimerSystem::update(sf::Time dt)
 {
-    for (std::pair<const int, sf::Time> timer : mCurrentTimers)
+    for (auto timer : mCurrentTimers)
     {
         mCurrentTimers[timer.first] += dt;
+
+        //std::cout << mTimes[timer.first].asSeconds() << std::endl;
 
         if (mCurrentTimers[timer.first].asSeconds() > mTimes[timer.first].asSeconds())
         {

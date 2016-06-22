@@ -99,6 +99,11 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
         Json::Value sensor = components["sensor"];
         physics->addSensor(entity, sensor["ID"].asInt());
     }
+    if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
+    {
+        Json::Value timer = components["timer"];
+        timers->insertTimer(entity, timer["time"].asFloat());
+    }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {
 
