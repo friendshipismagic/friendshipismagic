@@ -17,8 +17,10 @@ void UDPtestClass::testRoutine(PacketCommand& cmd){
 	udpServer.addObserver(this);
 
 	//Creating the client
-	UDPAgent udpClient(UDPAgent::DEFAULT_PORT+1,"137.194.57.129", UDPAgent::DEFAULT_PORT);
-	//UDPAgent udpClient(UDPAgent::DEFAULT_PORT+100,"localhost", UDPAgent::DEFAULT_PORT);
+	//UDPAgent udpClient(UDPAgent::DEFAULT_PORT+1,"137.194.67.108", UDPAgent::DEFAULT_PORT);
+
+	UDPAgent udpClient(UDPAgent::DEFAULT_PORT+100,"localhost", UDPAgent::DEFAULT_PORT);
+
 	udpClient.addObserver(this);
 
 	try{
@@ -94,7 +96,7 @@ void UDPtestClass::notify(std::shared_ptr<sf::Packet> pkt){
 	pkt >> str;
 	std::cout << str << std::endl;
 	*/
-	sf::Lock lockQueue(mutex);
+	sf::Lock lockQueue(queueMutex);
 	//std::cout << "buf filled with one packet" << std::endl;
 
 	packetBuf.push(pkt);

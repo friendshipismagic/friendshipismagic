@@ -10,6 +10,7 @@
 
 
 #include <SFML/Network/Packet.hpp>
+#include <SFML/System/Mutex.hpp>
 #include "UDPAgent.h"
 #include <queue>          // std::queue
 #include "../command/Command.h"

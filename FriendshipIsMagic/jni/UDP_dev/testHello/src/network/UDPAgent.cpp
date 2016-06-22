@@ -39,6 +39,8 @@ UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):the_thread()
 UDPAgent::~UDPAgent() {
 	// TODO Auto-generated destructor stub
 	running = false;
+    listener.unbind();
+    listener.setBlocking(false);
 	if (the_thread.joinable()) the_thread.join();
 }
 
@@ -98,9 +100,14 @@ void UDPAgent::AgentRoutine(){
 				//agentPrintLn("Received : "+str);
 				notifyObservers(pkt);
 				break;
+            case sf::Socket::Partial:
+                std::cout << "§§§§§§§§§ PARTIAL £££££££££" << std::endl;
 			case sf::Socket::NotReady:
 				//agentPrintLn("Non blocking result");
 				break;
+            case sf::Socket::Disconnected:
+                agentPrintLn("Socket closed!");
+                break;
 			default:
 				//erreur
 				if(debug) agentPrintLn("Socket receiving error!");

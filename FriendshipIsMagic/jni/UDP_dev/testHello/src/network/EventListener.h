@@ -13,6 +13,8 @@
 //-----------------------------------------------------
 #include <SFML/Network/Packet.hpp>
 #include <vector>
+#include <memory>
+
 using namespace std;
 template<typename T> class EventSpeaker;
 

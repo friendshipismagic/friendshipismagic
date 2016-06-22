@@ -15,6 +15,7 @@
 #include <iostream>
 #include <fstream>
 #include "commandList.h"
+#include <functional>
 
 template<typename InstructionType, typename Stream>
 class Command {

@@ -57,6 +57,7 @@ template<typename InstructionType, typename Stream>
 void Command<InstructionType, Stream>::interpret(Stream& packet) {
 	InstructionType commandId;
 	packet >> commandId;
+    std::cout << "[Command] receive command id : " << commandId << std::endl;
 	auto command = mStoredCommands.find(commandId);
 	if (command != mStoredCommands.end()){
 		//std::cout << "CommandId to execute :"<<commandId<< std::endl;
