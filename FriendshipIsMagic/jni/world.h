@@ -20,11 +20,19 @@ class World
 
         int createEntity(Systems::Mask mask, std::string fileName);
 
+        void destroyEntity(int entity);
+        void sigDestroyEntity(int entity);
+
+        Systems::Mask getMask(int entity);
+
     private:
 
         std::vector<Systems::Mask> mMasks;
         std::vector<System*> mSystems;
-        GraphicSystem * graphics;
+
+        std::vector<int> mEntitiesToDestroy;
+        GraphicSystem* graphics;
+
         PhysicSystem* physics;
         InputSystem* inputs;
 

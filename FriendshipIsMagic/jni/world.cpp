@@ -28,6 +28,13 @@ void World::update(sf::Time dt)
     {
         (*itr)->update(dt);
     }
+
+    for(int entity : mEntitiesToDestroy)
+    {
+        destroyEntity(entity);
+    }
+
+    mEntitiesToDestroy.clear();
 }
 
 void World::draw()
@@ -62,8 +69,10 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
     {
         Json::Value body = components["body"];
 
-        b2Body* missile = physics->createBody((physics->getPosition(0).x+50)/100,
-                                              physics->getPosition(0).y/100,
+
+        b2Body* newBody = physics->createBody(entity,
+                                              body["x"].asFloat(),
+                                              body["y"].asFloat(),
                                               body["width"].asFloat(),
                                               body["height"].asFloat(),
                                               body["rotation"].asFloat(),
@@ -93,4 +102,41 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
     }
 
     return entity;
+}
+
+
+void World::destroyEntity(int entity)
+{
+    std::cout << "destruction" << std::endl;
+    Systems::Mask mask = mMasks[entity];
+
+    if ((mask & Systems::Component::BODY) == Systems::Component::BODY)
+    {
+        physics->deletePosition(entity);
+        physics->deleteBody(entity);
+    }
+    if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
+    {
+
+    }
+    if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
+    {
+        graphics->deleteSprite(entity);
+    }
+    if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
+    {
+        timers->deleteTimer(entity);
+    }
+
+    mMasks[entity] = Systems::Mask::NONE;
+}
+
+Systems::Mask World::getMask(int entity)
+{
+    return mMasks[entity];
+}
+
+void World::sigDestroyEntity(int entity)
+{
+    mEntitiesToDestroy.push_back(entity);
 }

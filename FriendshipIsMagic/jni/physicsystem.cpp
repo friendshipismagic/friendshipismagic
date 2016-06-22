@@ -2,6 +2,7 @@
 #include "bloc.h"
 #include <functional>
 #include "world.h"
+#include "collisionsystem.h"
 
 PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* inputs)
 : System(world, context)
@@ -13,8 +14,8 @@ PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* in
 , mPositions()
 , mBodies()
 {
-    jumpListener = new MyContactListener();
-    mWorld.SetContactListener(jumpListener);
+    collisionListener = new CollisionSystem(mGameWorld, mContext);
+    mWorld.SetContactListener(collisionListener);
 
     insertPosition(0, b2Vec2({mPlayer.getPos().x, mPlayer.getPos().y}));
     insertBody(0, mPlayer.getBody());
@@ -67,14 +68,15 @@ void PhysicSystem::update(sf::Time dt)
         vel.x = 0.;
         mPlayerBody->SetLinearVelocity(vel);
     }
-    if (mJump && jumpListener->getNumFootContacts()>=1)
+    if (mJump && (collisionListener->getNumFootContacts() >= 1))
     {
         mPlayerBody->SetAwake(true);
         mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()), mPlayerBody->GetWorldCenter(), true );
     }
     if (mFire)
     {
-        mGameWorld->createEntity(Systems::BULLET,"Entities/bullet.txt");
+        int bullet = mGameWorld->createEntity(Systems::BULLET, "Entities/bullet.txt");
+        mBodies[bullet]->SetTransform(b2Vec2(mPlayerBody->GetPosition().x + 0.4, mPlayerBody->GetPosition().y), mBodies[bullet]->GetAngle());
     }
 
     float32 timeStep = 1.0f / 60.0f;
@@ -107,11 +109,11 @@ void PhysicSystem::insertPosition(int entity, b2Vec2 pos)
     mPositions.insert(std::make_pair(entity, sf::Vector2f({pos.x, pos.y})));
 }
 
-b2Body* PhysicSystem::createBody(float x, float y, float width, float height, float rotation, bool isDynamic)
+b2Body* PhysicSystem::createBody(int entity, float x, float y, float width, float height, float rotation, bool isDynamic)
 {
     b2BodyDef mBodyDef;
 	mBodyDef.position.Set(x, y);
-	mBodyDef.angle = (rotation);
+	mBodyDef.angle = rotation;
 	if (isDynamic)
         mBodyDef.type = b2_dynamicBody;
 
@@ -125,12 +127,14 @@ b2Body* PhysicSystem::createBody(float x, float y, float width, float height, fl
 	mFixtureDef.restitution = 0.f;
 
 	b2Body* mBody = mWorld.CreateBody(&mBodyDef);
-    mBody->CreateFixture(&mFixtureDef);
+
+    b2Fixture* fixture = mBody->CreateFixture(&mFixtureDef);
+    fixture->SetUserData((void*)entity);
 
     return mBody;
 }
 
-void PhysicSystem::addSensor(int entity,int sensorID)
+void PhysicSystem::addSensor(int entity, int sensorID)
 {
     b2PolygonShape mBox;
     mBox.SetAsBox(0.06, 0.2, b2Vec2(0,0.3), 0);

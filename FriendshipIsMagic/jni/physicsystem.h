@@ -5,7 +5,7 @@
 #include "state.h"
 #include "player.h"
 #include "systemprovider.h"
-#include "mycontactlistener.h"
+#include "collisionsystem.h"
 #include "inputsystem.h"
 
 class World;
@@ -21,7 +21,8 @@ class PhysicSystem: public System
 
         void insertPosition(int entity, b2Vec2 pos);
         void insertBody(int entity, b2Body* body);
-        b2Body* createBody( float x, float y, float width, float height, float rotation, bool isDynamic);
+
+        b2Body* createBody(int entity, float x, float y, float width, float height, float rotation, bool isDynamic);
 
         void addSensor(int entity, int sensorID);
 
@@ -33,8 +34,12 @@ class PhysicSystem: public System
         InputSystem* inputs;
         b2World mWorld;
         int scale;
+<<<<<<< ea93cc0ac86dc2a23e1afc332e91c013ce57263a
         Player mPlayer;
         MyContactListener* jumpListener;
+=======
+        CollisionSystem* collisionListener;
+>>>>>>> add CollisionSystem
         const sf::Vector2f errorPos;
 
         //Position component
