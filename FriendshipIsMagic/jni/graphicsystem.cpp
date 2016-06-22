@@ -1,12 +1,12 @@
-#include "GraphicSystem.h"
+#include "graphicsystem.h"
 
-GraphicSystem::GraphicSystem(State::Context context, PhysicSystem* physics)
+GraphicSystem::GraphicSystem(State::Context* context, PhysicSystem* physics)
 : mContext(context)
-, mWindow(context.window)
+, mWindow(context->window)
 , mSprites()
 , mPhysics(physics)
 {
-    sf::Texture* t = mContext.textures->get("Background");
+    sf::Texture*  t = context->textures->get("Background");
     background = new sf::Sprite();
     background->setTexture(*t);
     background->setPosition(-100, 0);
@@ -16,6 +16,8 @@ GraphicSystem::GraphicSystem(State::Context context, PhysicSystem* physics)
     insertSprite(1, "Floor", -20, 100, 100);
     insertSprite(2, "Floor", 0, 100, 100);
     insertSprite(3, "Floor2", 0, 2000, 100);
+
+    insertSprite(4, "Floor", 0, 20, 20);
 }
 
 void GraphicSystem::update(sf::Time dt)
@@ -43,10 +45,9 @@ void GraphicSystem::setPositionProvider(PositionProvider* pos)
 
 void GraphicSystem::insertSprite(int entity, std::string id, float rotation, float w, float h)
 {
-    sf::Texture* t = mContext.textures->get(id);
+    sf::Texture* t = mContext->textures->get(id);
     sf::Sprite sprite;
     sprite.setTexture(*t);
-    sprite.setPosition(-200, -200);
     float width = sprite.getTextureRect().width;
     float height = sprite.getTextureRect().height;
     sprite.setOrigin(width/2, height/2);

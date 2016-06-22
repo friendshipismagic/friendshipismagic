@@ -1,4 +1,4 @@
-#include "InputSystem.h"
+#include "inputsystem.h"
 
 InputSystem::InputSystem(State::Context context)
 : mContext(context)

@@ -1,12 +1,12 @@
 #include <SFML/Graphics.hpp>
-#include "ResourceHolder.h"
-#include "State.h"
-#include "Application.h"
+#include "resourceholder.h"
+#include "state.h"
+#include "application.h"
 
 int main()
 {
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 640), "Friendship is magic");
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Friendship is magic");
     window.setFramerateLimit(60);
     TextureHolder textures;
     textures.loadFromFile("Config/TextureConfig.txt");

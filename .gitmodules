@@ -1,3 +1,6 @@
 [submodule "deps/SFML"]
 	path = deps/SFML
 	url = https://github.com/SFML/SFML.git
+[submodule "FriendshipIsMagic/deps"]
+	path = FriendshipIsMagic/deps
+	url = https://github.com/alexandre-janniaux/FriendshipIsMagicDeps

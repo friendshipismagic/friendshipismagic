@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "State.h"
+#include "state.h"
 
 class TitleState: public State
 {
@@ -10,6 +10,9 @@ class TitleState: public State
          sf::Time mTextEffectTime;
          sf::Text mText;
          bool mShowText;
+
+         sf::Sprite mBackgroundSprite;
+         sf::Sprite mSettingsSprite;
 
     public:
 

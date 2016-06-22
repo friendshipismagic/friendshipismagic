@@ -1,4 +1,4 @@
-#include "StateStack.h"
+#include "statestack.h"
 #include <assert.h>
 
 StateStack::StateStack(State::Context context)

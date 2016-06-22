@@ -1,5 +1,5 @@
-#include "World.hpp"
-#include "PhysicSystem.h"
+#include "world.hpp"
+#include "physicsystem.h"
 #include <string.h>
 
 World::World(State::Context context)
@@ -12,7 +12,7 @@ World::World(State::Context context)
     physics =  new PhysicSystem(context, inputs);
     mSystems.push_back(physics);
 
-    graphics = new GraphicSystem(context, physics);
+    graphics = new GraphicSystem(context, &physics);
     mSystems.push_back(graphics);
 
     graphics->setPositionProvider(physics->getPositionProvider());

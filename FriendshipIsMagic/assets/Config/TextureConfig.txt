@@ -7,6 +7,6 @@
 	{"name":"Floor2","filename":"Graphics/floor2.png"},
 	{"name":"Floor","filename":"Graphics/floor.png"},
 	{"name":"icons/settings","filename":"Graphics/settings_icon.png"},
-	{"name":"menu/main/background","filename":"Graphics/test fond tile.png"}
+	{"name":"menu/main/background","filename":"Graphics/test fond title.png"}
 ]
 }

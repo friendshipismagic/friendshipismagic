@@ -1,6 +1,6 @@
-#include "Application.h"
-#include "TitleState.h"
-#include "GameState.h"
+#include "application.h"
+#include "titlestate.h"
+#include "gamestate.h"
 
 Application::Application(State::Context context)
 : mStateStack(context)
