@@ -8,7 +8,7 @@
 #include "previous.h"
 
 #include<vector>
-
+#include "../dijkstrainterface/previousinterface.h"
 #include "../dijkstrainterface/vertexinterface.h"
 
 using namespace std;

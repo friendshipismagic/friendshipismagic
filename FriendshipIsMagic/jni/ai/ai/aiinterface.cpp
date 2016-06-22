@@ -15,7 +15,6 @@
 #include "../../player.h"
 #include "../dijkstra/previous.h"
 #include "monstercontroller.h"
-#include <iostream>
 
 AiInterface::AiInterface() {
 	monsterController = new MonsterController();
@@ -25,9 +24,11 @@ AiInterface::~AiInterface() {
 	delete(monsterController);
 }
 
-void AiInterface::setPath(int mobID, float playerX, float playerY, Matrix& g){
-	int iX = int(playerX + 0.5)/100;
-	int iY = int(playerY + 0.5)/100;
+pair<int,int> AiInterface::setPath(Monster& monster, PlayerAndStuff& playerstuff, Matrix& g){
+	float posX = playerstuff.player->getPos().x;
+	float posY = playerstuff.player->getPos().y;
+	int iX = int(posX + 0.5);
+	int iY = int(posY+ 0.5);
 
 	VertexInterface* vertex = new VertexInterface();
 	vertex->setVertex('J', iX, iY );
@@ -35,17 +36,16 @@ void AiInterface::setPath(int mobID, float playerX, float playerY, Matrix& g){
 
 	Dijkstra dijkstra;
 	auto& previous = dijkstra.dijkstra(g, v);
-	monsterController->storePath(mobID, previous);
-	monsterController->currentPosition = {iX,iY};
-	//std::cout << previous.getSize() << std::endl;
-	std::cout << "bob" << std::endl;
-	VertexInterface* next = previous.getValue(&v);
-	std::cout << "bob" << std::endl;
-	monsterController->nextPosition = {next->getX(),next->getY()};
+	monsterController->storePath(monster, previous);
+
+	VertexInterface* next = previous.getValue(vertex);
+	// [Cible] --> [cible -1] --> [cible ...] --> nullptr
+
+	return {next->getX(),next->getY()};
 }
 
-AiInterface::Action AiInterface::giveOrder(int mobID, float playerX, float playerY, Matrix& g){
+AiInterface::Action AiInterface::giveOrder(Monster& monster){
 	//for all types of monster
-	 AiInterface::setPath(mobID, playerX, playerY, g);
-	 return monsterController->translateOrder();
+
+	return Action::still;
 }
