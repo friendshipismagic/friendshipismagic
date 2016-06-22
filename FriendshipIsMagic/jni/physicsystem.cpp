@@ -4,8 +4,7 @@
 #include "world.h"
 
 PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* inputs)
-: mContext(context)
-, mGameWorld(world)
+: System(world, context)
 , inputs(inputs)
 , mWorld(b2Vec2{0.f,10.f})
 , scale(100)

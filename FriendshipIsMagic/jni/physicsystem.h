@@ -30,8 +30,6 @@ class PhysicSystem: public System
 
     private:
 
-        State::Context mContext;
-        World* mGameWorld;
         InputSystem* inputs;
         b2World mWorld;
         int scale;

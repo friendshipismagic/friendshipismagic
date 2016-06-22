@@ -23,7 +23,5 @@ class InputSystem: public System
 
     private:
 
-        State::Context mContext;
-        World* mWorld;
         std::map<Input, bool> mInputs;
 };

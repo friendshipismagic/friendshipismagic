@@ -19,9 +19,6 @@ class TimerSystem: public System
 
     private:
 
-        State::Context mContext;
-        World* mWorld;
-
         std::map<int, sf::Time> mTimes;
         std::map<int, sf::Time> mCurrentTimers;
         std::vector<int> mTimersToDestroy;
