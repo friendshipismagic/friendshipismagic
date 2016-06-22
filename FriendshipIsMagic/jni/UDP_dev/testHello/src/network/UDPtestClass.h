@@ -22,7 +22,7 @@ public:
 	void testRoutine(PacketCommand& cmd);
 private:
 	sf::Mutex queueMutex;
-	std::queue<std::shared_ptr<sf::Packet>> packetBuf;
+	std::queue<std::shared_ptr<sf::Packet>> packetBuf ;
 };
 
 #endif /* UDPTESTCLASS_H_ */
