@@ -13,10 +13,13 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include"json/json.h"
-#include"json/json-forwards.h"
 #include <string>
 #include <SFML/Network/Packet.hpp>
+
+#ifdef FROMJSON
+#include"json/json.h"
+#include"json/json-forwards.h"
+#endif
 
 class Player {
 public:

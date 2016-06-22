@@ -5,17 +5,22 @@
  *      Author: edwardvergara
  */
 
-#ifndef COMMAND_COMMANDLIST_H_
-#define COMMAND_COMMANDLIST_H_
+#ifndef COMMAND_COMMAND_LIST_H_
+#define COMMAND_COMMAND_LIST_H_
 
 
-#include "CommandMessage.h"
-#include "../Player.h"
 #include <string>
+
+//#include "../player.h"
+#include "command-message.h"
+/*
+ * This file is used to store all the commands
+ * availables in the game.
+ */
 
 using SayHelloCommand = CommandMessage<2>;
 using PrintStringCommand = CommandMessage<3, std::string>;
-using SayPlayerInfoCommand = CommandMessage<4,Player>;
+//using SayPlayerInfoCommand = CommandMessage<4,Player>;
 
 
-#endif /* COMMAND_COMMANDLIST_H_ */
+#endif /* COMMAND_COMMAND_LIST_H_ */

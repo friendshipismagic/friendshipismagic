@@ -12,8 +12,6 @@
 // EventListener Class
 //-----------------------------------------------------
 #include <SFML/Network/Packet.hpp>
-#include <vector>
-#include <memory>
 
 using namespace std;
 template<typename T> class EventSpeaker;
@@ -37,7 +35,7 @@ private:
 };
 
 using UDPListener = EventListener<sf::Packet> ;
-#include "EventListener.inl"
+#include "event-listener.inl"
 #endif /* EVENTLISTENER_H_ */
 
 

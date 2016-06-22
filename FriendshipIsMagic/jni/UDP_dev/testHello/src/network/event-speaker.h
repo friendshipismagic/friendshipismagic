@@ -12,10 +12,7 @@
 // EventSpeaker Class
 //-----------------------------------------------------
 
-#include <vector>
-#include <algorithm>
-#include "EventListener.h"
-#include <memory>
+#include "event-listener.h"
 template <typename T> class EventListener;
 
 template <typename T>
@@ -42,7 +39,7 @@ private:
 
 using UDPSpeaker = EventSpeaker<sf::Packet>;
 
-#include "EventSpeaker.inl"
+#include "event-speaker.inl"
 #endif /* EVENTSPEAKER_H_ */
 
 

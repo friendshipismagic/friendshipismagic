@@ -5,7 +5,7 @@
  *      Author: edwardvergara
  */
 
-#include "Player.h"
+#include "player.h"
 
 
 
@@ -13,6 +13,7 @@
 Player::Player() {
 	// TODO Auto-generated constructor stub
 	//json test
+#ifdef FROMJSON
 	std::string fileName = "./data/player.txt";
 	std::ifstream file;
 	file.open(fileName.c_str());
@@ -56,6 +57,11 @@ Player::Player() {
 	//Json::StyledWriter writer;
 	// Make a new JSON document for the configuration. Preserve original comments.
 	// std::string outputConfig = writer.write( root );
+#endif
+	mFirstName = "John_f";
+	mLastName = "Do_l";
+	mPosX = 56;
+	mPosY = 42;
 
 }
 

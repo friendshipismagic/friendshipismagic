@@ -5,8 +5,7 @@
  *      Author: edwardvergara
  */
 
-#include "packetExplorer.h"
-
+#include "packet-explorer.h"
 
 template<int ID, typename... Args>
 sf::Packet CommandMessage<ID, Args...>::make(Args... args) {

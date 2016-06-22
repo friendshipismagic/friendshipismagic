@@ -5,12 +5,10 @@
  *      Author: edwardvergara
  */
 
-#include "UDPAgent.h"
+#include "udp-agent.h"
 //-----------------------------------------------------
 // UDPAgent Constructors/Destructor/Launcher
 //-----------------------------------------------------
-
-
 
 /*
  * Create as server
@@ -20,9 +18,9 @@ UDPAgent::UDPAgent(int srcPort):the_thread() {
 	mDestPort = 0;
 	running = false;
 	listener.setBlocking(false);
-	// lie la socket à un port
 	mSrcPort = srcPort;
 }
+
 /*
  * Create class as client
  */
@@ -31,30 +29,22 @@ UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):the_thread()
 	mDestIPAddr = ipAddr;
 	running = false;
 	listener.setBlocking(false);
-	// lie la socket à un port
 	mSrcPort = srcPort;
 	mDestPort = destPort;
 }
 
 UDPAgent::~UDPAgent() {
-	// TODO Auto-generated destructor stub
 	running = false;
-    listener.unbind();
-    listener.setBlocking(false);
 	if (the_thread.joinable()) the_thread.join();
 }
 
 //***** Function to call after creating ServerThread object
 void UDPAgent::start() {
 	if (listener.bind(mSrcPort) != sf::Socket::Done)
-	{
-		// erreur...
-		 //agentPrintLn("Binding error");
 		throw UDPException();
-	}
+
 	// This will start the thread by running the serverRoutine function
 	running  = true;
-	//if(debug)agentPrintLn("Running");
 	the_thread = std::thread(&UDPAgent::AgentRoutine, this);
 
 }
@@ -68,7 +58,6 @@ bool UDPAgent::send(sf::Packet pkt){
 	sf::Socket::Status st = listener.send(pkt, mDestIPAddr, mDestPort);
 	switch(st){
 	case sf::Socket::Status::Done:
-		//if(debug)agentPrintLn("Packet sent");
 		return true;
 	default:
 		if(debug) agentPrintLn("Socket sending error!");
@@ -78,21 +67,14 @@ bool UDPAgent::send(sf::Packet pkt){
 
 //***** The function runned by the_thread
 void UDPAgent::AgentRoutine(){
-
-
 	string str;
 	sf::Socket::Status st;
 	unsigned short int tmpPort;
 	sf::IpAddress tmpIP;
 	while (running) {
-		//std::cout << "Hello from thread!\n";
 
-        if (mLastPacketIsRead)
-            mLastPacket = std::make_shared<sf::Packet>();
-            
-        auto& pkt = mLastPacket;
-		// socket UDP:
-		st = listener.receive(*pkt, tmpIP, tmpPort);
+		sf::Packet pkt;
+		st = listener.receive(pkt, tmpIP, tmpPort);
 		switch(st){
 			case sf::Socket::Done:
 				if(mode == Mode::Server){
@@ -100,16 +82,10 @@ void UDPAgent::AgentRoutine(){
 					mDestPort= tmpPort;
 					//agentPrintLn("destIp : "+mDestIPAddr.toString()+ " port : "+ std::to_string(mDestPort));
 				}
-				//pkt >> str;
-				//agentPrintLn("Received : "+str);
-
-                if(pkt) {    
-                    sf::Packet p = *pkt;
-                    notifyObservers(p);
-                }
+				notifyObservers(pkt);
 				break;
             case sf::Socket::Partial:
-                std::cout << "§§§§§§§§§ PARTIAL £££££££££" << std::endl;
+                std::cout << "Socket partially received" << std::endl;
 			case sf::Socket::NotReady:
 				//agentPrintLn("Non blocking result");
 				break;
@@ -117,7 +93,6 @@ void UDPAgent::AgentRoutine(){
                 agentPrintLn("Socket closed!");
                 break;
 			default:
-				//erreur
 				if(debug) agentPrintLn("Socket receiving error!");
 				break;
 		}
@@ -143,13 +118,14 @@ int UDPAgent::getPeriod() {
 void UDPAgent::agentPrintLn(){
 	std::cout << "\n";
 }
+
 void UDPAgent::agentPrintLn(string str){
 	if(mode == Mode::Server)
 		std::cout << "UDPServer : " << str << std::endl;
 	else
 		std::cout << "UDPClient : " << str << std::endl;
-
 }
+
 void UDPAgent::agentPrint(string str){
 	if(mode == Mode::Server)
 		std::cout  << "UDPServer : " << str;

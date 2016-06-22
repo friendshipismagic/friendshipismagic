@@ -5,7 +5,7 @@
  *      Author: edwardvergara
  */
 
-#include "EventSpeaker.h"
+#include "event-speaker.h"
 template<typename T>
 EventSpeaker<T>::EventSpeaker() {
 	// TODO Auto-generated constructor stub

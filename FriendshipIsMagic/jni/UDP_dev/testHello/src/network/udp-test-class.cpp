@@ -5,12 +5,10 @@
  *      Author: edwardvergara
  */
 
-#include "UDPtestClass.h"
+#include "udp-test-class.h"
 
 
 void UDPtestClass::testRoutine(PacketCommand& cmd){
-
-	//*
 
 	//Creating the server
 	UDPAgent udpServer(UDPAgent::DEFAULT_PORT);
@@ -28,13 +26,13 @@ void UDPtestClass::testRoutine(PacketCommand& cmd){
 		udpClient.start();
 	}
 	catch (UDPException& e){
-		std::cout << "Binding error";
+		std::cout << "Binding error! Exiting program..." << std::endl;
 		return;
 	}
 
 
 
-
+/*
 	Player player;
 	player.setFirstName("from");
 		player.setLastName("Client");
@@ -63,7 +61,7 @@ void UDPtestClass::testRoutine(PacketCommand& cmd){
 	//boucle qui attend 4sec
 	//for (int i =0; i<4000;i++){
 	std::cout << i << " packets to receive"<< std::endl;
-	while(i >0){
+	while(i>0){
 
 		queueMutex.lock();
 		if(packetBuf.empty() == false){

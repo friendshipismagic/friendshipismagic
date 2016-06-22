@@ -10,12 +10,10 @@
 
 #include <map>
 #include <string>
-#include"../json/json.h"
-#include"../json/json-forwards.h"
 #include <iostream>
 #include <fstream>
-#include "commandList.h"
 #include <functional>
+#include "command-list.h"
 
 template<typename InstructionType, typename Stream>
 class Command {
@@ -32,14 +30,10 @@ class Command {
 		std::map<InstructionType, std::function<void(Stream&)> > mStoredCommands;
 };
 
-//Command<sf::Packet>
-
-//Command<std::iostream>
-
 #include <SFML/Network/Packet.hpp>
 
 using PacketCommand = Command<int, sf::Packet>;
 using ConsoleCommand = Command<std::string, sf::Packet>;
 
-#include "Command.inl"
+#include "command.inl"
 #endif /* COMMAND_H_ */

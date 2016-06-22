@@ -5,7 +5,7 @@
  *      Author: edwardvergara
  */
 
-#include "EventListener.h"
+#include "event-listener.h"
 template<typename T>
 EventListener<T>::EventListener() {
 	// TODO Auto-generated constructor stub

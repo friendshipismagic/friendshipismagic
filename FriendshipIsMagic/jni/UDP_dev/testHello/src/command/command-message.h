@@ -5,8 +5,8 @@
  *      Author: edwardvergara
  */
 
-#ifndef COMMAND_COMMANDMESSAGE_H_
-#define COMMAND_COMMANDMESSAGE_H_
+#ifndef COMMAND_COMMAND_MESSAGE_H_
+#define COMMAND_COMMAND_MESSAGE_H_
 
 #include <SFML/Network/Packet.hpp>
 
@@ -30,5 +30,5 @@ private:
 
 
 
-#include "CommandMessage.inl"
-#endif /* COMMAND_COMMANDMESSAGE_H_ */
+#include "command-message.inl"
+#endif /* COMMAND_COMMAND_MESSAGE_H_ */

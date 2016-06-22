@@ -1,3 +1,4 @@
+
 //============================================================================
 // Name        : testHello.cpp
 // Author      : 
@@ -5,18 +6,18 @@
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
 //============================================================================
-
+#define UDP_DEBUG
 #include <iostream>
 
-#include "command/Command.h"
-#include "Player.h"
-#include "network/UDPtestClass.h"
+#include "command/command.h"
+//#include "player.h"
+#include "network/udp-test-class.h"
 #include <thread>         // std::this_thread::sleep_for
 #include <chrono>         // std::chrono::seconds
 
-#include "network/UDPAgent.h"
-#include "command/commandList.h"
-#include "command/packetExplorer.h"
+#include "network/udp-agent.h"
+#include "command/command-list.h"
+#include "command/packet-explorer.h"
 
 
 using namespace std;
@@ -47,17 +48,18 @@ void sayHello(sf::Packet pkt){
 	std::cout << "Hello from main!" << std::endl;
 }
 void printString(sf::Packet pkt){
-	//cout << "Hello!!\n";
 	string str;
 	pkt >> str;
 	cout << str;
 }
-
+/*
 void sayPlayerInfo(sf::Packet pkt){
 	Player player;
 	pkt >> player;
 	player.printInfo();
 }
+*/
+#ifdef UDP_DEBUG
 int main() {
 
 	//Janniaux command
@@ -65,13 +67,13 @@ int main() {
 
 	cmd.setCommand(SayHelloCommand::id,sayHello);
 	cmd.setCommand(PrintStringCommand::id,printString);
-	cmd.setCommand(SayPlayerInfoCommand::id,sayPlayerInfo);
+	//cmd.setCommand(SayPlayerInfoCommand::id,sayPlayerInfo);
 
 	sf::Packet pkt;
-	Player player;
+	//Player player;
 
-	sf::Packet p = SayPlayerInfoCommand::make(player);
-	cmd.interpret(p);
+	//sf::Packet p = SayPlayerInfoCommand::make(player);
+	//cmd.interpret(p);
 
 	//packet >> toto >> titi >> tata;
 	//CommandMessage::check (toto, titi, tata);
@@ -82,7 +84,7 @@ int main() {
 
 	return 0;
 }
-
+#endif
 
 
 

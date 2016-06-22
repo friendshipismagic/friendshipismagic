@@ -11,11 +11,12 @@
 
 #include <SFML/Network/Packet.hpp>
 #include <SFML/System/Mutex.hpp>
-#include "UDPAgent.h"
 #include <queue>          // std::queue
-#include "../command/Command.h"
-#include "../Player.h"
-#include <memory>
+
+#include "../command/command.h"
+//#include "../Player.h"
+#include "udp-agent.h"
+
 
 class UDPtestClass : public UDPListener {
 public:

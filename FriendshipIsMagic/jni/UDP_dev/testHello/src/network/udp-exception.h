@@ -5,8 +5,8 @@
  *      Author: edwardvergara
  */
 
-#ifndef NETWORK_UDPEXCEPTION_H_
-#define NETWORK_UDPEXCEPTION_H_
+#ifndef NETWORK_UDP_EXCEPTION_H_
+#define NETWORK_UDP_EXCEPTION_H_
 #include <exception>
 
 class UDPException: public std::exception
@@ -19,4 +19,4 @@ public:
 		return "error";//this->exception();
 	  }*/
 };
-#endif /* NETWORK_UDPEXCEPTION_H_ */
+#endif /* NETWORK_UDP_EXCEPTION_H_ */

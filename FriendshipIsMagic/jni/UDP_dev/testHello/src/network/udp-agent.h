@@ -7,22 +7,25 @@
 
 #ifndef UDPAgent_H_
 #define UDPAgent_H_
-#include "EventSpeaker.h"
 #include <iostream>
 #include <SFML/Network.hpp>
 #include <thread>         // std::this_thread::sleep_for
 #include <chrono>         // std::chrono::seconds
 #include <SFML/Network/Packet.hpp>
-#include "UDPException.h"
 #include <memory>
+#include "event-speaker.h"
+#include "udp-exception.h"
 
 
 
 class UDPAgent : public UDPSpeaker {
 public:
+	//========== DEBUG
+	const bool debug = false;
+
 	static const int DEFAULT_PERIODE=250;
 	static const int DEFAULT_PORT = 54000;
-	const bool debug = true;
+
 	UDPAgent(int port);
 	UDPAgent(int port, sf::IpAddress ipAddr, int destPort);
 	virtual ~UDPAgent();
@@ -51,8 +54,6 @@ public:
 
 private:
 	sf::UdpSocket listener;
-    bool mLastPacketIsRead=true;
-    std::shared_ptr<sf::Packet> mLastPacket;
 	bool mode;
 	bool running;
 	int period = DEFAULT_PERIODE;

@@ -2,3 +2,4 @@
 *.d
 *.mk
 /json/
+/json_/
