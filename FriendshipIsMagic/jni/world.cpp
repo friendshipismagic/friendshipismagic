@@ -14,7 +14,15 @@ World::World(State::Context context)
     graphics = new GraphicSystem(this, context, physics);
     mSystems.push_back(graphics);
 
+    timers = new TimerSystem(this, context);
+    mSystems.push_back(timers);
+
     graphics->setPositionProvider(physics->getPositionProvider());
+
+    context.playerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
+    createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt");
+    createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt");
+    createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt");
 }
 
 void World::handleEvent(const sf::Event& event)
@@ -79,9 +87,9 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
                                               body["isDynamic"].asBool()
                                               );
 
-        missile->SetBullet(body["isBullet"].asBool());
-        missile->SetGravityScale(body["gravityScale"].asFloat());
-        missile->SetLinearVelocity(b2Vec2({body["vx"].asFloat(), body["vy"].asFloat()}));
+        newBody->SetBullet(body["isBullet"].asBool());
+        newBody->SetGravityScale(body["gravityScale"].asFloat());
+        newBody->SetLinearVelocity(b2Vec2({body["vx"].asFloat(), body["vy"].asFloat()}));
 
         physics->insertPosition(entity, newBody->GetPosition());
         physics->insertBody(entity, newBody);

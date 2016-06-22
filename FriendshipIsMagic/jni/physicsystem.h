@@ -34,12 +34,8 @@ class PhysicSystem: public System
         InputSystem* inputs;
         b2World mWorld;
         int scale;
-<<<<<<< ea93cc0ac86dc2a23e1afc332e91c013ce57263a
-        Player mPlayer;
-        MyContactListener* jumpListener;
-=======
+
         CollisionSystem* collisionListener;
->>>>>>> add CollisionSystem
         const sf::Vector2f errorPos;
 
         //Position component

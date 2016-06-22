@@ -29,11 +29,13 @@ class State
                 window = &win;
                 textures = &textu;
                 fonts = &fon;
+                playerID = 0;
             }
 
             sf::RenderWindow* window;
             TextureHolder* textures;
             FontHolder* fonts;
+            int playerID;
         };
 
     public:

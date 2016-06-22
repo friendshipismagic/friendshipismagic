@@ -6,18 +6,11 @@ GraphicSystem::GraphicSystem(World* world, State::Context context, PhysicSystem*
 , mSprites()
 , mPhysics(physics)
 {
-    sf::Texture*  t = context->textures->get("Background");
+    sf::Texture*  t = mContext.textures->get("Background");
     background = new sf::Sprite();
     background->setTexture(*t);
     background->setPosition(-100, 0);
 
-    insertSprite(0, "Skeleton", 0, 50, 69);
-
-    insertSprite(1, "Floor", -20, 100, 100);
-    insertSprite(2, "Floor", 0, 100, 100);
-    insertSprite(3, "Floor2", 0, 2000, 100);
-
-    insertSprite(4, "Floor", 0, 20, 20);
 }
 
 void GraphicSystem::update(sf::Time dt)
@@ -45,7 +38,7 @@ void GraphicSystem::setPositionProvider(PositionProvider* pos)
 
 void GraphicSystem::insertSprite(int entity, std::string id, float rotation, float w, float h)
 {
-    sf::Texture* t = mContext->textures->get(id);
+    sf::Texture* t = mContext.textures->get(id);
     sf::Sprite sprite;
     sprite.setTexture(*t);
     float width = sprite.getTextureRect().width;
@@ -55,4 +48,9 @@ void GraphicSystem::insertSprite(int entity, std::string id, float rotation, flo
     sprite.setScale(w/width, h/height);
 
     mSprites.insert(std::make_pair(entity, sprite));
+}
+
+void GraphicSystem::deleteSprite(int entity)
+{
+    mSprites.erase(entity);
 }

@@ -9,7 +9,6 @@ PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* in
 , inputs(inputs)
 , mWorld(b2Vec2{0.f,10.f})
 , scale(100)
-, mPlayer(&mWorld, 1, 1)
 , errorPos(sf::Vector2f({-1, -1}))
 , mPositions()
 , mBodies()
@@ -17,32 +16,13 @@ PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* in
     collisionListener = new CollisionSystem(mGameWorld, mContext);
     mWorld.SetContactListener(collisionListener);
 
-    insertPosition(0, b2Vec2({mPlayer.getPos().x, mPlayer.getPos().y}));
-    insertBody(0, mPlayer.getBody());
-
-    b2Body* floor  = createBody(6, 5.2, 0.5f, 0.5f, 20, false);
-
-    insertPosition(1, floor->GetPosition());
-    insertBody(1, floor);
-
-    b2Body* floor2 = createBody(3, 5.2, 0.5f, 0.5f, 0, false);
-    floor2->SetType(b2_dynamicBody);
-
-    insertPosition(2, floor2->GetPosition());
-    insertBody(2, floor2);
-
-    b2Body* floor3 = createBody(3, 6.5, 10.f, 0.5f, 0, false);
-
-    insertPosition(3, floor3->GetPosition());
-    insertBody(3, floor3);
-
     std::function<const sf::Vector2f&(unsigned int index)> posFunction = [this](unsigned int index) { return getPosition(index);};
     mPositionProvider = new PositionProvider(&posFunction);
 }
 
 void PhysicSystem::update(sf::Time dt)
 {
-    b2Body* mPlayerBody = mBodies[0];
+    b2Body* mPlayerBody = mBodies[mContext.playerID];
     bool mRight = inputs->getInputState(Input::right);
     bool mLeft = inputs->getInputState(Input::left);
     bool mJump = inputs->getInputState(Input::jump);
@@ -84,10 +64,10 @@ void PhysicSystem::update(sf::Time dt)
     int32 positionIterations = 3;
     mWorld.Step(timeStep, velocityIterations, positionIterations);
 
-    for(unsigned int i = 0; i < mBodies.size(); i++)
+    for(auto body: mBodies)
     {
-        b2Vec2 pos = mBodies[i]->GetPosition();
-        mPositions[i] = sf::Vector2f({pos.x*scale, pos.y*scale});
+        b2Vec2 pos = body.second->GetPosition();
+        mPositions[body.first] = sf::Vector2f({pos.x*scale, pos.y*scale});
     }
 }
 
