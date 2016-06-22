@@ -22,7 +22,7 @@ void UDPtestClass::testRoutine(PacketCommand& cmd){
 	udpClient.addObserver(this);
 
 	try{
-		udpServer.start();
+		udpServer.start() ;
 		udpClient.start();
 	}
 	catch (UDPException& e){
