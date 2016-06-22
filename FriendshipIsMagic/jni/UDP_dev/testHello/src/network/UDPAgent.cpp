@@ -102,16 +102,10 @@ void UDPAgent::AgentRoutine(){
 				}
 				//pkt >> str;
 				//agentPrintLn("Received : "+str);
-                if(!(*pkt))
-                    std::cout <<"packet not complete" << std::endl;
-                else {
-                    std::cout <<"packet complete" << std::endl;
-                    mLastPacketIsRead = false;
+
+                if(pkt) {    
                     sf::Packet p = *pkt;
-                    int instruction; 
-                    p >> instruction;
-                    std::cout << "[[[" << instruction << "]]]" << std::endl;
-                    notifyObservers(*pkt);
+                    notifyObservers(p);
                 }
 				break;
             case sf::Socket::Partial:
