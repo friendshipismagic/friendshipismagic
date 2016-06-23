@@ -11,6 +11,8 @@
 
 #include "aisystem.h"
 
+#include "aisystem.h"
+
 class World
 {
     public:
@@ -29,6 +31,8 @@ class World
 
         int levelReader(std::string fileName);
 
+        int levelReader(std::string fileName);
+
     private:
 
         std::vector<Systems::Mask> mMasks;
@@ -39,6 +43,12 @@ class World
         TimerSystem* timers;
         PhysicSystem* physics;
         InputSystem* inputs;
+        AISystem* mAI;
+
+        std::string tile = "";
+        int mLineCount = 0;
+        int mColumnCount = 0;
+
         AISystem* mAI;
 
         std::string tile = "";

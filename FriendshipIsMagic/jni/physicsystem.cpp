@@ -4,9 +4,9 @@
 #include "world.h"
 #include "collisionsystem.h"
 
-PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* inputs, AISystem* ai)
+PhysicSystem::PhysicSystem(World* world, State::Context context, LogicSystem* logics, AISystem* ai)
 : System(world, context)
-, inputs(inputs)
+, logics(logics)
 , mAI(ai)
 , mWorld(b2Vec2{0.f,10.f})
 , scale(100)
@@ -23,11 +23,11 @@ PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* in
 
 void PhysicSystem::update(sf::Time dt)
 {
-    b2Body* mPlayerBody = mBodies[mContext.playerID];
-    bool mRight = inputs->getInputState(Input::right);
-    bool mLeft = inputs->getInputState(Input::left);
-    bool mJump = inputs->getInputState(Input::jump);
-    bool mFire = inputs->getInputState(Input::fire);
+    b2Body* mPlayerBody = mBodies[mGameWorld->getPlayerID()];
+    bool mRight = logics->getLogic(Logic::moveRight);
+    bool mLeft = logics->getLogic(Logic::moveLeft);
+    bool mJump = logics->getLogic(Logic::isJumping);
+    bool mFire = logics->getLogic(Logic::fireOn);
 
     if (mRight)
     {
@@ -57,6 +57,10 @@ void PhysicSystem::update(sf::Time dt)
     if (mFire)
     {
         mGameWorld->createEntity(Systems::BULLET, "Entities/bullet.txt", mPlayerBody->GetPosition().x + 0.4, mPlayerBody->GetPosition().y);
+    }
+
+        logics->setLogic(Logic::canFire, false);
+        mGameWorld->timerOn(mGameWorld->getPlayerWeaponID());
     }
 
     AiInterface::Action action = mAI->getAction();

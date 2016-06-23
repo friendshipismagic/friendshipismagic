@@ -11,7 +11,10 @@ World::World(State::Context context)
     inputs = new InputSystem(this, context);
     mSystems.push_back(inputs);
 
-    physics =  new PhysicSystem(this, context, inputs, mAI);
+    logics = new LogicSystem(this, context, inputs);
+    mSystems.push_back(logics);
+
+    physics =  new PhysicSystem(this, context, logics, mAI);
     mSystems.push_back(physics);
 
     graphics = new GraphicSystem(this, context, physics);
@@ -25,9 +28,10 @@ World::World(State::Context context)
     context.playerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 1, 1);
     createEntity(Systems::Mask::MONSTER, "Entities/monster.txt", 3, 3);
 
-    /*createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt");
-    createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt");
-    createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt");*/
+    createEntity(Systems::Mask::WEAPONITEM, "Entities/uziitem.txt", 6, 4);
+    createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt", 3, 6.5);
+    createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 3, 5.2);
+    createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.2);
 
     levelReader("levels/arena0.txt");
     mAI->setMatrix(tile, mColumnCount);
@@ -166,6 +170,47 @@ Systems::Mask World::getMask(int entity)
 void World::sigDestroyEntity(int entity)
 {
     mEntitiesToDestroy.push_back(entity);
+}
+
+int World::levelReader(std::string fileName)
+{
+    //We open the JSON file
+    std::ifstream file(fileName.c_str());
+    if (!file)
+    {
+        std::cerr << "Error: can't open file " << fileName << std::endl;
+        return -1;
+    }
+
+    Json::Value root;
+    Json::Reader reader;
+    if( !reader.parse(file, root, false) )
+    {
+        std::cout << "Error while reading " + fileName + "file:\n" << reader.getFormattedErrorMessages();
+        return -1;
+    }
+
+    tile = root["tile"].asString();
+    mColumnCount = root["n"].asInt();
+    mLineCount = root["m"].asInt();
+
+    unsigned int j = 0;
+    for (unsigned int i = 0; i < tile.size(); i++)
+    {
+        if (i%mColumnCount == 0)
+            j++;
+
+        if (tile[i] == 'E')
+        {
+
+        }
+        else if (tile[i] == 'W')
+        {
+            createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", i%mColumnCount + 0.5, j + 0.5);
+        }
+    }
+
+    return 0;
 }
 
 int World::levelReader(std::string fileName)

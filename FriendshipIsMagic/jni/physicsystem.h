@@ -6,6 +6,7 @@
 #include "player.h"
 #include "systemprovider.h"
 #include "collisionsystem.h"
+#include "logicsystem.h"
 #include "inputsystem.h"
 #include "aisystem.h"
 
@@ -15,7 +16,7 @@ class PhysicSystem: public System
 {
     public:
 
-        PhysicSystem(World* world, State::Context context, InputSystem* inputs, AISystem* ai);
+        PhysicSystem(World* world, State::Context context, LogicSystem* logics, AISystem* ai);
         virtual void update(sf::Time dt);
         const sf::Vector2f& getPosition(unsigned int index);
         PositionProvider* getPositionProvider() { return mPositionProvider; };
@@ -32,6 +33,7 @@ class PhysicSystem: public System
 
     private:
 
+        LogicSystem* logics;
         InputSystem* inputs;
         AISystem* mAI;
         b2World mWorld;
