@@ -23,7 +23,8 @@ void TitleState::init()
 
 bool TitleState::handleEvent(const sf::Event& event)
 {
-    if (event.type == sf::Event::KeyPressed)
+    if (event.type == sf::Event::KeyPressed ||
+            event.type == sf::Event::TouchBegan)
     {
         requestStackPop();
         requestStackPush(States::Game);
