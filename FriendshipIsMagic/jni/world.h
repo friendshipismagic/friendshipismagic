@@ -9,6 +9,7 @@
 #include "timersystem.h"
 #include "logicsystem.h"
 #include "weaponsystem.h"
+#include "healthsystem.h"
 #include <Box2D/Box2D.h>
 
 class World
@@ -26,6 +27,7 @@ class World
         void sigDestroyEntity(int entity);
         void sigTimerCall(int entity);
         void sigCollisionWeaponItem(int entityPlayer, int entityItem);
+        void sigCollisionBullet(int entityBullet, int entityVictim);
         void timerOn(int entity);
 
         Systems::Mask getMask(int entity);
@@ -33,6 +35,10 @@ class World
         int getPlayerID() { return mPlayerID; };
         int getPlayerWeaponID() { return mPlayerWeaponID; };
         void setPlayerWeaponID(int entity) { mPlayerWeaponID = entity; };
+
+        int getCoPlayerID() { return mCoPlayerID; };
+        int getCoPlayerWeaponID() { return mCoPlayerWeaponID; };
+        void setCoPlayerWeaponID(int entity) { mCoPlayerWeaponID = entity; };
 
     private:
 
@@ -47,7 +53,11 @@ class World
         InputSystem* inputs;
         LogicSystem* logics;
         WeaponSystem* weapons;
+        HealthSystem* health;
 
         int mPlayerID = 0;
         int mPlayerWeaponID = 1;
+
+        int mCoPlayerID = 2;
+        int mCoPlayerWeaponID = 3;
 };

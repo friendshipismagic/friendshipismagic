@@ -24,10 +24,17 @@ World::World(State::Context context)
     weapons = new WeaponSystem(this, context);
     mSystems.push_back(weapons);
 
+    health = new HealthSystem(this, context);
+    mSystems.push_back(health);
+
     graphics->setPositionProvider(physics->getPositionProvider());
 
     mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
     mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt");
+
+    mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
+    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt");
+
     createEntity(Systems::Mask::WEAPONITEM, "Entities/uziitem.txt");
     createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt");
     createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt");
@@ -126,6 +133,16 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
         std::string weaponType = components["weaponType"].asString();
         weapons->insertWeaponType(entity, weaponType);
     }
+    if ((mask & Systems::Component::DAMAGE) == Systems::Component::DAMAGE)
+    {
+        int damage = components["damage"].asInt();
+        weapons->insertDamage(entity, damage);
+    }
+    if ((mask & Systems::Component::HEALTH) == Systems::Component::HEALTH)
+    {
+        int life = components["health"].asInt();
+        health->insertHealth(entity, life);
+    }
 
     return entity;
 }
@@ -133,7 +150,7 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
 
 void World::destroyEntity(int entity)
 {
-    std::cout << "destruction" << std::endl;
+    std::cout << "destruction " << entity << std::endl;
     Systems::Mask mask = mMasks[entity];
 
     if ((mask & Systems::Component::BODY) == Systems::Component::BODY)
@@ -156,6 +173,14 @@ void World::destroyEntity(int entity)
     if ((mask & Systems::Component::WEAPONTYPE) == Systems::Component::WEAPONTYPE)
     {
         weapons->deleteWeaponType(entity);
+    }
+    if ((mask & Systems::Component::DAMAGE) == Systems::Component::DAMAGE)
+    {
+        weapons->deleteDamage(entity);
+    }
+    if ((mask & Systems::Component::HEALTH) == Systems::Component::HEALTH)
+    {
+        health->deleteHealth(entity);
     }
 
     mMasks[entity] = Systems::Mask::NONE;
@@ -192,6 +217,16 @@ void World::sigCollisionWeaponItem(int entityPlayer, int entityItem)
     mEntitiesToDestroy.push_back(entityItem);
     mEntitiesToDestroy.push_back(mPlayerWeaponID);
     mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt");
+}
+
+void World::sigCollisionBullet(int entityBullet, int entityVictim)
+{
+    mEntitiesToDestroy.push_back(entityBullet);
+    if ((mMasks[entityVictim] & Systems::Component::HEALTH) == Systems::Component::HEALTH)
+    {
+        int damage = weapons->getDamage(entityBullet);
+        health->addToHealth(entityVictim, damage);
+    }
 }
 
 void World::timerOn(int entity)

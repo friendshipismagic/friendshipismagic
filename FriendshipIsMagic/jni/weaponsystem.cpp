@@ -26,3 +26,18 @@ void WeaponSystem::deleteWeaponType(int entity)
 {
     mWeaponTypes.erase(entity);
 }
+
+int WeaponSystem::getDamage(int entity)
+{
+    return mDamages[entity];
+}
+
+void WeaponSystem::insertDamage(int entity, int damage)
+{
+    mDamages.insert(std::make_pair(entity, damage));
+}
+
+void WeaponSystem::deleteDamage(int entity)
+{
+    mDamages.erase(entity);
+}

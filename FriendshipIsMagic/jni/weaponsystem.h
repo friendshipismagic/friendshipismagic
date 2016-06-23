@@ -18,8 +18,13 @@ class WeaponSystem: public System
         void insertWeaponType(int entity, std::string weaponType);
         void deleteWeaponType(int entity);
 
+        int getDamage(int entity);
+        void insertDamage(int entity, int damage);
+        void deleteDamage(int entity);
+
     private:
 
         std::map<int, std::string> mWeaponTypes;
+        std::map<int, int> mDamages;
 
 };

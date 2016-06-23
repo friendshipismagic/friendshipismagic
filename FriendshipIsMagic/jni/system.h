@@ -14,17 +14,18 @@ namespace Systems
         SENSOR = 1 << 3,
         TIMER = 1 << 4,
         DAMAGE = 1 << 5,
-        WEAPONTYPE = 1 << 6
+        WEAPONTYPE = 1 << 6,
+        HEALTH = 1 << 7
     };
 
     enum Mask
     {
         NONE = 0,
         BULLET = BODY | SPRITE | TIMER | DAMAGE,
-        PLAYER = SENSOR | BODY | SPRITE,
+        PLAYER = SENSOR | BODY | SPRITE | HEALTH,
         BLOC = BODY | SPRITE,
-        WEAPON = SPRITE | DAMAGE | TIMER,
-        ITEM = SPRITE | DAMAGE | TIMER,
+        WEAPON = SPRITE | TIMER | WEAPONTYPE,
+        ITEM = SPRITE | TIMER,
         WEAPONITEM = SPRITE | BODY | TIMER | WEAPONTYPE
     };
 };

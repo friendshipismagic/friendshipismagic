@@ -2,6 +2,7 @@
 "components":
 {
 "sprite":{"texture":"Floor2", "width":10, "height":10, "rotation":0},
-"timer":{"time":0.1}
+"timer":{"time":0.1},
+"weaponType":"uzi"
 }
 }
