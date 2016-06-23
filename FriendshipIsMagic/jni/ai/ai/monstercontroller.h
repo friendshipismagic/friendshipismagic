@@ -24,10 +24,10 @@ class MonsterController {
 public:
 	pair<int,int> currentPosition;
 	pair<int,int> nextPosition;
-	pair<PreviousInterface*,Monster*> monsterPath;
+	pair<PreviousInterface*,int> monsterPath;
 	MonsterController();
 	virtual ~MonsterController();
-	void storePath(Monster& monster, PreviousInterface& previous);
+	void storePath(int mobID, PreviousInterface& previous);
 	AiInterface::Action translateOrder();
 	void setCurrentAndNext(pair<int,int> current, pair<int,int> next);
 

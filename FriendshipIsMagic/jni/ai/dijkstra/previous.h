@@ -27,6 +27,7 @@ public:
 	void setValue(VertexInterface* vertex, VertexInterface* value) override;
 	VertexInterface* getValue(VertexInterface* vertex) override;
 	vector<VertexInterface*> getShortestPathTo(VertexInterface* vertex, VertexInterface* r) override;
+	virtual int getSize() { return previous.size();};
 };
 
 #endif /* DIJKSTRA_PREVIOUS_H_ */
