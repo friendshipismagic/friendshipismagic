@@ -31,9 +31,11 @@ World::World(State::Context context)
 
     mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
     mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt");
+    sensorOne = mPlayerID + 1;
 
     mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
     mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt");
+    sensorTwo = mCoPlayerID + 1;
 
     createEntity(Systems::Mask::WEAPONITEM, "Entities/uziitem.txt");
     createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt");
@@ -111,8 +113,8 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
     }
     if ((mask & Systems::Component::SENSOR) == Systems::Component::SENSOR)
     {
-        Json::Value sensor = components["sensor"];
-        physics->addSensor(entity, sensor["ID"].asInt());
+        physics->addSensor(entity, entity + 1);
+        mMasks.push_back(Systems::Mask::TAKEN);
     }
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
     {
@@ -142,6 +144,8 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
     {
         int life = components["health"].asInt();
         health->insertHealth(entity, life);
+
+        createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt");
     }
 
     return entity;

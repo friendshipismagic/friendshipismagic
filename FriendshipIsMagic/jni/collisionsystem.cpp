@@ -4,6 +4,7 @@
 CollisionSystem::CollisionSystem(World* world, State::Context context)
 : System(world, context)
 , mNumFootContacts(0)
+, mCoNumFootContacts(0)
 {
 
 }
@@ -32,31 +33,44 @@ void CollisionSystem::BeginContact(b2Contact* contact)
     }
 
     //check if fixture A was the foot sensor
-    void* fixtureUserData = contact->GetFixtureA()->GetUserData();
-    if ( (int)fixtureUserData == 3 )
+    if ( entityA  == mGameWorld->getPlayerSensorID() )
         mNumFootContacts++;
+    else if (entityA == mGameWorld->getCoPlayerSensorID())
+         mCoNumFootContacts++;
     //check if fixture B was the foot sensor
-    fixtureUserData = contact->GetFixtureB()->GetUserData();
-    if ( (int)fixtureUserData == 3 )
+     if ( entityB  == mGameWorld->getPlayerSensorID() )
         mNumFootContacts++;
+    else if (entityB == mGameWorld->getCoPlayerSensorID())
+         mCoNumFootContacts++;
+
+    //std::cout << mNumFootContacts << std::endl;
 }
 
 void CollisionSystem::EndContact(b2Contact* contact)
 {
-    //check if fixture A was the foot sensor
-    void* fixtureUserData = contact->GetFixtureA()->GetUserData();
-    if ( (int)fixtureUserData == 3 )
-        mNumFootContacts--;
-    //check if fixture B was the foot sensor
-    fixtureUserData = contact->GetFixtureB()->GetUserData();
-    if ( (int)fixtureUserData == 3 )
-        mNumFootContacts--;
+    int entityA = ((int) (contact->GetFixtureA()->GetUserData()));
+    int entityB = ((int) (contact->GetFixtureB()->GetUserData()));
 
+    //check if fixture A was the foot sensor
+    if ( entityA  == mGameWorld->getPlayerSensorID() )
+        mNumFootContacts--;
+    else if (entityA == mGameWorld->getCoPlayerSensorID())
+         mCoNumFootContacts--;
+    //check if fixture B was the foot sensor
+     if ( entityB  == mGameWorld->getPlayerSensorID() )
+        mNumFootContacts--;
+    else if (entityB == mGameWorld->getCoPlayerSensorID())
+         mCoNumFootContacts--;
 }
 
 int CollisionSystem::getNumFootContacts()
 {
     return mNumFootContacts;
+}
+
+int CollisionSystem::getCoNumFootContacts()
+{
+    return mCoNumFootContacts;
 }
 
 void CollisionSystem::setNumFootContacts(int n)

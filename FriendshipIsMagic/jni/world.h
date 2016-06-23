@@ -35,10 +35,12 @@ class World
         int getPlayerID() { return mPlayerID; };
         int getPlayerWeaponID() { return mPlayerWeaponID; };
         void setPlayerWeaponID(int entity) { mPlayerWeaponID = entity; };
+        int getPlayerSensorID() { return sensorOne; };
 
         int getCoPlayerID() { return mCoPlayerID; };
         int getCoPlayerWeaponID() { return mCoPlayerWeaponID; };
         void setCoPlayerWeaponID(int entity) { mCoPlayerWeaponID = entity; };
+        int getCoPlayerSensorID() { return sensorTwo; };
 
     private:
 
@@ -57,7 +59,9 @@ class World
 
         int mPlayerID = 0;
         int mPlayerWeaponID = 1;
+        int sensorOne = 0;
 
         int mCoPlayerID = 2;
         int mCoPlayerWeaponID = 3;
+        int sensorTwo = 0;
 };

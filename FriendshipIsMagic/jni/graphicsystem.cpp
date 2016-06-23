@@ -31,6 +31,11 @@ void GraphicSystem::draw()
     }
 }
 
+void GraphicSystem::attachSprite(int entityFather, int entitySon)
+{
+    mDependencies.insert(std::make_pair(entityFather, entitySon));
+}
+
 void GraphicSystem::setPositionProvider(PositionProvider* pos)
 {
     mPositionProvider = pos;

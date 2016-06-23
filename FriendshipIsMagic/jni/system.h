@@ -21,6 +21,8 @@ namespace Systems
     enum Mask
     {
         NONE = 0,
+        TAKEN = -1,
+        GRAPHICELEMENT = SPRITE,
         BULLET = BODY | SPRITE | TIMER | DAMAGE,
         PLAYER = SENSOR | BODY | SPRITE | HEALTH,
         BLOC = BODY | SPRITE,

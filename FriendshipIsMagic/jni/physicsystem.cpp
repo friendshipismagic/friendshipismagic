@@ -60,7 +60,7 @@ void PhysicSystem::update(sf::Time dt)
         mPlayerBody->SetLinearVelocity(vel);
 
     }
-    if (mJump && (collisionListener->getNumFootContacts() > 1) && mJumpTimer.asSeconds() > 0.5)
+    if (mJump && (collisionListener->getNumFootContacts() >= 1) && mJumpTimer.asSeconds() > 0.5)
     {
         mPlayerBody->SetAwake(true);
         mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()*6), mPlayerBody->GetWorldCenter(), true );
@@ -151,7 +151,7 @@ void PhysicSystem::addSensor(int entity, int sensorID)
     mFixtureDef.isSensor = true;
 
     b2Fixture* footSensorFixture = mBodies[entity]->CreateFixture(&mFixtureDef);
-    footSensorFixture->SetUserData( (void*)sensorID );
+    footSensorFixture->SetUserData( (void*)(sensorID));
 }
 
 void PhysicSystem::deleteBody(int entity)
