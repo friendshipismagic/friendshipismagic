@@ -30,8 +30,7 @@ void ResourceHolder<Resource>::loadFromFile(std::string fileName)
     std::ifstream file(fileName.c_str());
     if (!file)
     {
-        std::cerr << "Error: can't open file " << fileName << std::endl;
-        return;
+        throw std::runtime_error("ResourceHolder - can't open configuration file " + fileName);
     }
 
     Json::Value root;
@@ -60,7 +59,8 @@ template<typename Resource>
 Resource* ResourceHolder<Resource>::get(std::string id)
 {
     auto found = mResourceMap.find(id);
-    assert(found != mResourceMap.end());
+    if (found == mResourceMap.end())
+        throw std::runtime_error("ResourceHolder::get - Failed to get " + id);
     return found->second;
 }
 
