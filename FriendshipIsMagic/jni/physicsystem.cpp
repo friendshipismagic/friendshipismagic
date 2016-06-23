@@ -26,7 +26,7 @@ PhysicSystem::PhysicSystem(World* world, State::Context context, LogicSystem* lo
 
 void PhysicSystem::update(sf::Time dt)
 {
-    b2Body* mPlayerBody = mBodies[mContext.playerID];
+    b2Body* mPlayerBody = mBodies[mGameWorld->getPlayerID()];
     bool mRight = logics->getLogic(Logic::moveRight);
     bool mLeft = logics->getLogic(Logic::moveLeft);
     bool mJump = logics->getLogic(Logic::isJumping);
@@ -60,7 +60,7 @@ void PhysicSystem::update(sf::Time dt)
         mPlayerBody->SetLinearVelocity(vel);
 
     }
-    if (mJump && (collisionListener->getNumFootContacts() >= 1) && mJumpTimer.asSeconds() > 1)
+    if (mJump && (collisionListener->getNumFootContacts() > 1) && mJumpTimer.asSeconds() > 0.5)
     {
         mPlayerBody->SetAwake(true);
         mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()*6), mPlayerBody->GetWorldCenter(), true );
@@ -80,7 +80,7 @@ void PhysicSystem::update(sf::Time dt)
         }
 
         logics->setLogic(Logic::canFire, false);
-        mGameWorld->timerOn(mContext.playerWeaponID);
+        mGameWorld->timerOn(mGameWorld->getPlayerWeaponID());
     }
 
     float32 timeStep = 1.0f / 60.0f;

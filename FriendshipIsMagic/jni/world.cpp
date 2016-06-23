@@ -21,11 +21,14 @@ World::World(State::Context context)
     timers = new TimerSystem(this, context);
     mSystems.push_back(timers);
 
+    weapons = new WeaponSystem(this, context);
+    mSystems.push_back(weapons);
 
     graphics->setPositionProvider(physics->getPositionProvider());
 
-    context.playerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
-    context.playerID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt");
+    mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
+    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt");
+    createEntity(Systems::Mask::WEAPONITEM, "Entities/uziitem.txt");
     createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt");
     createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt");
     createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt");
@@ -118,8 +121,11 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
         Json::Value sprite = components["sprite"];
         graphics->insertSprite(entity, sprite["texture"].asString(), sprite["rotation"].asFloat(), sprite["width"].asFloat(), sprite["height"].asFloat());
     }
-    if (mask == Systems::Mask::WEAPON)
-        mContext.playerWeaponID = entity;
+    if ((mask & Systems::Component::WEAPONTYPE) == Systems::Component::WEAPONTYPE)
+    {
+        std::string weaponType = components["weaponType"].asString();
+        weapons->insertWeaponType(entity, weaponType);
+    }
 
     return entity;
 }
@@ -147,6 +153,10 @@ void World::destroyEntity(int entity)
     {
         timers->deleteTimer(entity);
     }
+    if ((mask & Systems::Component::WEAPONTYPE) == Systems::Component::WEAPONTYPE)
+    {
+        weapons->deleteWeaponType(entity);
+    }
 
     mMasks[entity] = Systems::Mask::NONE;
 }
@@ -171,6 +181,17 @@ void World::sigTimerCall(int entity)
     {
         logics->setLogic(Logic::canFire, true);
     }
+    else if(mask == Systems::Mask::WEAPONITEM)
+    {
+        mEntitiesToDestroy.push_back(entity);
+    }
+}
+
+void World::sigCollisionWeaponItem(int entityPlayer, int entityItem)
+{
+    mEntitiesToDestroy.push_back(entityItem);
+    mEntitiesToDestroy.push_back(mPlayerWeaponID);
+    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt");
 }
 
 void World::timerOn(int entity)

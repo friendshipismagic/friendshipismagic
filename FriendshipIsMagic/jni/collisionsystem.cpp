@@ -26,6 +26,11 @@ void CollisionSystem::BeginContact(b2Contact* contact)
     if((maskB == Systems::Mask::BULLET) && (maskA != Systems::Mask::BULLET))
         mGameWorld->sigDestroyEntity(entityB);
 
+    if((maskA == Systems::Mask::PLAYER) && (maskB == Systems::Mask::WEAPONITEM))
+    {
+        mGameWorld->sigCollisionWeaponItem(entityA, entityB);
+    }
+
     //check if fixture A was the foot sensor
     void* fixtureUserData = contact->GetFixtureA()->GetUserData();
     if ( (int)fixtureUserData == 3 )
@@ -46,6 +51,7 @@ void CollisionSystem::EndContact(b2Contact* contact)
     fixtureUserData = contact->GetFixtureB()->GetUserData();
     if ( (int)fixtureUserData == 3 )
         mNumFootContacts--;
+
 }
 
 int CollisionSystem::getNumFootContacts()
