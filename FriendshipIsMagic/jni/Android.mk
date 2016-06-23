@@ -78,6 +78,9 @@ LOCAL_WHOLE_STATIC_LIBRARIES := sfml-main
 
 LOCAL_CPP_FEATURES := exceptions rtti
 
+LOCAL_CFLAGS += -DANDROID_BUILD
+LOCAL_CPPFLAGS += -DANDROID_BUILD
+
 include $(BUILD_SHARED_LIBRARY)
 
 #$(call import-add-path,./deps)
