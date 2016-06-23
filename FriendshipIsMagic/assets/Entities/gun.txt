@@ -1,0 +1,7 @@
+{
+"components":
+{
+"sprite":{"texture":"Skull", "width":10, "height":10, "rotation":0},
+"timer":{"time":0.6}
+}
+}

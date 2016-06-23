@@ -66,7 +66,7 @@ void PhysicSystem::update(sf::Time dt)
         mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()*6), mPlayerBody->GetWorldCenter(), true );
         mJumpTimer = sf::Time::Zero;
     }
-    if (mFire)
+    if (mFire && (logics->getLogic(Logic::canFire)))
     {
         if(isFacingLeft)
         {
@@ -78,6 +78,9 @@ void PhysicSystem::update(sf::Time dt)
             int bullet = mGameWorld->createEntity(Systems::BULLET, "Entities/bulletR.txt");
             mBodies[bullet]->SetTransform(b2Vec2(mPlayerBody->GetPosition().x + 0.4, mPlayerBody->GetPosition().y), mBodies[bullet]->GetAngle());
         }
+
+        logics->setLogic(Logic::canFire, false);
+        mGameWorld->timerOn(mContext.playerWeaponID);
     }
 
     float32 timeStep = 1.0f / 60.0f;

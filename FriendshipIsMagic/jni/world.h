@@ -23,11 +23,14 @@ class World
 
         void destroyEntity(int entity);
         void sigDestroyEntity(int entity);
+        void sigTimerCall(int entity);
+        void timerOn(int entity);
 
         Systems::Mask getMask(int entity);
 
     private:
 
+        State::Context mContext;
         std::vector<Systems::Mask> mMasks;
         std::vector<System*> mSystems;
 

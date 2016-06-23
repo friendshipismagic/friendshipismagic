@@ -4,7 +4,7 @@
 #include "inputsystem.h"
 
 
-enum Logic { moveRight, moveLeft, isJumping, fireOn, isFacingRight, isFacingLeft };
+enum Logic { moveRight, moveLeft, isJumping, fireOn, isFacingRight, isFacingLeft, canFire };
 
 class LogicSystem: public System
 {
@@ -14,6 +14,8 @@ class LogicSystem: public System
          void update(sf::Time dt);
 
          bool getLogic(Logic l);
+         void insertLogic(Logic l, bool);
+         void setLogic(Logic l, bool);
 
      private:
 

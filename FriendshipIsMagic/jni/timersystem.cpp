@@ -17,16 +17,17 @@ void TimerSystem::update(sf::Time dt)
 
         if (mCurrentTimers[timer.first].asSeconds() > mTimes[timer.first].asSeconds())
         {
-            mTimersToDestroy.push_back(timer.first);
+            mTimersToCall.push_back(timer.first);
         }
     }
 
-    for (int j : mTimersToDestroy)
+    for (int j : mTimersToCall)
     {
-        mGameWorld->sigDestroyEntity(j);
+        mGameWorld->sigTimerCall(j);
+        mCurrentTimers.erase(j);
     }
 
-    mTimersToDestroy.clear();
+    mTimersToCall.clear();
 }
 
 void TimerSystem::insertTimer(int entity, float time)
@@ -40,4 +41,9 @@ void TimerSystem::deleteTimer(int entity)
 {
     mTimes.erase(entity);
     mCurrentTimers.erase(entity);
+}
+
+void TimerSystem::timerOn(int entity)
+{
+    mCurrentTimers.insert(std::make_pair(entity, sf::Time::Zero));
 }

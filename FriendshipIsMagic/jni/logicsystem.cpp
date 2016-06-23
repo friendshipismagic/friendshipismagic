@@ -11,6 +11,7 @@ LogicSystem::LogicSystem(World* world, State::Context context, InputSystem* inpu
     mLogics.insert(std::make_pair(Logic::isJumping, false));
     mLogics.insert(std::make_pair(Logic::isFacingLeft, false));
     mLogics.insert(std::make_pair(Logic::isFacingRight, false));
+    mLogics.insert(std::make_pair(Logic::canFire, false));
 }
 
 void LogicSystem::update(sf::Time dt)
@@ -38,4 +39,9 @@ bool LogicSystem::getLogic(Logic l)
     auto b = mLogics.find(l);
     assert(b != mLogics.end());
     return b->second;
+}
+
+void LogicSystem::setLogic(Logic l, bool b)
+{
+    mLogics[l] = b;
 }

@@ -30,12 +30,14 @@ class State
                 textures = &textu;
                 fonts = &fon;
                 playerID = 0;
+                playerWeaponID = 1;
             }
 
             sf::RenderWindow* window;
             TextureHolder* textures;
             FontHolder* fonts;
             int playerID;
+            int playerWeaponID;
         };
 
     public:

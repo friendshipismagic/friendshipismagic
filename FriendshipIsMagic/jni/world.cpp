@@ -3,7 +3,8 @@
 #include <string.h>
 
 World::World(State::Context context)
-: mSystems()
+: mContext(context)
+, mSystems()
 {
     inputs = new InputSystem(this, context);
     mSystems.push_back(inputs);
@@ -24,6 +25,7 @@ World::World(State::Context context)
     graphics->setPositionProvider(physics->getPositionProvider());
 
     context.playerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
+    context.playerID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt");
     createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt");
     createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt");
     createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt");
@@ -81,7 +83,6 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
     {
         Json::Value body = components["body"];
 
-
         b2Body* newBody = physics->createBody(entity,
                                               body["x"].asFloat(),
                                               body["y"].asFloat(),
@@ -117,6 +118,8 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
         Json::Value sprite = components["sprite"];
         graphics->insertSprite(entity, sprite["texture"].asString(), sprite["rotation"].asFloat(), sprite["width"].asFloat(), sprite["height"].asFloat());
     }
+    if (mask == Systems::Mask::WEAPON)
+        mContext.playerWeaponID = entity;
 
     return entity;
 }
@@ -156,4 +159,21 @@ Systems::Mask World::getMask(int entity)
 void World::sigDestroyEntity(int entity)
 {
     mEntitiesToDestroy.push_back(entity);
+}
+
+void World::sigTimerCall(int entity)
+{
+    Systems::Mask mask = mMasks[entity];
+
+    if(mask == Systems::Mask::BULLET)
+        mEntitiesToDestroy.push_back(entity);
+    else if(mask == Systems::Mask::WEAPON)
+    {
+        logics->setLogic(Logic::canFire, true);
+    }
+}
+
+void World::timerOn(int entity)
+{
+    timers->timerOn(entity);
 }

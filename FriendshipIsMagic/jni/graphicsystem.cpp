@@ -46,6 +46,7 @@ void GraphicSystem::insertSprite(int entity, std::string id, float rotation, flo
     sprite.setOrigin(width/2, height/2);
     sprite.setRotation(rotation);
     sprite.setScale(w/width, h/height);
+    sprite.setPosition(-1000,-1000); // the first position needs to be invisible
 
     mSprites.insert(std::make_pair(entity, sprite));
 }

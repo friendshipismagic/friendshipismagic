@@ -12,7 +12,8 @@ namespace Systems
         BODY = 1 << 1,
         SPRITE = 1 << 2,
         SENSOR = 1 << 3,
-        TIMER = 1 << 4
+        TIMER = 1 << 4,
+        DAMAGE = 1 << 5
     };
 
     enum Mask
@@ -22,7 +23,8 @@ namespace Systems
         GRAPHIC = POSITION | SPRITE,
         BULLET = BODY | SPRITE | TIMER,
         PLAYER = SENSOR | BODY | SPRITE,
-        BLOC = BODY | SPRITE
+        BLOC = BODY | SPRITE,
+        WEAPON = SPRITE | DAMAGE | TIMER
     };
 };
 
