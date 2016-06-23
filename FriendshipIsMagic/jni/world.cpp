@@ -8,7 +8,10 @@ World::World(State::Context context)
     inputs = new InputSystem(this, context);
     mSystems.push_back(inputs);
 
-    physics =  new PhysicSystem(this, context, inputs);
+    logics = new LogicSystem(this, context, inputs);
+    mSystems.push_back(logics);
+
+    physics =  new PhysicSystem(this, context, logics);
     mSystems.push_back(physics);
 
     graphics = new GraphicSystem(this, context, physics);
@@ -16,6 +19,7 @@ World::World(State::Context context)
 
     timers = new TimerSystem(this, context);
     mSystems.push_back(timers);
+
 
     graphics->setPositionProvider(physics->getPositionProvider());
 

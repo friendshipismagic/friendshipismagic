@@ -4,9 +4,9 @@
 #include "world.h"
 #include "collisionsystem.h"
 
-PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* inputs)
+PhysicSystem::PhysicSystem(World* world, State::Context context, LogicSystem* logics)
 : System(world, context)
-, inputs(inputs)
+, logics(logics)
 , mWorld(b2Vec2{0.f,10.f})
 , scale(100)
 , errorPos(sf::Vector2f({-1, -1}))
@@ -18,15 +18,20 @@ PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* in
 
     std::function<const sf::Vector2f&(unsigned int index)> posFunction = [this](unsigned int index) { return getPosition(index);};
     mPositionProvider = new PositionProvider(&posFunction);
+
+    mJumpTimer = sf::Time::Zero;
+    isFacingLeft = false;
+    isFacingRight = true;
 }
 
 void PhysicSystem::update(sf::Time dt)
 {
     b2Body* mPlayerBody = mBodies[mContext.playerID];
-    bool mRight = inputs->getInputState(Input::right);
-    bool mLeft = inputs->getInputState(Input::left);
-    bool mJump = inputs->getInputState(Input::jump);
-    bool mFire = inputs->getInputState(Input::fire);
+    bool mRight = logics->getLogic(Logic::moveRight);
+    bool mLeft = logics->getLogic(Logic::moveLeft);
+    bool mJump = logics->getLogic(Logic::isJumping);
+    bool mFire = logics->getLogic(Logic::fireOn);
+    mJumpTimer += dt;
 
     if (mRight)
     {
@@ -34,6 +39,9 @@ void PhysicSystem::update(sf::Time dt)
         b2Vec2 vel(mPlayerBody->GetLinearVelocity());
         vel.x = 2.5f;
         mPlayerBody->SetLinearVelocity(vel);
+
+        isFacingRight = true;
+        isFacingLeft = false;
     }
     if (mLeft)
     {
@@ -41,22 +49,35 @@ void PhysicSystem::update(sf::Time dt)
         b2Vec2 vel(mPlayerBody->GetLinearVelocity());
         vel.x = -2.5f;
         mPlayerBody->SetLinearVelocity(vel);
+
+        isFacingLeft = true;
+        isFacingRight = false;
     }
     if ((!mLeft && !mRight) || (mLeft && mRight))
     {
         b2Vec2 vel(mPlayerBody->GetLinearVelocity());
         vel.x = 0.;
         mPlayerBody->SetLinearVelocity(vel);
+
     }
-    if (mJump && (collisionListener->getNumFootContacts() >= 1))
+    if (mJump && (collisionListener->getNumFootContacts() >= 1) && mJumpTimer.asSeconds() > 1)
     {
         mPlayerBody->SetAwake(true);
-        mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()), mPlayerBody->GetWorldCenter(), true );
+        mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()*6), mPlayerBody->GetWorldCenter(), true );
+        mJumpTimer = sf::Time::Zero;
     }
     if (mFire)
     {
-        int bullet = mGameWorld->createEntity(Systems::BULLET, "Entities/bullet.txt");
-        mBodies[bullet]->SetTransform(b2Vec2(mPlayerBody->GetPosition().x + 0.4, mPlayerBody->GetPosition().y), mBodies[bullet]->GetAngle());
+        if(isFacingLeft)
+        {
+            int bullet = mGameWorld->createEntity(Systems::BULLET, "Entities/bulletL.txt");
+            mBodies[bullet]->SetTransform(b2Vec2(mPlayerBody->GetPosition().x - 0.4, mPlayerBody->GetPosition().y), mBodies[bullet]->GetAngle());
+        }
+        else
+        {
+            int bullet = mGameWorld->createEntity(Systems::BULLET, "Entities/bulletR.txt");
+            mBodies[bullet]->SetTransform(b2Vec2(mPlayerBody->GetPosition().x + 0.4, mPlayerBody->GetPosition().y), mBodies[bullet]->GetAngle());
+        }
     }
 
     float32 timeStep = 1.0f / 60.0f;
@@ -117,7 +138,7 @@ b2Body* PhysicSystem::createBody(int entity, float x, float y, float width, floa
 void PhysicSystem::addSensor(int entity, int sensorID)
 {
     b2PolygonShape mBox;
-    mBox.SetAsBox(0.06, 0.2, b2Vec2(0,0.3), 0);
+    mBox.SetAsBox(0.06, 0.1, b2Vec2(0,0.3445), 0);
 
 	b2FixtureDef mFixtureDef;
 	mFixtureDef.shape = &mBox;

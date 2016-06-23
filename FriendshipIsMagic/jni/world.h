@@ -7,6 +7,7 @@
 #include "graphicsystem.h"
 #include "inputsystem.h"
 #include "timersystem.h"
+#include "logicsystem.h"
 #include <Box2D/Box2D.h>
 
 class World
@@ -35,5 +36,6 @@ class World
         TimerSystem* timers;
         PhysicSystem* physics;
         InputSystem* inputs;
+        LogicSystem* logics;
 
 };

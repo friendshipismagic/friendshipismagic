@@ -4,8 +4,6 @@
 #include "state.h"
 #include "systemprovider.h"
 
-class World;
-
 enum Input { right, left, jump, fire };
 
 class InputSystem: public System
