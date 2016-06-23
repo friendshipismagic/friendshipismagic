@@ -21,9 +21,9 @@ public:
 	enum Action {left, right, up, down, still};
 	AiInterface();
 	virtual ~AiInterface();
-	pair<int,int> setPath(Monster& monster, PlayerAndStuff& playerstuff, Matrix& g);
+	void setPath(Monster& monster, PlayerAndStuff& playerstuff, Matrix& g);
 	MonsterController* monsterController;
-	Action giveOrder(Monster& monster);
+	Action giveOrder(Monster& monster, PlayerAndStuff& playerstuff, Matrix& g);
 };
 
 #endif /* JNI_AI_AI_AIINTERFACE_H_ */

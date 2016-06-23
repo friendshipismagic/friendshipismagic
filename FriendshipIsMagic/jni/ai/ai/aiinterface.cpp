@@ -24,7 +24,7 @@ AiInterface::~AiInterface() {
 	delete(monsterController);
 }
 
-pair<int,int> AiInterface::setPath(Monster& monster, PlayerAndStuff& playerstuff, Matrix& g){
+void AiInterface::setPath(Monster& monster, PlayerAndStuff& playerstuff, Matrix& g){
 	float posX = playerstuff.player->getPos().x;
 	float posY = playerstuff.player->getPos().y;
 	int iX = int(posX + 0.5);
@@ -37,15 +37,13 @@ pair<int,int> AiInterface::setPath(Monster& monster, PlayerAndStuff& playerstuff
 	Dijkstra dijkstra;
 	auto& previous = dijkstra.dijkstra(g, v);
 	monsterController->storePath(monster, previous);
-
+	monsterController->currentPosition = {iX,iY};
 	VertexInterface* next = previous.getValue(vertex);
-	// [Cible] --> [cible -1] --> [cible ...] --> nullptr
-
-	return {next->getX(),next->getY()};
+	monsterController->nextPosition = {next->getX(),next->getY()};
 }
 
-AiInterface::Action AiInterface::giveOrder(Monster& monster){
+AiInterface::Action AiInterface::giveOrder(Monster& monster, PlayerAndStuff& playerstuff, Matrix& g){
 	//for all types of monster
-
-	return Action::still;
+	 AiInterface::setPath(monster, playerstuff, g);
+	 return monsterController->translateOrder();
 }
