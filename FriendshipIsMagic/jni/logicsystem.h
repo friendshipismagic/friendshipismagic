@@ -7,7 +7,7 @@
 
 enum Logic { 	moveRight, 		moveLeft, 	isJumping, 		fireOn, 	isFacingRight, 		isFacingLeft, 	canFire,
 				coMoveRight, 	coMoveLeft,	coIsJumping,	coFireOn,	coIsFacingRight,	coIsFacingLeft,	coCanFire,
-				 changeDirection};
+				changeDirection};
 
 class LogicSystem: public System
 {
