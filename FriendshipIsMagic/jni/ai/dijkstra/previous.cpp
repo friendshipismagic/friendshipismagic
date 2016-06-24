@@ -32,10 +32,10 @@ void Previous::setValue(VertexInterface* vertex, VertexInterface* value){
 
 VertexInterface* Previous::getValue(VertexInterface* vertex){
 	//returns the value for a vertex or null if this value has not been set
-	std::cout << "get" << std::endl;
 	auto x = previous.find(vertex);
-	assert (x != previous.end());
-	return x->second;
+	if (x != previous.end())
+	    return x->second;
+    return nullptr;
 }
 
 vector<VertexInterface*> Previous::getShortestPathTo(VertexInterface* vertex, VertexInterface* r){

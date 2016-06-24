@@ -8,6 +8,8 @@
 #ifndef DIJKSTRA_DIJKSTRA_H_
 #define DIJKSTRA_DIJKSTRA_H_
 
+#include <memory>
+
 class ASetInterface;
 class GraphInterface;
 class PiInterface;
@@ -18,8 +20,10 @@ class Dijkstra {
 public:
 	Dijkstra();
 	virtual ~Dijkstra();
-	static PreviousInterface& dijkstra(GraphInterface& g, VertexInterface& r);
-	static PreviousInterface& dijkstra(GraphInterface& g,VertexInterface& r, ASetInterface& a, PiInterface& pi, PreviousInterface& previous);
+	static std::unique_ptr<PreviousInterface> dijkstra(GraphInterface& g, VertexInterface& r);
+
+private:
+	static std::unique_ptr<PreviousInterface>& dijkstra(GraphInterface& g,VertexInterface& r, ASetInterface& a, PiInterface& pi, std::unique_ptr<PreviousInterface>& previous);
 
 };
 

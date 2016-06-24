@@ -31,16 +31,16 @@ Dijkstra::~Dijkstra() {
 }
 
 
-PreviousInterface& Dijkstra::dijkstra(GraphInterface& g, VertexInterface& r){
+std::unique_ptr<PreviousInterface> Dijkstra::dijkstra(GraphInterface& g, VertexInterface& r){
 	ASet aSet;
 	Pi pi;
-	Previous previous;
+    std::unique_ptr<PreviousInterface> previous(new Previous());
 
-	return dijkstra(g,r,aSet,pi,previous);
+	return std::move(dijkstra(g,r,aSet,pi,previous));
 }
 
 
-PreviousInterface& Dijkstra::dijkstra(GraphInterface& g,VertexInterface& r, ASetInterface& a, PiInterface& pi, PreviousInterface& previous){
+std::unique_ptr<PreviousInterface>& Dijkstra::dijkstra(GraphInterface& g,VertexInterface& r, ASetInterface& a, PiInterface& pi, std::unique_ptr<PreviousInterface>& previous){
 
 	a.add(&r);
 	VertexInterface* pivot = &r;
@@ -71,7 +71,7 @@ PreviousInterface& Dijkstra::dijkstra(GraphInterface& g,VertexInterface& r, ASet
 				if(pi.getValue(pivot) + g.getWeight(&r,pivot) < pi.getValue(v))
 				{
 					pi.setValue(v, pi.getValue(pivot) + g.getWeight(&r,pivot));
-					previous.setValue(v,pivot);
+					previous->setValue(v,pivot);
 				}
 			}
 		}

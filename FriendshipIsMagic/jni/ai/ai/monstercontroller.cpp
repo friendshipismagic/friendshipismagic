@@ -6,7 +6,7 @@
  */
 
 #include "monstercontroller.h"
-#include "AiInterface.h"
+#include "aiinterface.h"
 #include "monster.h"
 #include "../dijkstra/previous.h"
 #include "../dijkstrainterface/previousinterface.h"
@@ -25,8 +25,21 @@ MonsterController::~MonsterController() {
 	// TODO Auto-generated destructor stub
 }
 
-void MonsterController::storePath(int mobID, PreviousInterface& previous){
-	monsterPath = make_pair(&previous, mobID);
+void MonsterController::setTarget(VertexInterface* target) {
+    mTarget = target;
+}
+
+
+void MonsterController::storePath(PreviousInterface& previous){
+    mPath.clear();
+    
+    auto next = previous.getValue(mTarget);
+
+    while(next != nullptr) {
+        mPath.push_back({next->getX(), next->getY()});
+        next = previous.getValue(next);
+    }
+
 }
 
 void MonsterController::setCurrentAndNext(pair<int,int> current, pair<int,int> next){

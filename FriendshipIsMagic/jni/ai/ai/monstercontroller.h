@@ -18,18 +18,23 @@ class Monster;
 class PreviousInterface;
 class Previous;
 class AiInterface;
+class VertexInterface;
 
 
 class MonsterController {
 public:
-	pair<int,int> currentPosition;
-	pair<int,int> nextPosition;
-	pair<PreviousInterface*,int> monsterPath;
 	MonsterController();
 	virtual ~MonsterController();
-	void storePath(int mobID, PreviousInterface& previous);
+    void setTarget(VertexInterface* target);
+	void storePath(PreviousInterface& previous);
 	AiInterface::Action translateOrder();
 	void setCurrentAndNext(pair<int,int> current, pair<int,int> next);
+
+private:
+	pair<int,int> currentPosition;
+	pair<int,int> nextPosition;
+    VertexInterface* mTarget = nullptr;
+    std::vector<std::pair<int,int>> mPath;
 
 };
 
