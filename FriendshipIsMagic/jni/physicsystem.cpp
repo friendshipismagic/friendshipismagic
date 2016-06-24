@@ -154,9 +154,12 @@ void PhysicSystem::addSensor(int entity, int sensorID)
 
 void PhysicSystem::deleteBody(int entity)
 {
-    b2Body* body = mBodies[entity];
-    mWorld.DestroyBody(body);
-    mBodies.erase(entity);
+    if (mBodies.find(entity) != mBodies.end())
+    {
+        b2Body* body = mBodies[entity];
+        mWorld.DestroyBody(body);
+        mBodies.erase(entity);
+    }
 }
 
 

@@ -46,10 +46,13 @@ class World
         void insertDependency(int entityFather, int entitySon);
         void deleteDependency(int entityFather, int entitySon);
 
+        void createPlayer();
+        void createCoPlayer();
+
     private:
 
         State::Context mContext;
-        std::vector<Systems::Mask> mMasks;
+        std::map<int, Systems::Mask> mMasks;
         std::vector<System*> mSystems;
         std::map<int, std::set<int> > mDependencies;
 
