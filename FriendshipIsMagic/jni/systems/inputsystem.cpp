@@ -25,13 +25,13 @@ void InputSystem::handleEvent(const sf::Event& event)
         case sf::Event::KeyReleased:
             handlePlayerInput(event.key.code, false);
             break;
-        /*case sf::Event::TouchBegan:
+        case sf::Event::TouchBegan:
             mTouchTime[event.touch.finger] = sf::Clock();
-            mTouchPos[event.touch.finger] = mContext.window->mapPixelToCoords({event.touch.x, event.touch.y});
+            mTouchPos[event.touch.finger] = {event.touch.x, event.touch.y};
             break;
         case sf::Event::TouchEnded:
             mInputs[mTouchInputs[event.touch.finger]] = false;
-            break;*/
+            break;
         default:
             break;
     }
@@ -60,6 +60,31 @@ void InputSystem::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 void InputSystem::update(sf::Time dt)
 {
 
+    for(int i=0; i<3; ++i) {
+        if (!sf::Touch::isDown(i)) continue;
+        auto touchPos = sf::Touch::getPosition(i, *mContext.window);
+        if (touchPos.x < wsize.x/2) {
+            mInputs[Input::fire] = true;
+            mTouchInputs[i] = Input::fire;
+        } else {
+            mInputs[Input::fire] = false;
+            //mTouchInputs[i] = Input::idle;
+        }
+    
+        if (touchPos.x > wsize.x/2) {
+            if (touchPos.x < mTouchPos[i].x) {
+                mInputs[Input::left] = true;
+                mInputs[Input::right] = false;
+                mTouchInputs[i] = Input::left;
+            }
+            else {
+                mInputs[Input::left] = false;
+                mInputs[Input::right] = true;
+                mTouchInputs[i] = Input::right;
+            }
+            
+        }
+    }
 }
 
 bool InputSystem::getInputState(Input input)
