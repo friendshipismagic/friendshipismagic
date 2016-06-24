@@ -63,7 +63,9 @@ LOCAL_SRC_FILES := main.cpp \
 	jsoncpp.cpp\
 	inputsystem.cpp \
 	timersystem.cpp \
-	collisionsystem.cpp 
+	collisionsystem.cpp \
+	filestream.cpp \
+	android/filestreamimpl.cpp
 
 
 LOCAL_C_INCLUDES := . \
