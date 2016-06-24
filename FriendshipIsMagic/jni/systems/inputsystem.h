@@ -22,7 +22,7 @@ class InputSystem: public System
     private:
 
         std::vector<sf::Clock> mTouchTime;
-        std::vector<sf::Vector2f> mTouchPos;
+        std::vector<sf::Vector2i> mTouchPos;
         std::vector<Input> mTouchInputs;
         std::map<Input, bool> mInputs;
 };
