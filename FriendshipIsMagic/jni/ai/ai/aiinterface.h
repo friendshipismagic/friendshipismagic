@@ -14,6 +14,7 @@ class Matrix;
 class MonsterController;
 
 #include <vector>
+#include <memory>
 using namespace std;
 
 class AiInterface {
@@ -22,8 +23,10 @@ public:
 	AiInterface();
 	virtual ~AiInterface();
 	void setPath(int mobID, float playerX, float playerY, Matrix& g);
-	MonsterController* monsterController;
 	Action giveOrder(int mobID,float playerX, float playerY, Matrix& g);
+
+private:
+    std::unique_ptr<MonsterController> mMonsterController;
 };
 
 #endif /* JNI_AI_AI_AIINTERFACE_H_ */

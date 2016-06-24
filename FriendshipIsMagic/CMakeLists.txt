@@ -66,10 +66,12 @@ PROJECT(FriendshipIsMagic)
 include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake)
 
 
-FILE(GLOB SOURCES jni/*/*.cpp )
-FILE(GLOB ANDROID_SRC jni/android/*.cpp)
+FILE(GLOB_RECURSE SOURCES "jni/*.cpp")
+FILE(GLOB ANDROID_SRC "jni/android/*.cpp")
+FILE(GLOB VANILLA_SRC "jni/vanilla/*.cpp")
 
 LIST(REMOVE_ITEM SOURCES ${ANDROID_SRC})
+#LIST(APPEND SOURCES ${VANILLA_SRC})
 
 
 

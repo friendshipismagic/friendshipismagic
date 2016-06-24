@@ -17,12 +17,12 @@
 #include "monstercontroller.h"
 #include <iostream>
 
-AiInterface::AiInterface() {
-	monsterController = new MonsterController();
+AiInterface::AiInterface():
+mMonsterController(new MonsterController()) 
+{
 }
 
 AiInterface::~AiInterface() {
-	delete(monsterController);
 }
 
 void AiInterface::setPath(int mobID, float playerX, float playerY, Matrix& g){
@@ -34,16 +34,19 @@ void AiInterface::setPath(int mobID, float playerX, float playerY, Matrix& g){
 	VertexInterface& v = *vertex;
 
 	Dijkstra dijkstra;
-	auto& previous = dijkstra.dijkstra(g, v);
-	monsterController->storePath(mobID, previous);
-	monsterController->currentPosition = {iX,iY};
+	auto previous = dijkstra.dijkstra(g, v);
+	VertexInterface* next = previous->getValue(&v);
+    mMonsterController->setTarget(vertex);
+	//mMonsterController->nextPosition = {next->getX(),next->getY()};
+
+	mMonsterController->storePath(*previous);
+	//mMonsterController->currentPosition = {iX,iY};
 	//std::cout << previous.getSize() << std::endl;
-	VertexInterface* next = previous.getValue(&v);
-	monsterController->nextPosition = {next->getX(),next->getY()};
+
 }
 
 AiInterface::Action AiInterface::giveOrder(int mobID, float playerX, float playerY, Matrix& g){
 	//for all types of monster
 	 AiInterface::setPath(mobID, playerX, playerY, g);
-	 return monsterController->translateOrder();
+	 return mMonsterController->translateOrder();
 }

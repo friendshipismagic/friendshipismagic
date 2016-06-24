@@ -64,7 +64,8 @@ void PhysicSystem::update(sf::Time dt)
     }
 
     AiInterface::Action action = mAI->getAction();
-    b2Body* mobody = mBodies[1];
+
+    b2Body* mobody = mBodies[mGameWorld->getCoPlayerID()];
 
     if (action == AiInterface::Action::left)
     {
