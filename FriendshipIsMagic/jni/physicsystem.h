@@ -7,6 +7,7 @@
 #include "systemprovider.h"
 #include "collisionsystem.h"
 #include "logicsystem.h"
+#include "entity.h"
 
 class World;
 
@@ -16,18 +17,18 @@ class PhysicSystem: public System
 
         PhysicSystem(World* world, State::Context context, LogicSystem* logics);
         virtual void update(sf::Time dt);
-        const sf::Vector2f& getPosition(unsigned int index);
+        const sf::Vector2f& getPosition(Entity entity);
         PositionProvider* getPositionProvider() { return mPositionProvider; };
 
-        void insertPosition(int entity, b2Vec2 pos);
-        void insertBody(int entity, b2Body* body);
+        void insertPosition(Entity entity, b2Vec2 pos);
+        void insertBody(Entity entity, b2Body* body);
 
-        b2Body* createBody(int entity, float x, float y, float width, float height, float rotation, bool isDynamic);
+        b2Body* createBody(Entity entity, float x, float y, float width, float height, float rotation, bool isDynamic);
 
-        void addSensor(int entity, int sensorID);
+        void addSensor(Entity entity, Entity sensorID);
 
-        void deleteBody(int entity);
-        void deletePosition(int entity);
+        void deleteBody(Entity entity);
+        void deletePosition(Entity entity);
 
         int getScale() { return mScale; };
 
@@ -41,11 +42,11 @@ class PhysicSystem: public System
         const sf::Vector2f errorPos;
 
         //Position component
-        std::map<int, sf::Vector2f> mPositions;
+        std::map<Entity, sf::Vector2f> mPositions;
         PositionProvider* mPositionProvider;
 
         //Body component
-        std::map<int, b2Body*> mBodies;
+        std::map<Entity, b2Body*> mBodies;
 
         sf::Time mJumpTimer;
         bool isFacingRight;

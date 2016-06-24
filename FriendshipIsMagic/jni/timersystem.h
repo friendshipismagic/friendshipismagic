@@ -3,6 +3,7 @@
 #include "system.h"
 #include "state.h"
 #include "systemprovider.h"
+#include "entity.h"
 
 class World;
 
@@ -13,14 +14,14 @@ class TimerSystem: public System
         TimerSystem(World* world, State::Context context);
         void update(sf::Time dt);
 
-        void insertTimer(int entity, float time);
-        void deleteTimer(int entity);
-        void timerOn(int entity);
+        void insertTimer(Entity entity, float time);
+        void deleteTimer(Entity entity);
+        void timerOn(Entity entity);
 
     private:
 
-        std::map<int, sf::Time> mTimes;
-        std::map<int, sf::Time> mCurrentTimers;
-        std::vector<int> mTimersToCall;
+        std::map<Entity, sf::Time> mTimes;
+        std::map<Entity, sf::Time> mCurrentTimers;
+        std::vector<Entity> mTimersToCall;
 
 };

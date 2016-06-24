@@ -16,8 +16,8 @@ void CollisionSystem::update(sf::Time dt)
 
 void CollisionSystem::BeginContact(b2Contact* contact)
 {
-    int entityA = ((int) (contact->GetFixtureA()->GetUserData()));
-    int entityB = ((int) (contact->GetFixtureB()->GetUserData()));
+    Entity entityA = ((Entity) (contact->GetFixtureA()->GetUserData()));
+    Entity entityB = ((Entity) (contact->GetFixtureB()->GetUserData()));
     Systems::Mask maskA = mGameWorld->getMask(entityA);
     Systems::Mask maskB = mGameWorld->getMask(entityB);
 
@@ -48,8 +48,8 @@ void CollisionSystem::BeginContact(b2Contact* contact)
 
 void CollisionSystem::EndContact(b2Contact* contact)
 {
-    int entityA = ((int) (contact->GetFixtureA()->GetUserData()));
-    int entityB = ((int) (contact->GetFixtureB()->GetUserData()));
+    Entity entityA = ((Entity) (contact->GetFixtureA()->GetUserData()));
+    Entity entityB = ((Entity) (contact->GetFixtureB()->GetUserData()));
 
     //check if fixture A was the foot sensor
     if ( entityA  == mGameWorld->getPlayerSensorID() )

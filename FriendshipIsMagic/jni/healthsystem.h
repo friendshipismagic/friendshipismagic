@@ -2,6 +2,7 @@
 #include "system.h"
 #include "state.h"
 #include "graphicsystem.h"
+#include "entity.h"
 
 class HealthSystem: public System
 {
@@ -10,18 +11,18 @@ class HealthSystem: public System
         HealthSystem(World* world, State::Context context, GraphicSystem* graphics);
         void update(sf::Time dt);
 
-        int getCurrentHealth(int entity);
-        void insertHealth(int entity, int health);
-        void deleteHealth(int entity);
-        void insertHealthBar(int entityOwner, int entityHealthBar);
+        int getCurrentHealth(Entity entity);
+        void insertHealth(Entity entity, int health);
+        void deleteHealth(Entity entity);
+        void insertHealthBar(Entity entityOwner, Entity entityHealthBar);
 
-        void addToHealth(int entity, int amount);
+        void addToHealth(Entity entity, int amount);
 
     private:
 
-        std::map<int, int> mCurrentHealth;
-        std::map<int, int> mMaxHealth;
-        std::map<int, int> mHealthBarCorrelation;
+        std::map<Entity, int> mCurrentHealth;
+        std::map<Entity, int> mMaxHealth;
+        std::map<Entity, int> mHealthBarCorrelation;
         GraphicSystem* graphics;
 
 };

@@ -12,13 +12,13 @@ void WeaponSystem::update(sf::Time dt)
 
 }
 
-std::string WeaponSystem::getWeaponType(int entity)
+std::string WeaponSystem::getWeaponType(Entity entity)
 {
     assert(mWeaponTypes.find(entity) != mWeaponTypes.end());
     return mWeaponTypes[entity];
 }
 
-void WeaponSystem::insertWeaponType(int entity, std::string weaponType)
+void WeaponSystem::insertWeaponType(Entity entity, std::string weaponType)
 {
     if (mWeaponTypes.find(entity) == mWeaponTypes.end())
         mWeaponTypes.insert(std::make_pair(entity, weaponType));
@@ -26,19 +26,19 @@ void WeaponSystem::insertWeaponType(int entity, std::string weaponType)
         mWeaponTypes[entity] = weaponType;
 }
 
-void WeaponSystem::deleteWeaponType(int entity)
+void WeaponSystem::deleteWeaponType(Entity entity)
 {
     if (mWeaponTypes.find(entity) != mWeaponTypes.end())
         mWeaponTypes.erase(entity);
 }
 
-int WeaponSystem::getDamage(int entity)
+int WeaponSystem::getDamage(Entity entity)
 {
     assert(mDamages.find(entity) != mDamages.end());
     return mDamages[entity];
 }
 
-void WeaponSystem::insertDamage(int entity, int damage)
+void WeaponSystem::insertDamage(Entity entity, int damage)
 {
     if (mDamages.find(entity) == mDamages.end())
         mDamages.insert(std::make_pair(entity, damage));
@@ -46,7 +46,7 @@ void WeaponSystem::insertDamage(int entity, int damage)
         mDamages[entity] = damage;
 }
 
-void WeaponSystem::deleteDamage(int entity)
+void WeaponSystem::deleteDamage(Entity entity)
 {
     if(mDamages.find(entity) != mDamages.end())
         mDamages.erase(entity);

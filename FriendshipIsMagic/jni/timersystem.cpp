@@ -21,7 +21,7 @@ void TimerSystem::update(sf::Time dt)
         }
     }
 
-    for (int j : mTimersToCall)
+    for (Entity j : mTimersToCall)
     {
         mGameWorld->sigTimerCall(j);
         mCurrentTimers.erase(j);
@@ -30,7 +30,7 @@ void TimerSystem::update(sf::Time dt)
     mTimersToCall.clear();
 }
 
-void TimerSystem::insertTimer(int entity, float time)
+void TimerSystem::insertTimer(Entity entity, float time)
 {
     sf::Time t = sf::seconds(time);
 
@@ -45,7 +45,7 @@ void TimerSystem::insertTimer(int entity, float time)
         mCurrentTimers[entity] = sf::Time::Zero;
 }
 
-void TimerSystem::deleteTimer(int entity)
+void TimerSystem::deleteTimer(Entity entity)
 {
     if (mTimes.find(entity) != mTimes.end())
         mTimes.erase(entity);
@@ -53,7 +53,7 @@ void TimerSystem::deleteTimer(int entity)
         mCurrentTimers.erase(entity);
 }
 
-void TimerSystem::timerOn(int entity)
+void TimerSystem::timerOn(Entity entity)
 {
     if(mCurrentTimers.find(entity) == mCurrentTimers.end())
         mCurrentTimers.insert(std::make_pair(entity, sf::Time::Zero));

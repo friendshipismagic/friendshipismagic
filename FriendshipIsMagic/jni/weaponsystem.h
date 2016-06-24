@@ -1,6 +1,7 @@
 #pragma once
 #include "system.h"
 #include "state.h"
+#include "entity.h"
 
 namespace Weapon
 {
@@ -14,17 +15,17 @@ class WeaponSystem: public System
         WeaponSystem(World* world, State::Context context);
         void update(sf::Time dt);
 
-        std::string getWeaponType(int entity);
-        void insertWeaponType(int entity, std::string weaponType);
-        void deleteWeaponType(int entity);
+        std::string getWeaponType(Entity entity);
+        void insertWeaponType(Entity entity, std::string weaponType);
+        void deleteWeaponType(Entity entity);
 
-        int getDamage(int entity);
-        void insertDamage(int entity, int damage);
-        void deleteDamage(int entity);
+        int getDamage(Entity entity);
+        void insertDamage(Entity entity, int damage);
+        void deleteDamage(Entity entity);
 
     private:
 
-        std::map<int, std::string> mWeaponTypes;
-        std::map<int, int> mDamages;
+        std::map<Entity, std::string> mWeaponTypes;
+        std::map<Entity, int> mDamages;
 
 };

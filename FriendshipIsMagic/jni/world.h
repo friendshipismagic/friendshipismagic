@@ -12,6 +12,7 @@
 #include "healthsystem.h"
 #include <Box2D/Box2D.h>
 #include <set>
+#include "entity.h"
 
 class World
 {
@@ -22,43 +23,43 @@ class World
         void draw();
         void handleEvent(const sf::Event& event);
 
-        int createEntity(Systems::Mask mask, std::string fileName, float x, float y);
+        Entity createEntity(Systems::Mask mask, std::string fileName, float x, float y);
 
-        void destroyEntity(int entity);
-        void sigDestroyEntity(int entity);
-        void sigTimerCall(int entity);
-        void sigCollisionWeaponItem(int entityPlayer, int entityItem);
-        void sigCollisionBullet(int entityBullet, int entityVictim);
-        void timerOn(int entity);
+        void destroyEntity(Entity entity);
+        void sigDestroyEntity(Entity entity);
+        void sigTimerCall(Entity entity);
+        void sigCollisionWeaponItem(Entity entityPlayer, Entity entityItem);
+        void sigCollisionBullet(Entity entityBullet, Entity entityVictim);
+        void timerOn(Entity entity);
 
-        Systems::Mask getMask(int entity);
+        Systems::Mask getMask(Entity entity);
 
-        int getPlayerID() { return mPlayerID; };
-        int getPlayerWeaponID() { return mPlayerWeaponID; };
-        void setPlayerWeaponID(int entity) { mPlayerWeaponID = entity; };
-        int getPlayerSensorID() { return sensorOne; };
+        Entity getPlayerID() { return mPlayerID; };
+        Entity getPlayerWeaponID() { return mPlayerWeaponID; };
+        void setPlayerWeaponID(Entity entity) { mPlayerWeaponID = entity; };
+        Entity getPlayerSensorID() { return sensorOne; };
 
-        int getCoPlayerID() { return mCoPlayerID; };
-        int getCoPlayerWeaponID() { return mCoPlayerWeaponID; };
-        void setCoPlayerWeaponID(int entity) { mCoPlayerWeaponID = entity; };
-        int getCoPlayerSensorID() { return sensorTwo; };
+        Entity getCoPlayerID() { return mCoPlayerID; };
+        Entity getCoPlayerWeaponID() { return mCoPlayerWeaponID; };
+        void setCoPlayerWeaponID(Entity entity) { mCoPlayerWeaponID = entity; };
+        Entity getCoPlayerSensorID() { return sensorTwo; };
 
-        void insertDependency(int entityFather, int entitySon);
-        void deleteDependency(int entityFather, int entitySon);
+        void insertDependency(Entity entityFather, Entity entitySon);
+        void deleteDependency(Entity entityFather, Entity entitySon);
 
         void createPlayer();
         void createCoPlayer();
 
-        void insertMask(int entity, Systems::Mask mask);
+        void insertMask(Entity entity, Systems::Mask mask);
 
     private:
 
         State::Context mContext;
-        std::map<int, Systems::Mask> mMasks;
+        std::map<Entity, Systems::Mask> mMasks;
         std::vector<System*> mSystems;
-        std::map<int, std::set<int> > mDependencies;
+        std::map<Entity, std::set<Entity> > mDependencies;
 
-        std::vector<int> mEntitiesToDestroy;
+        std::vector<Entity> mEntitiesToDestroy;
         GraphicSystem* graphics;
         TimerSystem* timers;
         PhysicSystem* physics;
@@ -67,11 +68,11 @@ class World
         WeaponSystem* weapons;
         HealthSystem* health;
 
-        int mPlayerID = 0;
-        int mPlayerWeaponID = 1;
-        int sensorOne = 0;
+        Entity mPlayerID = 0;
+        Entity mPlayerWeaponID = 1;
+        Entity sensorOne = 0;
 
-        int mCoPlayerID = 2;
-        int mCoPlayerWeaponID = 3;
-        int sensorTwo = 0;
+        Entity mCoPlayerID = 2;
+        Entity mCoPlayerWeaponID = 3;
+        Entity sensorTwo = 0;
 };

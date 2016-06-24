@@ -4,6 +4,7 @@
 #include "state.h"
 #include "systemprovider.h"
 #include "physicsystem.h"
+#include "entity.h"
 
 class GraphicSystem : public System
 {
@@ -15,11 +16,11 @@ class GraphicSystem : public System
         void draw();
         void setPositionProvider(PositionProvider* pos);
 
-        void insertSprite(int entity, std::string id, float rotation, float w, float h);
-        void deleteSprite(int entity);
+        void insertSprite(Entity entity, std::string id, float rotation, float w, float h);
+        void deleteSprite(Entity entity);
 
-        void attachSprite(int entityFather, int entitySon);
-        void setSize(int entity, float w , float h);
+        void attachSprite(Entity entityFather, Entity entitySon);
+        void setSize(Entity entity, float w , float h);
 
     private:
 
@@ -27,9 +28,9 @@ class GraphicSystem : public System
         sf::Sprite* background;
 
         //Sprite component
-        std::map<int, sf::Sprite> mSprites;
+        std::map<Entity, sf::Sprite> mSprites;
 
-        std::map<int, int> mDependencies;
+        std::map<Entity, Entity> mDependencies;
 
         PositionProvider* mPositionProvider;
         PhysicSystem* mPhysics;

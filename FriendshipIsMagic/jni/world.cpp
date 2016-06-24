@@ -51,7 +51,7 @@ void World::update(sf::Time dt)
         (*itr)->update(dt);
     }
 
-    for(int entity : mEntitiesToDestroy)
+    for(Entity entity : mEntitiesToDestroy)
     {
         destroyEntity(entity);
     }
@@ -64,9 +64,9 @@ void World::draw()
     graphics->draw();
 }
 
-int World::createEntity(Systems::Mask mask, std::string fileName, float x, float y)
+Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, float y)
 {
-    int entity = mMasks.size(); //This id is not own by anyone, so we can provide it for the new Entity
+    Entity entity = mMasks.size(); //This id is not own by anyone, so we can provide it for the new Entity
     for(auto m: mMasks)
     {
         if (m.second == Systems::Mask::NONE) //We seek for an empty entity
@@ -153,7 +153,7 @@ int World::createEntity(Systems::Mask mask, std::string fileName, float x, float
         int life = components["health"].asInt();
         health->insertHealth(entity, life);
 
-        int healthBarID = createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt", 0, -0.5);
+        Entity healthBarID = createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt", 0, -0.5);
         graphics->attachSprite(entity, healthBarID);
         health->insertHealthBar(entity, healthBarID);
 
@@ -164,7 +164,7 @@ int World::createEntity(Systems::Mask mask, std::string fileName, float x, float
 }
 
 
-void World::destroyEntity(int entity)
+void World::destroyEntity(Entity entity)
 {
     std::cout << "destruction " << entity << std::endl;
     Systems::Mask mask = mMasks[entity];
@@ -201,17 +201,17 @@ void World::destroyEntity(int entity)
     mMasks[entity] = Systems::Mask::NONE;
 }
 
-Systems::Mask World::getMask(int entity)
+Systems::Mask World::getMask(Entity entity)
 {
     return mMasks[entity];
 }
 
-void World::sigDestroyEntity(int entity)
+void World::sigDestroyEntity(Entity entity)
 {
     mEntitiesToDestroy.push_back(entity);
     if (mDependencies.find(entity) != mDependencies.end())
     {
-        for (int entitySon : mDependencies[entity])
+        for (Entity entitySon : mDependencies[entity])
         {
             sigDestroyEntity(entitySon);
         }
@@ -222,7 +222,7 @@ void World::sigDestroyEntity(int entity)
         createCoPlayer();
 }
 
-void World::sigTimerCall(int entity)
+void World::sigTimerCall(Entity entity)
 {
     Systems::Mask mask = mMasks[entity];
 
@@ -238,7 +238,7 @@ void World::sigTimerCall(int entity)
     }
 }
 
-void World::sigCollisionWeaponItem(int entityPlayer, int entityItem)
+void World::sigCollisionWeaponItem(Entity entityPlayer, Entity entityItem)
 {
     mEntitiesToDestroy.push_back(entityItem);
     mEntitiesToDestroy.push_back(mPlayerWeaponID);
@@ -247,7 +247,7 @@ void World::sigCollisionWeaponItem(int entityPlayer, int entityItem)
     insertDependency(mPlayerID,mPlayerWeaponID);
 }
 
-void World::sigCollisionBullet(int entityBullet, int entityVictim)
+void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
 {
     mEntitiesToDestroy.push_back(entityBullet);
     if ((mMasks[entityVictim] & Systems::Component::HEALTH) == Systems::Component::HEALTH)
@@ -257,23 +257,23 @@ void World::sigCollisionBullet(int entityBullet, int entityVictim)
     }
 }
 
-void World::timerOn(int entity)
+void World::timerOn(Entity entity)
 {
     timers->timerOn(entity);
 }
 
-void World::insertDependency(int entityFather, int entitySon)
+void World::insertDependency(Entity entityFather, Entity entitySon)
 {
     if (mDependencies.find(entityFather) == mDependencies.end())
     {
-        std::set<int> sons;
+        std::set<Entity> sons;
         sons.insert(entitySon);
         mDependencies.insert(std::make_pair(entityFather, sons));
     }
     mDependencies[entityFather].insert(entitySon);
 }
 
-void World::deleteDependency(int entityFather, int entitySon)
+void World::deleteDependency(Entity entityFather, Entity entitySon)
 {
     mDependencies[entityFather].erase(entitySon);
 }
@@ -296,7 +296,7 @@ void World::createCoPlayer()
     sensorTwo = mCoPlayerID + 1;
 }
 
-void World::insertMask(int entity, Systems::Mask mask)
+void World::insertMask(Entity entity, Systems::Mask mask)
 {
     if (mMasks.find(entity) != mMasks.end())
         mMasks[entity] = mask;

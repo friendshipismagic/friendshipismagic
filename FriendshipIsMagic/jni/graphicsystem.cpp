@@ -38,7 +38,7 @@ void GraphicSystem::draw()
     }
 }
 
-void GraphicSystem::attachSprite(int entityFather, int entitySon)
+void GraphicSystem::attachSprite(Entity entityFather, Entity entitySon)
 {
     mDependencies.insert(std::make_pair(entitySon, entityFather));
 }
@@ -48,7 +48,7 @@ void GraphicSystem::setPositionProvider(PositionProvider* pos)
     mPositionProvider = pos;
 }
 
-void GraphicSystem::insertSprite(int entity, std::string id, float rotation, float w, float h)
+void GraphicSystem::insertSprite(Entity entity, std::string id, float rotation, float w, float h)
 {
     sf::Texture* t = mContext.textures->get(id);
     sf::Sprite sprite;
@@ -66,7 +66,7 @@ void GraphicSystem::insertSprite(int entity, std::string id, float rotation, flo
         mSprites[entity] = sprite;
 }
 
-void GraphicSystem::deleteSprite(int entity)
+void GraphicSystem::deleteSprite(Entity entity)
 {
     if (mSprites.find(entity) != mSprites.end())
         mSprites.erase(entity);
@@ -74,7 +74,7 @@ void GraphicSystem::deleteSprite(int entity)
         mDependencies.erase(entity);
 }
 
-void GraphicSystem::setSize(int entity, float w, float h)
+void GraphicSystem::setSize(Entity entity, float w, float h)
 {
     sf::Sprite sprite = mSprites[entity];
     float width = sprite.getTextureRect().width;

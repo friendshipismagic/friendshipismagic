@@ -22,13 +22,13 @@ void HealthSystem::update(sf::Time dt)
     }
 }
 
-int HealthSystem::getCurrentHealth(int entity)
+int HealthSystem::getCurrentHealth(Entity entity)
 {
     assert(mCurrentHealth.find(entity) == mCurrentHealth.end());
     return mCurrentHealth[entity];
 }
 
-void HealthSystem::insertHealth(int entity, int health)
+void HealthSystem::insertHealth(Entity entity, int health)
 {
     if (mMaxHealth.find(entity) == mMaxHealth.end())
         mMaxHealth.insert(std::make_pair(entity, health));
@@ -41,7 +41,7 @@ void HealthSystem::insertHealth(int entity, int health)
         mCurrentHealth[entity] = health;
 }
 
-void HealthSystem::deleteHealth(int entity)
+void HealthSystem::deleteHealth(Entity entity)
 {
     if (mMaxHealth.find(entity) != mMaxHealth.end())
         mMaxHealth.erase(entity);
@@ -53,7 +53,7 @@ void HealthSystem::deleteHealth(int entity)
         mHealthBarCorrelation.erase(entity);
 }
 
-void HealthSystem::addToHealth(int entity, int amount)
+void HealthSystem::addToHealth(Entity entity, int amount)
 {
     mCurrentHealth[entity] += amount;
     int maxHealth = mMaxHealth[entity];
@@ -61,7 +61,7 @@ void HealthSystem::addToHealth(int entity, int amount)
         mCurrentHealth[entity] = maxHealth;
 }
 
-void HealthSystem::insertHealthBar(int entityOwner, int entityHealthBar)
+void HealthSystem::insertHealthBar(Entity entityOwner, Entity entityHealthBar)
 {
     if (mHealthBarCorrelation.find(entityOwner) == mHealthBarCorrelation.end())
         mHealthBarCorrelation.insert(std::make_pair(entityOwner, entityHealthBar));
