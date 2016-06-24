@@ -20,6 +20,7 @@ State* StateStack::createState(States::ID stateID)
 void StateStack::registerState(States::ID stateID, State* state)
 {
     mFactories[stateID] = state;
+    state->init();
 }
 
 void StateStack::handleEvent(const sf::Event& event)

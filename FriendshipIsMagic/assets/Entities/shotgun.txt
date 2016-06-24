@@ -1,0 +1,9 @@
+{
+"components":
+{
+"sprite":{"texture":"WaterGun", "width":20, "height":16, "rotation":0},
+"timer":{"time":2},
+"weaponType":"shotgun",
+"damage":-150
+}
+}

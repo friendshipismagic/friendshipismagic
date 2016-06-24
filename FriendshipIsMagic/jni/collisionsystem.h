@@ -17,8 +17,10 @@ class CollisionSystem: public System, public b2ContactListener
 
         void setNumFootContacts(int n);
         int getNumFootContacts();
+        int getCoNumFootContacts();
 
     private:
 
         int mNumFootContacts;
+        int mCoNumFootContacts;
 };

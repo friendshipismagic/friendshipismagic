@@ -6,9 +6,15 @@
 	{"name":"Background","filename":"Graphics/background.png"},
 	{"name":"Floor2","filename":"Graphics/floor2.png"},
 	{"name":"Floor","filename":"Graphics/floor.png"},
-	{"name":"Bullet","filename":"Graphics/bullet.png"},
+	{"name":"BulletL","filename":"Graphics/bulletl.png"},
+	{"name":"BulletR","filename":"Graphics/bulletr.png"},
 	{"name":"icons/settings","filename":"Graphics/settings_icon.png"},
 	{"name":"menu/main/background","filename":"Graphics/test fond title.png"},
-	{"name":"menu/settings/background","filename":"Graphics/settings-background.jpg"}
+	{"name":"menu/settings/background","filename":"Graphics/settings-background.jpg"},
+	{"name":"LifeBar","filename":"Graphics/life_bar.png"},
+	{"name":"WaterGun","filename":"Graphics/water_gun.png"},
+	{"name":"Player","filename":"Graphics/player.png"},
+	{"name":"RedBlock","filename":"Graphics/redblock.png"},
+	{"name":"BlueBlock","filename":"Graphics/blueblock.png"}
 ]
 }

@@ -2,6 +2,6 @@
 "components":
 {
 "sprite":{"texture":"Floor2", "width":2000, "height":100, "rotation":0},
-"body":{"isBullet":false, "width":10, "height":0.5, "rotation":0, "isDynamic":false, "x":3 , "y":6.5 ,"vx":0, "vy":0, "gravityScale":0}
+"body":{"isBullet":false, "width":10, "height":0.5, "rotation":0, "isDynamic":false, "isSensor":false,"vx":0, "vy":0, "gravityScale":0}
 }
 }

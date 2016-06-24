@@ -1,0 +1,10 @@
+{
+"components":
+{
+"sprite":{"texture":"Skull", "width":30, "height":30, "rotation":0},
+"body":{"isBullet":false, "width":0.15, "height":0.15, "rotation":0, "isDynamic":false, "isSensor":false ,"vx":0, "vy":0, "gravityScale":0},
+"timer":{"time":30},
+"weaponType":"raygun",
+"type":"weapon"
+}
+}

@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <memory>
 #include "json.h"
 #include <iostream>
@@ -9,6 +10,12 @@
 #include <math.h>
 #include "json.h"
 #include <assert.h>
+
+#ifdef ANDROID_BUILD
+    #include <SFML/System/NativeActivity.hpp>
+    #include <android/native_activity.h>
+    #include <android/asset_manager.h>
+#endif
 
 template <typename Resource>
 class ResourceHolder
@@ -27,20 +34,35 @@ class ResourceHolder
 template<typename Resource>
 void ResourceHolder<Resource>::loadFromFile(std::string fileName)
 {
-    std::ifstream file(fileName.c_str());
-    if (!file)
-    {
-        std::cerr << "Error: can't open file " << fileName << std::endl;
-        return;
-    }
-
     Json::Value root;
     Json::Reader reader;
-    if( !reader.parse(file, root, false) )
-    {
-        std::cout << "Error while reading" + fileName + "file:\n" << reader.getFormattedErrorMessages();
-        return;
-    }
+
+    #ifdef ANDROID_BUILD
+        auto file = AAssetManager_open(sf::getNativeActivity()->assetManager, fileName.c_str(), AASSET_MODE_UNKNOWN);
+        std::size_t size = AAsset_getLength(file);
+        char buffer[size];
+        AAsset_read(file,buffer,size);
+        AAsset_close(file);
+
+        if (!reader.parse(buffer, root, false))
+        {
+            throw std::runtime_error("Error while reading" + fileName + "file:\n" + reader.getFormattedErrorMessages());
+
+        }
+
+    #else
+        std::ifstream file(fileName.c_str());
+        if (!file)
+        {
+            throw std::runtime_error("ResourceHolder - can't open configuration file " + fileName);
+        }
+
+        if( !reader.parse(file, root, false) )
+        {
+            std::cout << "Error while reading" + fileName + "file:\n" << reader.getFormattedErrorMessages();
+            return;
+        }
+    #endif
 
     Json::Value resources = root["resources"];
 
@@ -60,7 +82,8 @@ template<typename Resource>
 Resource* ResourceHolder<Resource>::get(std::string id)
 {
     auto found = mResourceMap.find(id);
-    assert(found != mResourceMap.end());
+    if (found == mResourceMap.end())
+        throw std::runtime_error("ResourceHolder::get - Failed to get " + id);
     return found->second;
 }
 
@@ -76,3 +99,4 @@ void ResourceHolder<Resource>::load(std::string id, std::string filename)
 
 using TextureHolder = ResourceHolder<sf::Texture>;
 using FontHolder = ResourceHolder<sf::Font>;
+using SoundBufferHolder = ResourceHolder<sf::SoundBuffer>;

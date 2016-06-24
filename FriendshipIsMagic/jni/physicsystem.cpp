@@ -4,12 +4,12 @@
 #include "world.h"
 #include "collisionsystem.h"
 
-PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* inputs)
+PhysicSystem::PhysicSystem(World* world, State::Context context, LogicSystem* logics)
 : System(world, context)
-, inputs(inputs)
+, logics(logics)
 , mWorld(b2Vec2{0.f,10.f})
-, scale(100)
-, errorPos(sf::Vector2f({-1, -1}))
+, mScale(100)
+, errorPos(sf::Vector2f({-1000, -1000}))
 , mPositions()
 , mBodies()
 {
@@ -18,15 +18,18 @@ PhysicSystem::PhysicSystem(World* world, State::Context context, InputSystem* in
 
     std::function<const sf::Vector2f&(unsigned int index)> posFunction = [this](unsigned int index) { return getPosition(index);};
     mPositionProvider = new PositionProvider(&posFunction);
+
+    mJumpTimer = sf::Time::Zero;
 }
 
 void PhysicSystem::update(sf::Time dt)
 {
-    b2Body* mPlayerBody = mBodies[mContext.playerID];
-    bool mRight = inputs->getInputState(Input::right);
-    bool mLeft = inputs->getInputState(Input::left);
-    bool mJump = inputs->getInputState(Input::jump);
-    bool mFire = inputs->getInputState(Input::fire);
+    b2Body* mPlayerBody = mBodies[mGameWorld->getPlayerID()];
+    bool mRight = logics->getLogic(Logic::moveRight);
+    bool mLeft = logics->getLogic(Logic::moveLeft);
+    bool mJump = logics->getLogic(Logic::isJumping);
+
+    mJumpTimer += dt;
 
     if (mRight)
     {
@@ -48,15 +51,11 @@ void PhysicSystem::update(sf::Time dt)
         vel.x = 0.;
         mPlayerBody->SetLinearVelocity(vel);
     }
-    if (mJump && (collisionListener->getNumFootContacts() >= 1))
+    if (mJump && (collisionListener->getNumFootContacts() >= 1) && mJumpTimer.asSeconds() > 0.5)
     {
         mPlayerBody->SetAwake(true);
-        mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()), mPlayerBody->GetWorldCenter(), true );
-    }
-    if (mFire)
-    {
-        int bullet = mGameWorld->createEntity(Systems::BULLET, "Entities/bullet.txt");
-        mBodies[bullet]->SetTransform(b2Vec2(mPlayerBody->GetPosition().x + 0.4, mPlayerBody->GetPosition().y), mBodies[bullet]->GetAngle());
+        mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()*6), mPlayerBody->GetWorldCenter(), true );
+        mJumpTimer = sf::Time::Zero;
     }
 
     float32 timeStep = 1.0f / 60.0f;
@@ -67,29 +66,35 @@ void PhysicSystem::update(sf::Time dt)
     for(auto body: mBodies)
     {
         b2Vec2 pos = body.second->GetPosition();
-        mPositions[body.first] = sf::Vector2f({pos.x*scale, pos.y*scale});
+        mPositions[body.first] = sf::Vector2f({pos.x*mScale, pos.y*mScale});
     }
 }
 
-const sf::Vector2f& PhysicSystem::getPosition(unsigned int index)
+const sf::Vector2f& PhysicSystem::getPosition(Entity entity)
 {
-    if (index < mPositions.size())
-        return mPositions[index];
+    if (mPositions.find(entity) != mPositions.end())
+        return mPositions[entity];
 
     return errorPos;
 }
 
-void PhysicSystem::insertBody(int entity, b2Body* body)
+void PhysicSystem::insertBody(Entity entity, b2Body* body)
 {
-    mBodies.insert(std::make_pair(entity, body));
+    if(mBodies.find(entity) == mBodies.end())
+        mBodies.insert(std::make_pair(entity, body));
+    else
+        mBodies[entity] = body;
 }
 
-void PhysicSystem::insertPosition(int entity, b2Vec2 pos)
+void PhysicSystem::insertPosition(Entity entity, b2Vec2 pos)
 {
-    mPositions.insert(std::make_pair(entity, sf::Vector2f({pos.x, pos.y})));
+    if(mPositions.find(entity) == mPositions.end())
+        mPositions.insert(std::make_pair(entity, sf::Vector2f({pos.x, pos.y})));
+    else
+        mPositions[entity] = sf::Vector2f({pos.x, pos.y});
 }
 
-b2Body* PhysicSystem::createBody(int entity, float x, float y, float width, float height, float rotation, bool isDynamic)
+b2Body* PhysicSystem::createBody(Entity entity, float x, float y, float width, float height, float rotation, bool isDynamic, bool isSensor)
 {
     b2BodyDef mBodyDef;
 	mBodyDef.position.Set(x, y);
@@ -105,6 +110,7 @@ b2Body* PhysicSystem::createBody(int entity, float x, float y, float width, floa
 	mFixtureDef.density = 0.0f;
 	mFixtureDef.friction = 0.f;
 	mFixtureDef.restitution = 0.f;
+    mFixtureDef.isSensor = isSensor;
 
 	b2Body* mBody = mWorld.CreateBody(&mBodyDef);
 
@@ -114,10 +120,10 @@ b2Body* PhysicSystem::createBody(int entity, float x, float y, float width, floa
     return mBody;
 }
 
-void PhysicSystem::addSensor(int entity, int sensorID)
+void PhysicSystem::addSensor(Entity entity, Entity owner, float x, float y, float w, float h)
 {
     b2PolygonShape mBox;
-    mBox.SetAsBox(0.06, 0.2, b2Vec2(0,0.3), 0);
+    mBox.SetAsBox(w, h, b2Vec2(x,y), 0);
 
 	b2FixtureDef mFixtureDef;
 	mFixtureDef.shape = &mBox;
@@ -126,19 +132,42 @@ void PhysicSystem::addSensor(int entity, int sensorID)
 	mFixtureDef.restitution = 0.f;
     mFixtureDef.isSensor = true;
 
-    b2Fixture* footSensorFixture = mBodies[entity]->CreateFixture(&mFixtureDef);
-    footSensorFixture->SetUserData( (void*)sensorID );
+    b2Fixture* footSensorFixture = mBodies[owner]->CreateFixture(&mFixtureDef);
+    footSensorFixture->SetUserData( (void*)(entity));
 }
 
-void PhysicSystem::deleteBody(int entity)
+void PhysicSystem::deleteBody(Entity entity)
 {
-    b2Body* body = mBodies[entity];
-    mWorld.DestroyBody(body);
-    mBodies.erase(entity);
+    if (mBodies.find(entity) != mBodies.end())
+    {
+        b2Body* body = mBodies[entity];
+        mWorld.DestroyBody(body);
+        mBodies.erase(entity);
+    }
 }
 
 
-void PhysicSystem::deletePosition(int entity)
+void PhysicSystem::deletePosition(Entity entity)
 {
-    mPositions.erase(entity);
+    if(mPositions.find(entity) != mPositions.end())
+        mPositions.erase(entity);
+}
+
+void PhysicSystem::mirror(Entity entity)
+{
+    if(mPositions.find(entity) != mPositions.end())
+    {
+        sf::Vector2f pos = mPositions[entity];
+        mPositions[entity] = sf::Vector2f({-pos.x, pos.y});
+    }
+}
+
+void PhysicSystem::mirrorVelocity(Entity entity)
+{
+    if(mBodies.find(entity) != mBodies.end())
+    {
+        b2Body* body = mBodies[entity];
+        b2Vec2 vel = body->GetLinearVelocity();
+        body->SetLinearVelocity(b2Vec2({-vel.x, vel.y}));
+    }
 }

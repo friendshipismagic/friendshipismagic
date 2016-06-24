@@ -1,0 +1,10 @@
+{
+"resources":
+[
+	{"name":"gun","filename":"Sounds/gun.wav"},
+	{"name":"uzi","filename":"Sounds/uzi.wav"},
+	{"name":"raygun","filename":"Sounds/raygun.wav"},
+	{"name":"shotgun","filename":"Sounds/shotgun.wav"},
+	{"name":"Hit","filename":"Sounds/hit.wav"}
+]
+}

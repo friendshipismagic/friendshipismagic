@@ -1,7 +1,7 @@
 {
 "components":
 {
-"sprite":{"texture":"Floor", "width":100, "height":100, "rotation":0},
-"body":{"isBullet":false, "width":0.5, "height":0.5, "rotation":0, "isDynamic":false, "x":6 , "y":5.2 ,"vx":0, "vy":0, "gravityScale":0}
+"sprite":{"texture":"RedBlock", "width":100, "height":100, "rotation":0},
+"body":{"isBullet":false, "width":0.5, "height":0.5, "rotation":0, "isDynamic":false, "isSensor":false ,"vx":0, "vy":0, "gravityScale":0}
 }
 }

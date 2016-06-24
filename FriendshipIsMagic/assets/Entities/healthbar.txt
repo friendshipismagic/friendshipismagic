@@ -1,0 +1,7 @@
+{
+"components":
+{
+"sprite":{"texture":"LifeBar", "width":50, "height":10, "rotation":0},
+"padding": {"x":0, "y":-0.5}
+}
+}

@@ -17,27 +17,46 @@ void TimerSystem::update(sf::Time dt)
 
         if (mCurrentTimers[timer.first].asSeconds() > mTimes[timer.first].asSeconds())
         {
-            mTimersToDestroy.push_back(timer.first);
+            mTimersToCall.push_back(timer.first);
         }
     }
 
-    for (int j : mTimersToDestroy)
+    for (Entity j : mTimersToCall)
     {
-        mGameWorld->sigDestroyEntity(j);
+        mGameWorld->sigTimerCall(j);
+        mCurrentTimers.erase(j);
     }
 
-    mTimersToDestroy.clear();
+    mTimersToCall.clear();
 }
 
-void TimerSystem::insertTimer(int entity, float time)
+void TimerSystem::insertTimer(Entity entity, float time)
 {
     sf::Time t = sf::seconds(time);
-    mTimes.insert(std::make_pair(entity, t));
-    mCurrentTimers.insert(std::make_pair(entity, sf::Time::Zero));
+
+    if (mTimes.find(entity) == mTimes.end())
+        mTimes.insert(std::make_pair(entity, t));
+    else
+        mTimes[entity] = t;
+
+    if(mCurrentTimers.find(entity) == mCurrentTimers.end())
+        mCurrentTimers.insert(std::make_pair(entity, sf::Time::Zero));
+    else
+        mCurrentTimers[entity] = sf::Time::Zero;
 }
 
-void TimerSystem::deleteTimer(int entity)
+void TimerSystem::deleteTimer(Entity entity)
 {
-    mTimes.erase(entity);
-    mCurrentTimers.erase(entity);
+    if (mTimes.find(entity) != mTimes.end())
+        mTimes.erase(entity);
+    if(mCurrentTimers.find(entity) != mCurrentTimers.end())
+        mCurrentTimers.erase(entity);
+}
+
+void TimerSystem::timerOn(Entity entity)
+{
+    if(mCurrentTimers.find(entity) == mCurrentTimers.end())
+        mCurrentTimers.insert(std::make_pair(entity, sf::Time::Zero));
+    else
+        mCurrentTimers[entity] = sf::Time::Zero;
 }
