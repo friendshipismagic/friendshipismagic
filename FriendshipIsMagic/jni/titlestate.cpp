@@ -50,9 +50,7 @@ bool TitleState::handleEvent(const sf::Event& event)
 
         case sf::Event::Resized:
             {
-                sf::View view;
-                view.setSize(event.size.width, event.size.height); // TODO portable
-                //updateRatio();
+                updateRatio();
             } break;
 
         default:
