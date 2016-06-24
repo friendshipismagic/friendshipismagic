@@ -7,7 +7,11 @@
 #include "graphicsystem.h"
 #include "inputsystem.h"
 #include "timersystem.h"
+#include "logicsystem.h"
+#include "weaponsystem.h"
+#include "healthsystem.h"
 #include <Box2D/Box2D.h>
+#include <set>
 
 class World
 {
@@ -18,22 +22,54 @@ class World
         void draw();
         void handleEvent(const sf::Event& event);
 
-        int createEntity(Systems::Mask mask, std::string fileName);
+        int createEntity(Systems::Mask mask, std::string fileName, float x, float y);
 
         void destroyEntity(int entity);
         void sigDestroyEntity(int entity);
+        void sigTimerCall(int entity);
+        void sigCollisionWeaponItem(int entityPlayer, int entityItem);
+        void sigCollisionBullet(int entityBullet, int entityVictim);
+        void timerOn(int entity);
 
         Systems::Mask getMask(int entity);
 
+        int getPlayerID() { return mPlayerID; };
+        int getPlayerWeaponID() { return mPlayerWeaponID; };
+        void setPlayerWeaponID(int entity) { mPlayerWeaponID = entity; };
+        int getPlayerSensorID() { return sensorOne; };
+
+        int getCoPlayerID() { return mCoPlayerID; };
+        int getCoPlayerWeaponID() { return mCoPlayerWeaponID; };
+        void setCoPlayerWeaponID(int entity) { mCoPlayerWeaponID = entity; };
+        int getCoPlayerSensorID() { return sensorTwo; };
+
+        void insertDependency(int entityFather, int entitySon);
+        void deleteDependency(int entityFather, int entitySon);
+
+        void createPlayer();
+        void createCoPlayer();
+
     private:
 
-        std::vector<Systems::Mask> mMasks;
+        State::Context mContext;
+        std::map<int, Systems::Mask> mMasks;
         std::vector<System*> mSystems;
+        std::map<int, std::set<int> > mDependencies;
 
         std::vector<int> mEntitiesToDestroy;
         GraphicSystem* graphics;
         TimerSystem* timers;
         PhysicSystem* physics;
         InputSystem* inputs;
+        LogicSystem* logics;
+        WeaponSystem* weapons;
+        HealthSystem* health;
 
+        int mPlayerID = 0;
+        int mPlayerWeaponID = 1;
+        int sensorOne = 0;
+
+        int mCoPlayerID = 2;
+        int mCoPlayerWeaponID = 3;
+        int sensorTwo = 0;
 };

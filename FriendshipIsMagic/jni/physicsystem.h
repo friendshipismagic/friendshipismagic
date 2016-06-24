@@ -6,7 +6,7 @@
 #include "player.h"
 #include "systemprovider.h"
 #include "collisionsystem.h"
-#include "inputsystem.h"
+#include "logicsystem.h"
 
 class World;
 
@@ -14,7 +14,7 @@ class PhysicSystem: public System
 {
     public:
 
-        PhysicSystem(World* world, State::Context context, InputSystem* inputs);
+        PhysicSystem(World* world, State::Context context, LogicSystem* logics);
         virtual void update(sf::Time dt);
         const sf::Vector2f& getPosition(unsigned int index);
         PositionProvider* getPositionProvider() { return mPositionProvider; };
@@ -29,11 +29,13 @@ class PhysicSystem: public System
         void deleteBody(int entity);
         void deletePosition(int entity);
 
+        int getScale() { return mScale; };
+
     private:
 
-        InputSystem* inputs;
+        LogicSystem* logics;
         b2World mWorld;
-        int scale;
+        int mScale;
 
         CollisionSystem* collisionListener;
         const sf::Vector2f errorPos;
@@ -44,4 +46,8 @@ class PhysicSystem: public System
 
         //Body component
         std::map<int, b2Body*> mBodies;
+
+        sf::Time mJumpTimer;
+        bool isFacingRight;
+        bool isFacingLeft;
 };

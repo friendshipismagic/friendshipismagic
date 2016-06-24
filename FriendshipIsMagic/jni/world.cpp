@@ -4,12 +4,16 @@
 #include "filestream.hpp"
 
 World::World(State::Context context)
-: mSystems()
+: mContext(context)
+, mSystems()
 {
     inputs = new InputSystem(this, context);
     mSystems.push_back(inputs);
 
-    physics =  new PhysicSystem(this, context, inputs);
+    logics = new LogicSystem(this, context, inputs);
+    mSystems.push_back(logics);
+
+    physics =  new PhysicSystem(this, context, logics);
     mSystems.push_back(physics);
 
     graphics = new GraphicSystem(this, context, physics);
@@ -18,12 +22,21 @@ World::World(State::Context context)
     timers = new TimerSystem(this, context);
     mSystems.push_back(timers);
 
+    weapons = new WeaponSystem(this, context);
+    mSystems.push_back(weapons);
+
+    health = new HealthSystem(this, context, graphics);
+    mSystems.push_back(health);
+
     graphics->setPositionProvider(physics->getPositionProvider());
 
-    context.playerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
-    createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt");
-    createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt");
-    createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt");
+    createPlayer();
+    createCoPlayer();
+
+    createEntity(Systems::Mask::WEAPONITEM, "Entities/uziitem.txt", 6, 4);
+    createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt", 3, 6.5);
+    createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 3, 5.2);
+    createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.2);
 }
 
 void World::handleEvent(const sf::Event& event)
@@ -51,10 +64,20 @@ void World::draw()
     graphics->draw();
 }
 
-int World::createEntity(Systems::Mask mask, std::string fileName)
+int World::createEntity(Systems::Mask mask, std::string fileName, float x, float y)
 {
     int entity = mMasks.size(); //This id is not own by anyone, so we can provide it for the new Entity
-    mMasks.push_back(mask); //We add the entity's mask in the vector
+    /*for(auto mask : mMasks)
+    {
+        if (mask.second == Systems::Mask::NONE) //We seek for an empty entity
+        {
+            entity = mask.first;
+            break;
+        }
+    }*/
+    //std::cout << entity << std::endl;
+    mMasks.insert(std::make_pair(entity, mask)); //We add the entity's mask in the map
+    int scale = physics->getScale();
 
     //We open the JSON file
     FileStream file;
@@ -80,10 +103,9 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
     {
         Json::Value body = components["body"];
 
-
         b2Body* newBody = physics->createBody(entity,
-                                              body["x"].asFloat(),
-                                              body["y"].asFloat(),
+                                              x,
+                                              y,
                                               body["width"].asFloat(),
                                               body["height"].asFloat(),
                                               body["rotation"].asFloat(),
@@ -94,13 +116,13 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
         newBody->SetGravityScale(body["gravityScale"].asFloat());
         newBody->SetLinearVelocity(b2Vec2({body["vx"].asFloat(), body["vy"].asFloat()}));
 
-        physics->insertPosition(entity, newBody->GetPosition());
+        //physics->insertPosition(entity, newBody->GetPosition());
         physics->insertBody(entity, newBody);
     }
     if ((mask & Systems::Component::SENSOR) == Systems::Component::SENSOR)
     {
-        Json::Value sensor = components["sensor"];
-        physics->addSensor(entity, sensor["ID"].asInt());
+        physics->addSensor(entity, entity + 1);
+        mMasks.insert(std::make_pair(entity + 1, Systems::Mask::TAKEN));
     }
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
     {
@@ -109,12 +131,33 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {
-
+        physics->insertPosition(entity, b2Vec2({scale*x, scale*y}));
     }
     if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
     {
         Json::Value sprite = components["sprite"];
         graphics->insertSprite(entity, sprite["texture"].asString(), sprite["rotation"].asFloat(), sprite["width"].asFloat(), sprite["height"].asFloat());
+    }
+    if ((mask & Systems::Component::WEAPONTYPE) == Systems::Component::WEAPONTYPE)
+    {
+        std::string weaponType = components["weaponType"].asString();
+        weapons->insertWeaponType(entity, weaponType);
+    }
+    if ((mask & Systems::Component::DAMAGE) == Systems::Component::DAMAGE)
+    {
+        int damage = components["damage"].asInt();
+        weapons->insertDamage(entity, damage);
+    }
+    if ((mask & Systems::Component::HEALTH) == Systems::Component::HEALTH)
+    {
+        int life = components["health"].asInt();
+        health->insertHealth(entity, life);
+
+        int healthBarID = createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt", 0, -0.5);
+        graphics->attachSprite(entity, healthBarID);
+        health->insertHealthBar(entity, healthBarID);
+
+        insertDependency(entity, healthBarID);
     }
 
     return entity;
@@ -123,17 +166,16 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
 
 void World::destroyEntity(int entity)
 {
-    std::cout << "destruction" << std::endl;
+    std::cout << "destruction " << entity << std::endl;
     Systems::Mask mask = mMasks[entity];
 
     if ((mask & Systems::Component::BODY) == Systems::Component::BODY)
     {
-        physics->deletePosition(entity);
         physics->deleteBody(entity);
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {
-
+        physics->deletePosition(entity);
     }
     if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
     {
@@ -142,6 +184,18 @@ void World::destroyEntity(int entity)
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
     {
         timers->deleteTimer(entity);
+    }
+    if ((mask & Systems::Component::WEAPONTYPE) == Systems::Component::WEAPONTYPE)
+    {
+        weapons->deleteWeaponType(entity);
+    }
+    if ((mask & Systems::Component::DAMAGE) == Systems::Component::DAMAGE)
+    {
+        weapons->deleteDamage(entity);
+    }
+    if ((mask & Systems::Component::HEALTH) == Systems::Component::HEALTH)
+    {
+        health->deleteHealth(entity);
     }
 
     mMasks[entity] = Systems::Mask::NONE;
@@ -155,4 +209,89 @@ Systems::Mask World::getMask(int entity)
 void World::sigDestroyEntity(int entity)
 {
     mEntitiesToDestroy.push_back(entity);
+    if (mDependencies.find(entity) != mDependencies.end())
+    {
+        for (int entitySon : mDependencies[entity])
+        {
+            sigDestroyEntity(entitySon);
+        }
+    }
+    if(entity == mPlayerID)
+        createPlayer();
+     if(entity == mCoPlayerID)
+        createCoPlayer();
+}
+
+void World::sigTimerCall(int entity)
+{
+    Systems::Mask mask = mMasks[entity];
+
+    if(mask == Systems::Mask::BULLET)
+        mEntitiesToDestroy.push_back(entity);
+    else if(mask == Systems::Mask::WEAPON)
+    {
+        logics->setLogic(Logic::canFire, true);
+    }
+    else if(mask == Systems::Mask::WEAPONITEM)
+    {
+        mEntitiesToDestroy.push_back(entity);
+    }
+}
+
+void World::sigCollisionWeaponItem(int entityPlayer, int entityItem)
+{
+    mEntitiesToDestroy.push_back(entityItem);
+    mEntitiesToDestroy.push_back(mPlayerWeaponID);
+    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt", 0.1, 0);
+    graphics->attachSprite(mPlayerID, mPlayerWeaponID);
+    insertDependency(mPlayerID,mPlayerWeaponID);
+}
+
+void World::sigCollisionBullet(int entityBullet, int entityVictim)
+{
+    mEntitiesToDestroy.push_back(entityBullet);
+    if ((mMasks[entityVictim] & Systems::Component::HEALTH) == Systems::Component::HEALTH)
+    {
+        int damage = weapons->getDamage(entityBullet);
+        health->addToHealth(entityVictim, damage);
+    }
+}
+
+void World::timerOn(int entity)
+{
+    timers->timerOn(entity);
+}
+
+void World::insertDependency(int entityFather, int entitySon)
+{
+    if (mDependencies.find(entityFather) == mDependencies.end())
+    {
+        std::set<int> sons;
+        sons.insert(entitySon);
+        mDependencies.insert(std::make_pair(entityFather, sons));
+    }
+    mDependencies[entityFather].insert(entitySon);
+}
+
+void World::deleteDependency(int entityFather, int entitySon)
+{
+    mDependencies[entityFather].erase(entitySon);
+}
+
+void World::createPlayer()
+{
+    mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 1, 1);
+    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0.1, 0);
+    graphics->attachSprite(mPlayerID, mPlayerWeaponID);
+    insertDependency(mPlayerID, mPlayerWeaponID);
+    sensorOne = mPlayerID + 1;
+}
+
+void World::createCoPlayer()
+{
+    mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 5, 1);
+    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0.1, 0);
+    graphics->attachSprite(mCoPlayerID, mCoPlayerWeaponID);
+    insertDependency(mCoPlayerID, mCoPlayerWeaponID);
+    sensorTwo = mCoPlayerID + 1;
 }

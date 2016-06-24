@@ -18,6 +18,9 @@ class GraphicSystem : public System
         void insertSprite(int entity, std::string id, float rotation, float w, float h);
         void deleteSprite(int entity);
 
+        void attachSprite(int entityFather, int entitySon);
+        void setSize(int entity, float w , float h);
+
     private:
 
         sf::RenderWindow* mWindow;
@@ -25,6 +28,8 @@ class GraphicSystem : public System
 
         //Sprite component
         std::map<int, sf::Sprite> mSprites;
+
+        std::map<int, int> mDependencies;
 
         PositionProvider* mPositionProvider;
         PhysicSystem* mPhysics;

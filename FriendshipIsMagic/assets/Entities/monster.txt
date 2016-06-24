@@ -1,0 +1,7 @@
+{
+"components":
+{
+"sprite":{"texture":"Skeleton", "width":50, "height":69, "rotation":0},
+"body":{"isBullet":false, "width":0.25, "height":0.3445, "rotation":0, "isDynamic":true, "x":1 , "y":1 ,"vx":0, "vy":0, "gravityScale":1}
+}
+}

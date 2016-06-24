@@ -12,17 +12,23 @@ namespace Systems
         BODY = 1 << 1,
         SPRITE = 1 << 2,
         SENSOR = 1 << 3,
-        TIMER = 1 << 4
+        TIMER = 1 << 4,
+        DAMAGE = 1 << 5,
+        WEAPONTYPE = 1 << 6,
+        HEALTH = 1 << 7
     };
 
     enum Mask
     {
         NONE = 0,
-        PHYSIC = POSITION | BODY,
-        GRAPHIC = POSITION | SPRITE,
-        BULLET = BODY | SPRITE | TIMER,
-        PLAYER = SENSOR | BODY | SPRITE,
-        BLOC = BODY | SPRITE
+        TAKEN = -1,
+        GRAPHICELEMENT = SPRITE | POSITION,
+        BULLET = BODY | SPRITE | TIMER | DAMAGE | POSITION,
+        PLAYER = SENSOR | BODY | SPRITE | HEALTH | POSITION,
+        BLOC = BODY | SPRITE | POSITION,
+        WEAPON = SPRITE | TIMER | WEAPONTYPE | POSITION,
+        ITEM = SPRITE | TIMER | POSITION,
+        WEAPONITEM = SPRITE | BODY | TIMER | WEAPONTYPE | POSITION
     };
 };
 

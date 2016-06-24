@@ -1,4 +1,5 @@
 #include "inputsystem.h"
+#include "world.h"
 
 InputSystem::InputSystem(World* world, State::Context context)
 : System(world, context)
