@@ -57,7 +57,8 @@ class World
         State::Context mContext;
         std::map<Entity, Systems::Mask> mMasks;
         std::vector<System*> mSystems;
-        std::map<Entity, std::set<Entity> > mDependencies;
+        std::map<Entity, std::set<Entity> > mSons;
+        std::map<Entity, Entity> mFathers;
 
         std::vector<Entity> mEntitiesToDestroy;
         GraphicSystem* graphics;

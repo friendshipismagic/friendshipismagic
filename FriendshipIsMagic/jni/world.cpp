@@ -57,6 +57,11 @@ void World::update(sf::Time dt)
     }
 
     mEntitiesToDestroy.clear();
+
+    if(mMasks[mPlayerID] == Systems::Mask::NONE)
+        createPlayer();
+    if(mMasks[mCoPlayerID] == Systems::Mask::NONE)
+        createCoPlayer();
 }
 
 void World::draw()
@@ -69,7 +74,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     Entity entity = mMasks.size(); //This id is not own by anyone, so we can provide it for the new Entity
     for(auto m: mMasks)
     {
-        if (m.second == Systems::Mask::NONE) //We seek for an empty entity
+        if ((m.second == Systems::Mask::NONE) && (m.first != mPlayerID) && (m.first != mCoPlayerID)) //We seek for an empty entity
         {
             entity = m.first;
             mMasks.erase(entity);
@@ -209,17 +214,20 @@ Systems::Mask World::getMask(Entity entity)
 void World::sigDestroyEntity(Entity entity)
 {
     mEntitiesToDestroy.push_back(entity);
-    if (mDependencies.find(entity) != mDependencies.end())
+    if (mSons.find(entity) != mSons.end())
     {
-        for (Entity entitySon : mDependencies[entity])
+        for (Entity entitySon : mSons[entity])
         {
+            std::cout << entitySon << " " <<  mMasks[entitySon] << std::endl;
+            deleteDependency(entity, entitySon);
             sigDestroyEntity(entitySon);
         }
     }
-    if(entity == mPlayerID)
-        createPlayer();
-    if(entity == mCoPlayerID)
-        createCoPlayer();
+    if (mFathers.find(entity) != mFathers.end())
+    {
+        deleteDependency(mFathers[entity], entity);
+        mFathers.erase(entity);
+    }
 }
 
 void World::sigTimerCall(Entity entity)
@@ -244,7 +252,7 @@ void World::sigCollisionWeaponItem(Entity entityPlayer, Entity entityItem)
     mEntitiesToDestroy.push_back(mPlayerWeaponID);
     mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt", 0.1, 0);
     graphics->attachSprite(mPlayerID, mPlayerWeaponID);
-    insertDependency(mPlayerID,mPlayerWeaponID);
+    insertDependency(mPlayerID, mPlayerWeaponID);
 }
 
 void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
@@ -264,18 +272,32 @@ void World::timerOn(Entity entity)
 
 void World::insertDependency(Entity entityFather, Entity entitySon)
 {
-    if (mDependencies.find(entityFather) == mDependencies.end())
+    if (mSons.find(entityFather) == mSons.end())
     {
         std::set<Entity> sons;
         sons.insert(entitySon);
-        mDependencies.insert(std::make_pair(entityFather, sons));
+        mSons.insert(std::make_pair(entityFather, sons));
     }
-    mDependencies[entityFather].insert(entitySon);
+    else
+        mSons[entityFather].insert(entitySon);
+
+    if (mFathers.find(entitySon) == mFathers.end())
+    {
+        mFathers.insert(std::make_pair(entitySon, entityFather));
+    }
+    else
+        mFathers[entitySon] = entityFather;
 }
 
 void World::deleteDependency(Entity entityFather, Entity entitySon)
 {
-    mDependencies[entityFather].erase(entitySon);
+    if (mSons.find(entityFather) != mSons.end())
+        mSons[entityFather].erase(entitySon);
+
+    if (mFathers.find(entitySon) == mFathers.end())
+    {
+        mFathers.erase(entitySon);
+    }
 }
 
 void World::createPlayer()
