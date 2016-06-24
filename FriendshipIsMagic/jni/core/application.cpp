@@ -30,6 +30,10 @@ void Application::processInput()
     sf::Event event;
     while (mWindow->pollEvent(event))
     {
+        if(event.type == sf::Event::LostFocus) 
+            mPause = true;
+        else if (event.type == sf::Event::GainedFocus)
+            mPause = false;
         mStateStack.handleEvent(event);
     }
 }
@@ -41,6 +45,7 @@ void Application::update(sf::Time dt)
 
 void Application::draw()
 {
+    if (mPause) return;
     mWindow->clear();
     mStateStack.draw();
     mWindow->display();

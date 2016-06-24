@@ -3,7 +3,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := friendshipismagic
 
-LOCAL_SRC_FILES := core/main.cpp \
+LOCAL_SRC_FILES := main.cpp \
 	../deps/box2d/include/Box2D/Collision/b2BroadPhase.cpp \
 	../deps/box2d/include/Box2D/Collision/b2CollideCircle.cpp \
 	../deps/box2d/include/Box2D/Collision/b2CollideEdge.cpp \
