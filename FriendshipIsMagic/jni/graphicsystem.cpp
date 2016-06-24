@@ -67,6 +67,8 @@ void GraphicSystem::insertSprite(int entity, std::string id, float rotation, flo
 void GraphicSystem::deleteSprite(int entity)
 {
     mSprites.erase(entity);
+    if (mDependencies.find(entity) != mDependencies.end())
+        mDependencies.erase(entity);
 }
 
 void GraphicSystem::setSize(int entity, float w, float h)

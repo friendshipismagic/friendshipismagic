@@ -11,6 +11,7 @@
 #include "weaponsystem.h"
 #include "healthsystem.h"
 #include <Box2D/Box2D.h>
+#include <set>
 
 class World
 {
@@ -42,11 +43,15 @@ class World
         void setCoPlayerWeaponID(int entity) { mCoPlayerWeaponID = entity; };
         int getCoPlayerSensorID() { return sensorTwo; };
 
+        void insertDependency(int entityFather, int entitySon);
+        void deleteDependency(int entityFather, int entitySon);
+
     private:
 
         State::Context mContext;
         std::vector<Systems::Mask> mMasks;
         std::vector<System*> mSystems;
+        std::map<int, std::set<int> > mDependencies;
 
         std::vector<int> mEntitiesToDestroy;
         GraphicSystem* graphics;

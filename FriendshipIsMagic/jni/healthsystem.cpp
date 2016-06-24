@@ -37,6 +37,8 @@ void HealthSystem::deleteHealth(int entity)
 {
     mMaxHealth.erase(entity);
     mCurrentHealth.erase(entity);
+    if (mHealthBarCorrelation.find(entity) != mHealthBarCorrelation.end())
+        mHealthBarCorrelation.erase(entity);
 }
 
 void HealthSystem::addToHealth(int entity, int amount)

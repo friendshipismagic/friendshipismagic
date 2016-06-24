@@ -34,7 +34,8 @@ World::World(State::Context context)
     sensorOne = mPlayerID + 1;
 
     mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 5, 1);
-    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0, 0);
+    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 3, 0);
+    insertDependency(mCoPlayerID,mCoPlayerWeaponID);
     sensorTwo = mCoPlayerID + 1;
 
     createEntity(Systems::Mask::WEAPONITEM, "Entities/uziitem.txt", 6, 4);
@@ -149,6 +150,8 @@ int World::createEntity(Systems::Mask mask, std::string fileName, float x, float
         int healthBarID = createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt", 0, -0.5);
         graphics->attachSprite(entity, healthBarID);
         health->insertHealthBar(entity, healthBarID);
+
+        insertDependency(entity, healthBarID);
     }
 
     return entity;
@@ -200,6 +203,13 @@ Systems::Mask World::getMask(int entity)
 void World::sigDestroyEntity(int entity)
 {
     mEntitiesToDestroy.push_back(entity);
+    if (mDependencies.find(entity) != mDependencies.end())
+    {
+        for (int entitySon : mDependencies[entity])
+        {
+            sigDestroyEntity(entitySon);
+        }
+    }
 }
 
 void World::sigTimerCall(int entity)
@@ -238,4 +248,20 @@ void World::sigCollisionBullet(int entityBullet, int entityVictim)
 void World::timerOn(int entity)
 {
     timers->timerOn(entity);
+}
+
+void World::insertDependency(int entityFather, int entitySon)
+{
+    if (mDependencies.find(entityFather) == mDependencies.end())
+    {
+        std::set<int> sons;
+        sons.insert(entitySon);
+        mDependencies.insert(std::make_pair(entityFather, sons));
+    }
+    mDependencies[entityFather].insert(entitySon);
+}
+
+void World::deleteDependency(int entityFather, int entitySon)
+{
+    mDependencies[entityFather].erase(entitySon);
 }
