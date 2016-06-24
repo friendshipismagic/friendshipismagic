@@ -485,7 +485,7 @@ void World::insertMask(Entity entity, Systems::Mask mask)
         mMasks.insert(std::make_pair(entity, mask));
 }
 
-void World::insertMask(int entity, Systems::Mask mask)
+void World::insertMask(Entity entity, Systems::Mask mask)
 {
     if (mMasks.find(entity) != mMasks.end())
         mMasks[entity] = mask;
