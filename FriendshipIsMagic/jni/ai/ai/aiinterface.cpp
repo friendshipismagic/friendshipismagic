@@ -38,9 +38,7 @@ void AiInterface::setPath(int mobID, float playerX, float playerY, Matrix& g){
 	monsterController->storePath(mobID, previous);
 	monsterController->currentPosition = {iX,iY};
 	//std::cout << previous.getSize() << std::endl;
-	std::cout << "bob" << std::endl;
 	VertexInterface* next = previous.getValue(&v);
-	std::cout << "bob" << std::endl;
 	monsterController->nextPosition = {next->getX(),next->getY()};
 }
 

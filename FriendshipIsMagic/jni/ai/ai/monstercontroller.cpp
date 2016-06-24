@@ -57,4 +57,6 @@ AiInterface::Action MonsterController::translateOrder(){
 	if(deltaX == 0 && deltaY == -1){
 			return AiInterface::down;
 		}
+
+	return AiInterface::still;
 }
