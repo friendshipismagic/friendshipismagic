@@ -5,6 +5,7 @@
 #include "systemprovider.h"
 #include "physicsystem.h"
 #include "entity.h"
+#include <set>
 
 class GraphicSystem : public System
 {
@@ -19,7 +20,9 @@ class GraphicSystem : public System
         void insertSprite(Entity entity, std::string id, float rotation, float w, float h);
         void deleteSprite(Entity entity);
 
-        void attachSprite(Entity entityFather, Entity entitySon);
+        void insertDependency(Entity entityFather, Entity entitySon);
+        void deleteDependency(Entity entityFather, Entity entitySon);
+
         void setSize(Entity entity, float w , float h);
 
     private:
@@ -30,7 +33,8 @@ class GraphicSystem : public System
         //Sprite component
         std::map<Entity, sf::Sprite> mSprites;
 
-        std::map<Entity, Entity> mDependencies;
+        std::map<Entity, std::set<Entity> > mSons;
+        std::map<Entity, Entity> mFathers;
 
         PositionProvider* mPositionProvider;
         PhysicSystem* mPhysics;

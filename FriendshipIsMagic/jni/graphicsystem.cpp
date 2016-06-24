@@ -18,9 +18,8 @@ void GraphicSystem::update(sf::Time dt)
     {
         sf::Vector2f pos = mPhysics->getPosition(i);
         sf::Vector2f fatherPos({0,0});
-        auto dependency = mDependencies.find(i);
-        if (dependency != mDependencies.end())
-            fatherPos = mPhysics->getPosition(mDependencies[i]);
+        if (mFathers.find(i) != mFathers.end())
+            fatherPos = mPhysics->getPosition(mFathers[i]);
         pos.x += fatherPos.x;
         pos.y += fatherPos.y;
         //std::cout << pos.x << " " << pos.y << std::endl;
@@ -36,11 +35,6 @@ void GraphicSystem::draw()
     {
         mWindow->draw(sprite.second);
     }
-}
-
-void GraphicSystem::attachSprite(Entity entityFather, Entity entitySon)
-{
-    mDependencies.insert(std::make_pair(entitySon, entityFather));
 }
 
 void GraphicSystem::setPositionProvider(PositionProvider* pos)
@@ -70,8 +64,19 @@ void GraphicSystem::deleteSprite(Entity entity)
 {
     if (mSprites.find(entity) != mSprites.end())
         mSprites.erase(entity);
-    if (mDependencies.find(entity) != mDependencies.end())
-        mDependencies.erase(entity);
+
+    if (mSons.find(entity) != mSons.end())
+    {
+        for (Entity entitySon : mSons[entity])
+        {
+            deleteDependency(entity, entitySon);
+        }
+    }
+    if (mFathers.find(entity) != mFathers.end())
+    {
+        deleteDependency(mFathers[entity], entity);
+        mFathers.erase(entity);
+    }
 }
 
 void GraphicSystem::setSize(Entity entity, float w, float h)
@@ -81,4 +86,34 @@ void GraphicSystem::setSize(Entity entity, float w, float h)
     float height = sprite.getTextureRect().height;
     sprite.setScale(w/width, h/height);
     mSprites[entity] = sprite;
+}
+
+void GraphicSystem::insertDependency(Entity entityFather, Entity entitySon)
+{
+    if (mSons.find(entityFather) == mSons.end())
+    {
+        std::set<Entity> sons;
+        sons.insert(entitySon);
+        mSons.insert(std::make_pair(entityFather, sons));
+    }
+    else
+        mSons[entityFather].insert(entitySon);
+
+    if (mFathers.find(entitySon) == mFathers.end())
+    {
+        mFathers.insert(std::make_pair(entitySon, entityFather));
+    }
+    else
+        mFathers[entitySon] = entityFather;
+}
+
+void GraphicSystem::deleteDependency(Entity entityFather, Entity entitySon)
+{
+    if (mSons.find(entityFather) != mSons.end())
+        mSons[entityFather].erase(entitySon);
+
+    if (mFathers.find(entitySon) == mFathers.end())
+    {
+        mFathers.erase(entitySon);
+    }
 }

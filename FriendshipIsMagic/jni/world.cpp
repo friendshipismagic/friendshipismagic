@@ -74,7 +74,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     Entity entity = mMasks.size(); //This id is not own by anyone, so we can provide it for the new Entity
     for(auto m: mMasks)
     {
-        if ((m.second == Systems::Mask::NONE) && (m.first != mPlayerID) && (m.first != mCoPlayerID)) //We seek for an empty entity
+        if (m.second == Systems::Mask::NONE) //We seek for an empty entity
         {
             entity = m.first;
             mMasks.erase(entity);
@@ -159,7 +159,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
         health->insertHealth(entity, life);
 
         Entity healthBarID = createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt", 0, -0.5);
-        graphics->attachSprite(entity, healthBarID);
+        graphics->insertDependency(entity, healthBarID);
         health->insertHealthBar(entity, healthBarID);
 
         insertDependency(entity, healthBarID);
@@ -218,7 +218,6 @@ void World::sigDestroyEntity(Entity entity)
     {
         for (Entity entitySon : mSons[entity])
         {
-            std::cout << entitySon << " " <<  mMasks[entitySon] << std::endl;
             deleteDependency(entity, entitySon);
             sigDestroyEntity(entitySon);
         }
@@ -251,7 +250,7 @@ void World::sigCollisionWeaponItem(Entity entityPlayer, Entity entityItem)
     mEntitiesToDestroy.push_back(entityItem);
     mEntitiesToDestroy.push_back(mPlayerWeaponID);
     mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt", 0.1, 0);
-    graphics->attachSprite(mPlayerID, mPlayerWeaponID);
+    graphics->insertDependency(mPlayerID, mPlayerWeaponID);
     insertDependency(mPlayerID, mPlayerWeaponID);
 }
 
@@ -304,7 +303,7 @@ void World::createPlayer()
 {
     mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 1, 1);
     mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0.1, 0);
-    graphics->attachSprite(mPlayerID, mPlayerWeaponID);
+    graphics->insertDependency(mPlayerID, mPlayerWeaponID);
     insertDependency(mPlayerID, mPlayerWeaponID);
     sensorOne = mPlayerID + 1;
 }
@@ -313,7 +312,7 @@ void World::createCoPlayer()
 {
     mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 5, 1);
     mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0.1, 0);
-    graphics->attachSprite(mCoPlayerID, mCoPlayerWeaponID);
+    graphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     sensorTwo = mCoPlayerID + 1;
 }
