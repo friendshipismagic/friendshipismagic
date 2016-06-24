@@ -12,7 +12,7 @@ class WeaponSystem: public System
 {
     public:
 
-        WeaponSystem(World* world, State::Context context);
+        WeaponSystem(World* world, State::Context& context);
         void update(sf::Time dt);
 
         std::string getWeaponType(Entity entity);

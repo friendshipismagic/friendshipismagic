@@ -1,7 +1,9 @@
 #include "graphicsystem.h"
 #include "world.h"
 
-GraphicSystem::GraphicSystem(World* world, State::Context context, PhysicSystem* physics, LogicSystem* logics)
+
+GraphicSystem::GraphicSystem(World* world, State::Context& context, PhysicSystem* physics, LogicSystem* logics)
+
 : System(world, context)
 , mWindow(context.window)
 , mPhysics(physics)

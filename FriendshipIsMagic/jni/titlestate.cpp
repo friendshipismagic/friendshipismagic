@@ -1,7 +1,7 @@
 #include "titlestate.h"
 #include <iostream>
 
-TitleState::TitleState(StateStack& mystack, Context context)
+TitleState::TitleState(StateStack& mystack, Context& context)
 : State(mystack, context)
 , mFont()
 , mTextEffectTime()
@@ -37,21 +37,23 @@ void TitleState::updateRatio() {
 
 bool TitleState::handleEvent(const sf::Event& event)
 {
-    if (event.type == sf::Event::KeyPressed)
-    {
 
-    	if(event.key.code == sf::Keyboard::S){
-    		std::cout << "S pressed!!!!"<< std::endl;
-    		 requestStackPop();
-    		 requestStackPush(States::Settings);
-    	}else{
-        requestStackPop();
-        requestStackPush(States::Game);
-    	}
-    }
+    switch(event.type) {
+        case sf::Event::TouchBegan:
+        case sf::Event::MouseButtonPressed:
+        	//Server
+        	if (event.mouseButton.button == sf::Mouse::Left){
+        		mContext.UDPMode = UDPAgent::Mode::Server;
+        	}
+        	else if(event.mouseButton.button == sf::Mouse::Right){
+        		mContext.UDPMode = UDPAgent::Mode::Client;
+        	}
+        	requestStackPop();
+			requestStackPush(States::Game);
+            break;
 
-    if(event.type == sf::Event::Closed)
-        requestStackPop();
+        case sf::Event::Closed:
+            requestStackPop();
 
     return true;
 }

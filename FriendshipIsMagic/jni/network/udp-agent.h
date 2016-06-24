@@ -20,6 +20,11 @@
 
 class UDPAgent : public UDPSpeaker {
 public:
+	enum Mode{
+			Server,
+			Client,
+			None
+		};
 	//========== DEBUG
 	const bool debug = false;
 
@@ -51,7 +56,7 @@ public:
 	unsigned short int getSrcPort() const {
 		return mSrcPort;
 	}
-	bool isClient();
+	UDPAgent::Mode getMode();
 
 
 	sf::IpAddress getLocalAddress();
@@ -60,7 +65,7 @@ public:
 
 private:
 	sf::UdpSocket listener;
-	bool mode;
+	UDPAgent::Mode mode;
 	bool running;
 	int period = DEFAULT_PERIODE;
 	std::thread the_thread;
@@ -75,10 +80,7 @@ private:
 
 	//***** The function runned by the_thread
 	void	AgentRoutine();
-	enum Mode{
-		Server,
-		Client
-	};
+
 };
 
 #endif /* UDPAgent_H_ */

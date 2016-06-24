@@ -8,7 +8,7 @@ class HealthSystem: public System
 {
     public:
 
-        HealthSystem(World* world, State::Context context, GraphicSystem* graphics);
+        HealthSystem(World* world, State::Context& context, GraphicSystem* graphics);
         void update(sf::Time dt);
 
         int getCurrentHealth(Entity entity);

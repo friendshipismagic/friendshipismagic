@@ -3,20 +3,22 @@
 #include "settings-state.h"
 #include "gamestate.h"
 
-Application::Application(State::Context context)
+Application::Application(State::Context& context)
 : mStateStack(context)
 , mWindow(context.window)
 {
     registerStates(context);
-
     //We start with the Title screen
     mStateStack.pushState(States::Title);
 
+
     sf::Event event;
+
     mStateStack.handleEvent(event);
+
 }
 
-void Application::registerStates(State::Context context)
+void Application::registerStates(State::Context& context)
 {
     mStateStack.registerState(States::Title, new TitleState(mStateStack, context));
     mStateStack.registerState(States::Game, new GameState(mStateStack, context));

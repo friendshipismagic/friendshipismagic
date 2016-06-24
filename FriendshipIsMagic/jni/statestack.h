@@ -15,7 +15,7 @@ class StateStack
         };
 
     public:
-        StateStack(State::Context context);
+        StateStack(State::Context& context);
 
         void registerState(States::ID stateID, State*);
 
@@ -41,7 +41,7 @@ class StateStack
     private:
         std::vector<State*> mStack;
         std::vector<PendingChange> mPendingList;
-        State::Context mContext;
+        State::Context& mContext;
         std::map<States::ID, State*> mFactories;
 };
 

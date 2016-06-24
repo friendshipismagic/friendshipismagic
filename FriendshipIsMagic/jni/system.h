@@ -40,7 +40,7 @@ class System
 {
     public:
 
-        System(World* world, State::Context context)
+        System(World* world, State::Context& context)
         : mContext(context)
         , mGameWorld(world)
         {
@@ -50,7 +50,7 @@ class System
 
     protected:
 
-        State::Context mContext;
+        State::Context& mContext;
         World* mGameWorld;
 
 };

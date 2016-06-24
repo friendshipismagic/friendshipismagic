@@ -12,7 +12,7 @@ class GraphicSystem : public System
 {
     public:
 
-        GraphicSystem(World* world, State::Context context, PhysicSystem* physics, LogicSystem* logics);
+        GraphicSystem(World* world, State::Context& context, PhysicSystem* physics, LogicSystem* logics);
 
         virtual void update(sf::Time dt);
         void draw();

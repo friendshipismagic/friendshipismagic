@@ -11,7 +11,7 @@ class TimerSystem: public System
 {
     public:
 
-        TimerSystem(World* world, State::Context context);
+        TimerSystem(World* world, State::Context& context);
         void update(sf::Time dt);
 
         void insertTimer(Entity entity, float time);

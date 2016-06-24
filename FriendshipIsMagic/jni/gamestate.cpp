@@ -1,6 +1,6 @@
 #include "gamestate.h"
 
-GameState::GameState(StateStack& mystack, State::Context context)
+GameState::GameState(StateStack& mystack, State::Context& context)
 : State(mystack, context)
 , mFont()
 , mText()
@@ -14,7 +14,16 @@ GameState::GameState(StateStack& mystack, State::Context context)
 
 void GameState::init()
 {
-
+	if(mContext.UDPMode == UDPAgent::Mode::Client){
+		mWorld.startUDPClient(UDPAgent::DEFAULT_PORT+1, "localhost", UDPAgent::DEFAULT_PORT );
+		std::cout << "gameState: started as Client." << std::endl;
+	}else if(mContext.UDPMode == UDPAgent::Mode::Server){
+		mWorld.startUDPServer(UDPAgent::DEFAULT_PORT);
+		std::cout << "gameState: started as Server." << std::endl;
+	}
+	else{
+		std::cout << "gameState: no mode found for UDPAgent" << std::endl;
+	}
 }
 
 bool GameState::handleEvent(const sf::Event& event)

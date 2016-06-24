@@ -4,7 +4,7 @@
 #include "world.h"
 #include "collisionsystem.h"
 
-PhysicSystem::PhysicSystem(World* world, State::Context context, LogicSystem* logics)
+PhysicSystem::PhysicSystem(World* world, State::Context& context, LogicSystem* logics)
 : System(world, context)
 , logics(logics)
 , mWorld(b2Vec2{0.f,10.f})
@@ -28,6 +28,14 @@ void PhysicSystem::update(sf::Time dt)
     bool mRight = logics->getLogic(Logic::moveRight);
     bool mLeft = logics->getLogic(Logic::moveLeft);
     bool mJump = logics->getLogic(Logic::isJumping);
+    bool mFire = logics->getLogic(Logic::fireOn);
+
+    //==== CoPlayer
+    b2Body* mCoPlayerBody = mBodies[mGameWorld->getCoPlayerID()];
+	bool mCoRight = logics->getLogic(Logic::coMoveRight);
+	bool mCoLeft = logics->getLogic(Logic::coMoveLeft);
+	bool mCoJump = logics->getLogic(Logic::coIsJumping);
+	bool mCoFire = logics->getLogic(Logic::coFireOn);
 
     mJumpTimer += dt;
 
@@ -57,6 +65,56 @@ void PhysicSystem::update(sf::Time dt)
         mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()*6), mPlayerBody->GetWorldCenter(), true );
         mJumpTimer = sf::Time::Zero;
     }
+
+    //===== CoPlayer
+    if (mCoRight)
+	{
+		mCoPlayerBody->SetAwake(true);
+		b2Vec2 vel(mCoPlayerBody->GetLinearVelocity());
+		vel.x = 2.5f;
+		mCoPlayerBody->SetLinearVelocity(vel);
+
+		coIsFacingRight = true;
+		coIsFacingLeft = false;
+	}
+	if (mCoLeft)
+	{
+		mCoPlayerBody->SetAwake(true);
+		b2Vec2 vel(mCoPlayerBody->GetLinearVelocity());
+		vel.x = -2.5f;
+		mCoPlayerBody->SetLinearVelocity(vel);
+
+		coIsFacingLeft = true;
+		coIsFacingRight = false;
+	}
+	if ((!mCoLeft && !mCoRight) || (mCoLeft && mCoRight))
+	{
+		b2Vec2 vel(mCoPlayerBody->GetLinearVelocity());
+		vel.x = 0.;
+		mCoPlayerBody->SetLinearVelocity(vel);
+
+	}
+	if (mCoJump && (collisionListener->getNumFootContacts() >= 1) && mJumpTimer.asSeconds() > 0.5)
+	{
+		mCoPlayerBody->SetAwake(true);
+		mCoPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mCoPlayerBody->GetMass()*6), mCoPlayerBody->GetWorldCenter(), true );
+		mJumpTimer = sf::Time::Zero;
+	}
+	if (mCoFire && (logics->getLogic(Logic::coCanFire)))
+	{
+		if(coIsFacingLeft)
+		{
+			mGameWorld->createEntity(Systems::BULLET, "Entities/bulletL.txt", mCoPlayerBody->GetPosition().x - 0.4, mCoPlayerBody->GetPosition().y);
+		}
+		else
+		{
+			mGameWorld->createEntity(Systems::BULLET, "Entities/bulletR.txt", mCoPlayerBody->GetPosition().x + 0.4, mCoPlayerBody->GetPosition().y);
+		}
+
+		logics->setLogic(Logic::coCanFire, false);
+		mGameWorld->timerOn(mGameWorld->getPlayerWeaponID());
+	}
+    //===== Fin CoPLayer
 
     float32 timeStep = 1.0f / 60.0f;
     int32 velocityIterations = 8;

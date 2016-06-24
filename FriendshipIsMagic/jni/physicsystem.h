@@ -9,13 +9,14 @@
 #include "logicsystem.h"
 #include "entity.h"
 
+
 class World;
 
 class PhysicSystem: public System
 {
     public:
 
-        PhysicSystem(World* world, State::Context context, LogicSystem* logics);
+        PhysicSystem(World* world, State::Context& context, LogicSystem* logics);
         virtual void update(sf::Time dt);
         const sf::Vector2f& getPosition(Entity entity);
         PositionProvider* getPositionProvider() { return mPositionProvider; };
@@ -52,4 +53,12 @@ class PhysicSystem: public System
         std::map<Entity, b2Body*> mBodies;
 
         sf::Time mJumpTimer;
+        bool isFacingRight;
+        bool isFacingLeft;
+
+        //===== CoPlayer
+        bool coIsFacingRight;
+		bool coIsFacingLeft;
+
+
 };

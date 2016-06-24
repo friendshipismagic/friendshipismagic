@@ -1,9 +1,10 @@
 #include "logicsystem.h"
 #include "world.h"
 
-LogicSystem::LogicSystem(World* world, State::Context context, InputSystem* inputs)
+LogicSystem::LogicSystem(World* world, State::Context& context, InputSystem* inputs, NetworkSystem* network)
 : System(world, context)
 , mInputs(inputs)
+, mNetwork(network)
 {
     mLogics.insert(std::make_pair(Logic::moveRight, false));
     mLogics.insert(std::make_pair(Logic::moveLeft, false));
@@ -12,7 +13,19 @@ LogicSystem::LogicSystem(World* world, State::Context context, InputSystem* inpu
     mLogics.insert(std::make_pair(Logic::isFacingLeft, true));
     mLogics.insert(std::make_pair(Logic::isFacingRight, false));
     mLogics.insert(std::make_pair(Logic::canFire, false));
+
     mLogics.insert(std::make_pair(Logic::changeDirection, false));
+
+
+    //===== CoPLayer
+    mLogics.insert(std::make_pair(Logic::coMoveRight, false));
+	mLogics.insert(std::make_pair(Logic::coMoveLeft, false));
+	mLogics.insert(std::make_pair(Logic::coFireOn, false));
+	mLogics.insert(std::make_pair(Logic::coIsJumping, false));
+	mLogics.insert(std::make_pair(Logic::coIsFacingLeft, false));
+	mLogics.insert(std::make_pair(Logic::coIsFacingRight, false));
+	mLogics.insert(std::make_pair(Logic::coCanFire, false));
+
 }
 
 void LogicSystem::update(sf::Time dt)
@@ -46,6 +59,24 @@ void LogicSystem::update(sf::Time dt)
         mLogics[Logic::changeDirection] = false;
     if (!mLogics[Logic::moveLeft] && !mLogics[Logic::moveRight])
         mLogics[Logic::changeDirection] = false;
+
+    //coPLayer
+    mLogics[Logic::coMoveRight] = mNetwork->getInputState(Input::right);
+	mLogics[Logic::coMoveLeft] = mNetwork->getInputState(Input::left);
+	mLogics[Logic::coFireOn] = mNetwork->getInputState(Input::fire);
+	mLogics[Logic::coIsJumping] = mNetwork->getInputState(Input::jump);
+
+
+	if (mLogics[Logic::coMoveRight])
+	{
+		mLogics[Logic::coIsFacingLeft] = false;
+		mLogics[Logic::coIsFacingRight] = true;
+	}
+	if (mLogics[Logic::coMoveLeft])
+	{
+		mLogics[Logic::coIsFacingLeft] = true;
+		mLogics[Logic::coIsFacingRight] = false;
+	}
 
 }
 

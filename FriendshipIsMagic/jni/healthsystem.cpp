@@ -2,7 +2,7 @@
 #include "world.h"
 #include "player.h"
 
-HealthSystem::HealthSystem(World* world, State::Context context, GraphicSystem* graphics)
+HealthSystem::HealthSystem(World* world, State::Context& context, GraphicSystem* graphics)
 : System(world, context)
 , graphics(graphics)
 {

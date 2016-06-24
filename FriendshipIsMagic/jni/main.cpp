@@ -32,7 +32,7 @@ int main()
     struct State::Context context(window, textures, fonts, sounds);
 
     Application app(context);
-    int truc = app.run();
+	int truc = app.run();
 
     return truc;
 }

@@ -10,7 +10,7 @@ class InputSystem: public System
 {
     public:
 
-        InputSystem(World* world, State::Context context);
+        InputSystem(World* world, State::Context& context);
         virtual void update(sf::Time dt);
         void handleEvent(const sf::Event& event);
         bool getInputState(Input);

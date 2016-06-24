@@ -20,7 +20,7 @@ class TitleState: public State
 
     public:
 
-        TitleState(StateStack&, Context);
+        TitleState(StateStack&, Context&);
         virtual void init();
         virtual void draw();
         virtual bool update(sf::Time dt);

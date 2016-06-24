@@ -4,14 +4,17 @@
 #include "filestream.hpp"
 #include "player.h"
 
-World::World(State::Context context)
+World::World(State::Context& context)
 : mContext(context)
 , mSystems()
 {
     mInputs = new InputSystem(this, context);
     mSystems.push_back(mInputs);
 
-    mLogics = new LogicSystem(this, context, mInputs);
+    network = new NetworkSystem(this, context, inputs);
+    mSystems.push_back(network);
+
+    mlogics = new LogicSystem(this, context, inputs, network);
     mSystems.push_back(mLogics);
 
     mPhysics =  new PhysicSystem(this, context, mLogics);
@@ -53,7 +56,14 @@ World::World(State::Context context)
     createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 9, 5.2);
     createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.2);
 }
-
+//Server mode
+void World::startUDPServer(int srcPort){
+	network->startUDPServer(srcPort);
+}
+//Client mode
+void World::startUDPClient(int srcPort, sf::IpAddress destIp, int destPort){
+	network->startUDPClient(srcPort, destIp, destPort);
+}
 void World::handleEvent(const sf::Event& event)
 {
     mInputs->handleEvent(event);

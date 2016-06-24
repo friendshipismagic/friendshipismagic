@@ -11,9 +11,10 @@ class GameState: public State
          sf::Text mText;
          World mWorld;
 
+
     public:
 
-        GameState(StateStack&, Context);
+        GameState(StateStack&, Context&);
         virtual void init();
         virtual void draw();
         virtual bool update(sf::Time dt);

@@ -1,7 +1,7 @@
 #include "statestack.h"
 #include <assert.h>
 
-StateStack::StateStack(State::Context context)
+StateStack::StateStack(State::Context& context)
 : mStack()
 , mPendingList()
 , mContext(context)
@@ -20,7 +20,8 @@ State* StateStack::createState(States::ID stateID)
 void StateStack::registerState(States::ID stateID, State* state)
 {
     mFactories[stateID] = state;
-    state->init();
+    //ARHHHHHHH ALEXANDRE CEST PAS BIENNNN
+    //state->init();
 }
 
 void StateStack::handleEvent(const sf::Event& event)
@@ -59,6 +60,7 @@ void StateStack::applyPendingChanges()
         {
             case Push:
                 mStack.push_back(createState(change.stateID));
+                mStack.front()->init();
                 break;
             case Pop:
                 mStack.pop_back();

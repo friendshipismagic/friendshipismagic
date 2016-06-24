@@ -7,9 +7,9 @@ class Application
 {
     public:
 
-        Application(State::Context context);
+        Application(State::Context& context);
 
-        void registerStates(State::Context context);
+        void registerStates(State::Context& context);
         void processInput();
         void update(sf::Time dt);
         void draw();

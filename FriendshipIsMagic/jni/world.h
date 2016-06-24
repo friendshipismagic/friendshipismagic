@@ -13,6 +13,7 @@
 #include "itemsystem.h"
 #include "scoresystem.h"
 #include "soundsystem.h"
+#include "network-system.h"
 #include <Box2D/Box2D.h>
 #include <set>
 #include "entity.h"
@@ -21,7 +22,7 @@ class World
 {
     public:
 
-        World(State::Context context);
+        World(State::Context& context);
         void update(sf::Time dt);
         void draw();
         void handleEvent(const sf::Event& event);
@@ -52,6 +53,8 @@ class World
 
         void createPlayer();
         void createCoPlayer();
+        void startUDPServer(int srcPort);
+        void startUDPClient(int srcPort, sf::IpAddress destIp, int destPort);
 
         void insertMask(Entity entity, Systems::Mask mask);
 
@@ -68,6 +71,7 @@ class World
         TimerSystem* mTimers;
         PhysicSystem* mPhysics;
         InputSystem* mInputs;
+        NetworkSystem* network;
         LogicSystem* mLogics;
         WeaponSystem* mWeapons;
         HealthSystem* mHealth;

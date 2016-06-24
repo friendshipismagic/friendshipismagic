@@ -20,6 +20,7 @@
 
 using SayHelloCommand = CommandMessage<2>;
 using PrintStringCommand = CommandMessage<3, std::string>;
+using ShareInputCommand = CommandMessage<4, bool, bool, bool, bool>;
 //using SayPlayerInfoCommand = CommandMessage<4,Player>;
 
 

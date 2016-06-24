@@ -34,6 +34,7 @@ UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):the_thread()
 }
 
 UDPAgent::~UDPAgent() {
+	listener.unbind();
 	running = false;
 	if (the_thread.joinable()) the_thread.join();
 }
@@ -68,10 +69,14 @@ bool UDPAgent::send(sf::Packet pkt){
 //***** The function runned by the_thread
 void UDPAgent::AgentRoutine(){
 	string str;
-	sf::Socket::Status st;
+	sf::Socket::Status st = sf::Socket::Status::Disconnected;
 	unsigned short int tmpPort;
 	sf::IpAddress tmpIP;
 	while (running) {
+
+		// Tempo de tour de boucle SUPER IMPORTANTE. Elle evite d'overload le CPU.
+		// Ne pas prendre de periode inférieur à 1ms!
+		std::this_thread::sleep_for (std::chrono::milliseconds(period));
 
 		sf::Packet pkt;
 		st = listener.receive(pkt, tmpIP, tmpPort);
@@ -98,9 +103,7 @@ void UDPAgent::AgentRoutine(){
 		}
 
 
-		// Tempo de tour de boucle SUPER IMPORTANTE. Elle evite d'overload le CPU.
-		// Ne pas prendre de periode inférieur à 1ms!
-		std::this_thread::sleep_for (std::chrono::milliseconds(period));
+
 	}
 }
 
@@ -115,10 +118,8 @@ int UDPAgent::getPeriod() {
 	return period;
 }
 
-bool UDPAgent::isClient(){
-	if (mode == Mode::Client)
-		return true;
-	return false;
+UDPAgent::Mode UDPAgent::getMode(){
+	return mode;
 }
 
 void UDPAgent::agentPrintLn(){
