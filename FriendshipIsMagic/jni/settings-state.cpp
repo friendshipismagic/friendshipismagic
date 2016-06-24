@@ -86,8 +86,8 @@ bool SettingsState::handleEvent(const sf::Event& event)
 				}
 				break;
 			case sf::Keyboard::E: //ENVOYER
-				pkt = PrintStringCommand::make("Hey guys!!!");
-				mAgent->send(pkt);
+				//pkt = PrintStringCommand::make("Hey guys!!!");
+				//mAgent->send(pkt);
 				break;
 			case sf::Keyboard::R: //RECEVEIVE
 				if(emptyBuf() == false){

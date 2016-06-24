@@ -29,6 +29,7 @@ private:
 	std::unique_ptr<UDPAgent> mUDP;
 	std::map<Input, bool> mInputs;
 	PacketCommand mCmd;
+	sf::Clock mClock;
 
 
 	bool running = false;

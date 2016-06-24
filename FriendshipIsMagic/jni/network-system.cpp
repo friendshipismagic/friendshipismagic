@@ -6,11 +6,12 @@
  */
 
 #include "network-system.h"
+#include <SFML/System.hpp>
 
 void printString(sf::Packet pkt){
-	std::string str;
-	pkt >> str;
-	std::cout << str << std::endl;
+	int t,r;
+	pkt >> t >> r;
+	std::cout << std::to_string(t) << std::to_string(r) << std::endl;
 }
 NetworkSystem::NetworkSystem(World* world, State::Context& context, InputSystem* input)
 :System(world, context)
@@ -36,16 +37,16 @@ NetworkSystem::~NetworkSystem() {
 void NetworkSystem::updateCoPlayerInput(sf::Packet pkt){
 	bool right, left, fire, jump;
 	pkt >> right >>left >> fire >> jump;
-	/*
+
 	mInputs[Input::right] = right;
 	mInputs[Input::left] = left;
 	mInputs[Input::fire] = fire;
 	mInputs[Input::jump] = jump;
-	*/
 
-	if(mContext.UDPMode == UDPAgent::Mode::Server)
+
+	//if(mContext.UDPMode == UDPAgent::Mode::Server && jump)
 		//std::cout << "received " << std::hex << ordre << std::dec << std::endl;
-		std::cout << "Received client inputs: " << right << left << fire << jump << std::endl;
+	//	std::cout << "Received client inputs: " << std::to_string(right) << std::to_string(left) << std::to_string(fire) << std::to_string(jump) << std::endl;
 }
 
 void NetworkSystem::update(sf::Time dt){
@@ -59,19 +60,18 @@ void NetworkSystem::update(sf::Time dt){
 			mInput->getInputState(Input::left),
 			mInput->getInputState(Input::fire),
 			mInput->getInputState(Input::jump));
-	/*
-	if( mContext.UDPMode == UDPAgent::Mode::Server){
-		pkt = PrintStringCommand::make("From server:");// + std::to_string(mInput->getInputState(Input::jump)));
-	}
-	else{
-		pkt = PrintStringCommand::make("From client:");//+ std::to_string(mInput->getInputState(Input::jump)));
-	}*/
+
 	mUDP->send(pkt);
 
 	//Receive
+	//sf::Clock master;
 	while(emptyBuf() == false){
+		//std::cout << "master has waited " << master.getElapsedTime().asSeconds();
+		//sf::Clock slave;
 		auto pkt = popFrontBuf();
+		//std::cout << " and slave " << slave.getElapsedTime().asSeconds() << std::endl;
 		mCmd.interpret(pkt);
+		//master = sf::Clock();
 	}
 
 }

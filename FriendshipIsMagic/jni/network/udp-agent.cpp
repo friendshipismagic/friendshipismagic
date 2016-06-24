@@ -28,7 +28,7 @@ UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):the_thread()
 	mode = Mode::Client;
 	mDestIPAddr = ipAddr;
 	running = false;
-	listener.setBlocking(false);
+	//listener.setBlocking(false);
 	mSrcPort = srcPort;
 	mDestPort = destPort;
 }
@@ -76,7 +76,7 @@ void UDPAgent::AgentRoutine(){
 
 		// Tempo de tour de boucle SUPER IMPORTANTE. Elle evite d'overload le CPU.
 		// Ne pas prendre de periode inférieur à 1ms!
-		std::this_thread::sleep_for (std::chrono::milliseconds(period));
+		//std::this_thread::sleep_for (std::chrono::milliseconds(period));
 
 		sf::Packet pkt;
 		st = listener.receive(pkt, tmpIP, tmpPort);
