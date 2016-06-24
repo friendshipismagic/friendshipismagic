@@ -8,8 +8,8 @@ PhysicSystem::PhysicSystem(World* world, State::Context context, LogicSystem* lo
 : System(world, context)
 , logics(logics)
 , mWorld(b2Vec2{0.f,10.f})
-, scale(100)
-, errorPos(sf::Vector2f({-1, -1}))
+, mScale(100)
+, errorPos(sf::Vector2f({-1000, -1000}))
 , mPositions()
 , mBodies()
 {
@@ -70,13 +70,11 @@ void PhysicSystem::update(sf::Time dt)
     {
         if(isFacingLeft)
         {
-            int bullet = mGameWorld->createEntity(Systems::BULLET, "Entities/bulletL.txt");
-            mBodies[bullet]->SetTransform(b2Vec2(mPlayerBody->GetPosition().x - 0.4, mPlayerBody->GetPosition().y), mBodies[bullet]->GetAngle());
+            mGameWorld->createEntity(Systems::BULLET, "Entities/bulletL.txt", mPlayerBody->GetPosition().x - 0.4, mPlayerBody->GetPosition().y);
         }
         else
         {
-            int bullet = mGameWorld->createEntity(Systems::BULLET, "Entities/bulletR.txt");
-            mBodies[bullet]->SetTransform(b2Vec2(mPlayerBody->GetPosition().x + 0.4, mPlayerBody->GetPosition().y), mBodies[bullet]->GetAngle());
+            mGameWorld->createEntity(Systems::BULLET, "Entities/bulletR.txt", mPlayerBody->GetPosition().x + 0.4, mPlayerBody->GetPosition().y);
         }
 
         logics->setLogic(Logic::canFire, false);
@@ -91,7 +89,7 @@ void PhysicSystem::update(sf::Time dt)
     for(auto body: mBodies)
     {
         b2Vec2 pos = body.second->GetPosition();
-        mPositions[body.first] = sf::Vector2f({pos.x*scale, pos.y*scale});
+        mPositions[body.first] = sf::Vector2f({pos.x*mScale, pos.y*mScale});
     }
 }
 

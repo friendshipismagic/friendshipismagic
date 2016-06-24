@@ -29,11 +29,13 @@ class PhysicSystem: public System
         void deleteBody(int entity);
         void deletePosition(int entity);
 
+        int getScale() { return mScale; };
+
     private:
 
         LogicSystem* logics;
         b2World mWorld;
-        int scale;
+        int mScale;
 
         CollisionSystem* collisionListener;
         const sf::Vector2f errorPos;

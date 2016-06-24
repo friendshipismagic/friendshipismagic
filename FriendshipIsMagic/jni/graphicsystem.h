@@ -19,6 +19,7 @@ class GraphicSystem : public System
         void deleteSprite(int entity);
 
         void attachSprite(int entityFather, int entitySon);
+        void setSize(int entity, float w , float h);
 
     private:
 

@@ -24,23 +24,23 @@ World::World(State::Context context)
     weapons = new WeaponSystem(this, context);
     mSystems.push_back(weapons);
 
-    health = new HealthSystem(this, context);
+    health = new HealthSystem(this, context, graphics);
     mSystems.push_back(health);
 
     graphics->setPositionProvider(physics->getPositionProvider());
 
-    mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
-    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt");
+    mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 1, 1);
+    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0, 0);
     sensorOne = mPlayerID + 1;
 
-    mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt");
-    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt");
+    mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 5, 1);
+    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0, 0);
     sensorTwo = mCoPlayerID + 1;
 
-    createEntity(Systems::Mask::WEAPONITEM, "Entities/uziitem.txt");
-    createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt");
-    createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt");
-    createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt");
+    createEntity(Systems::Mask::WEAPONITEM, "Entities/uziitem.txt", 6, 4);
+    createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt", 3, 6.5);
+    createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 3, 5.2);
+    createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.2);
 }
 
 void World::handleEvent(const sf::Event& event)
@@ -68,10 +68,11 @@ void World::draw()
     graphics->draw();
 }
 
-int World::createEntity(Systems::Mask mask, std::string fileName)
+int World::createEntity(Systems::Mask mask, std::string fileName, float x, float y)
 {
     int entity = mMasks.size(); //This id is not own by anyone, so we can provide it for the new Entity
     mMasks.push_back(mask); //We add the entity's mask in the vector
+    int scale = physics->getScale();
 
     //We open the JSON file
     std::ifstream file(fileName.c_str());
@@ -96,8 +97,8 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
         Json::Value body = components["body"];
 
         b2Body* newBody = physics->createBody(entity,
-                                              body["x"].asFloat(),
-                                              body["y"].asFloat(),
+                                              x,
+                                              y,
                                               body["width"].asFloat(),
                                               body["height"].asFloat(),
                                               body["rotation"].asFloat(),
@@ -108,7 +109,7 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
         newBody->SetGravityScale(body["gravityScale"].asFloat());
         newBody->SetLinearVelocity(b2Vec2({body["vx"].asFloat(), body["vy"].asFloat()}));
 
-        physics->insertPosition(entity, newBody->GetPosition());
+        //physics->insertPosition(entity, newBody->GetPosition());
         physics->insertBody(entity, newBody);
     }
     if ((mask & Systems::Component::SENSOR) == Systems::Component::SENSOR)
@@ -123,7 +124,7 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {
-
+        physics->insertPosition(entity, b2Vec2({scale*x, scale*y}));
     }
     if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
     {
@@ -145,7 +146,9 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
         int life = components["health"].asInt();
         health->insertHealth(entity, life);
 
-        createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt");
+        int healthBarID = createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt", 0, -0.5);
+        graphics->attachSprite(entity, healthBarID);
+        health->insertHealthBar(entity, healthBarID);
     }
 
     return entity;
@@ -159,12 +162,11 @@ void World::destroyEntity(int entity)
 
     if ((mask & Systems::Component::BODY) == Systems::Component::BODY)
     {
-        physics->deletePosition(entity);
         physics->deleteBody(entity);
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {
-
+        physics->deletePosition(entity);
     }
     if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
     {
@@ -220,7 +222,7 @@ void World::sigCollisionWeaponItem(int entityPlayer, int entityItem)
 {
     mEntitiesToDestroy.push_back(entityItem);
     mEntitiesToDestroy.push_back(mPlayerWeaponID);
-    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt");
+    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt", 0, 0);
 }
 
 void World::sigCollisionBullet(int entityBullet, int entityVictim)

@@ -9,6 +9,7 @@
 	{"name":"BulletL","filename":"Graphics/bulletl.png"},
 	{"name":"BulletR","filename":"Graphics/bulletr.png"},
 	{"name":"icons/settings","filename":"Graphics/settings_icon.png"},
-	{"name":"menu/main/background","filename":"Graphics/test fond title.png"}
+	{"name":"menu/main/background","filename":"Graphics/test fond title.png"},
+	{"name":"LifeBar","filename":"Graphics/life_bar.png"}
 ]
 }

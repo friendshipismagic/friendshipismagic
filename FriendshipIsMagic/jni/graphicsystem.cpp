@@ -17,7 +17,15 @@ void GraphicSystem::update(sf::Time dt)
 {
     for (unsigned int i = 0; i < mSprites.size(); i++)
     {
-        mSprites[i].setPosition(mPhysics->getPosition(i));
+        sf::Vector2f pos = mPhysics->getPosition(i);
+        sf::Vector2f fatherPos({0,0});
+        auto dependency = mDependencies.find(i);
+        if (dependency != mDependencies.end())
+            fatherPos = mPhysics->getPosition(mDependencies[i]);
+        pos.x += fatherPos.x;
+        pos.y += fatherPos.y;
+        //std::cout << pos.x << " " << pos.y << std::endl;
+        mSprites[i].setPosition(pos);
     }
 }
 
@@ -33,7 +41,7 @@ void GraphicSystem::draw()
 
 void GraphicSystem::attachSprite(int entityFather, int entitySon)
 {
-    mDependencies.insert(std::make_pair(entityFather, entitySon));
+    mDependencies.insert(std::make_pair(entitySon, entityFather));
 }
 
 void GraphicSystem::setPositionProvider(PositionProvider* pos)
@@ -59,4 +67,13 @@ void GraphicSystem::insertSprite(int entity, std::string id, float rotation, flo
 void GraphicSystem::deleteSprite(int entity)
 {
     mSprites.erase(entity);
+}
+
+void GraphicSystem::setSize(int entity, float w, float h)
+{
+    sf::Sprite sprite = mSprites[entity];
+    float width = sprite.getTextureRect().width;
+    float height = sprite.getTextureRect().height;
+    sprite.setScale(w/width, h/height);
+    mSprites[entity] = sprite;
 }
