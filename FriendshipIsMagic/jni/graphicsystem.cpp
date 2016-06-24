@@ -1,10 +1,12 @@
 #include "graphicsystem.h"
+#include "world.h"
 
-GraphicSystem::GraphicSystem(World* world, State::Context context, PhysicSystem* physics)
+GraphicSystem::GraphicSystem(World* world, State::Context context, PhysicSystem* physics, LogicSystem* logics)
 : System(world, context)
 , mWindow(context.window)
 , mSprites()
 , mPhysics(physics)
+, mLogics(logics)
 {
     sf::Texture*  t = mContext.textures->get("Background");
     background = new sf::Sprite();
@@ -22,8 +24,12 @@ void GraphicSystem::update(sf::Time dt)
             fatherPos = mPhysics->getPosition(mFathers[i]);
         pos.x += fatherPos.x;
         pos.y += fatherPos.y;
-        //std::cout << pos.x << " " << pos.y << std::endl;
         mSprites[i].setPosition(pos);
+    }
+
+    if (mLogics->getLogic(Logic::changeDirection))
+    {
+        mirror(mGameWorld->getPlayerID(), -1);
     }
 }
 
@@ -86,6 +92,27 @@ void GraphicSystem::setSize(Entity entity, float w, float h)
     float height = sprite.getTextureRect().height;
     sprite.setScale(w/width, h/height);
     mSprites[entity] = sprite;
+}
+
+
+void GraphicSystem::mirror(Entity entity, int m)
+{
+    sf::Sprite sprite = mSprites[entity];
+    if (m < 0)
+        sprite.scale(-1, 1);
+    else
+        sprite.scale(1, 1);
+    sf::Vector2f pos = sprite.getPosition();
+    sprite.setPosition(-pos.x, pos.y);
+    mSprites[entity] = sprite;
+    mPhysics->mirror(entity);
+    if (mSons.find(entity) != mSons.end())
+    {
+        for (Entity entitySon : mSons[entity])
+        {
+            mirror(entitySon, m);
+        }
+    }
 }
 
 void GraphicSystem::insertDependency(Entity entityFather, Entity entitySon)

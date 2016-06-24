@@ -6,12 +6,13 @@
 #include "physicsystem.h"
 #include "entity.h"
 #include <set>
+#include "logicsystem.h"
 
 class GraphicSystem : public System
 {
     public:
 
-        GraphicSystem(World* world, State::Context context, PhysicSystem* physics);
+        GraphicSystem(World* world, State::Context context, PhysicSystem* physics, LogicSystem* logics);
 
         virtual void update(sf::Time dt);
         void draw();
@@ -24,6 +25,7 @@ class GraphicSystem : public System
         void deleteDependency(Entity entityFather, Entity entitySon);
 
         void setSize(Entity entity, float w , float h);
+        void mirror(Entity entity, int m);
 
     private:
 
@@ -38,5 +40,6 @@ class GraphicSystem : public System
 
         PositionProvider* mPositionProvider;
         PhysicSystem* mPhysics;
+        LogicSystem* mLogics;
 
 };

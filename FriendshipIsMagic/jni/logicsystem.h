@@ -4,7 +4,7 @@
 #include "inputsystem.h"
 
 
-enum Logic { moveRight, moveLeft, isJumping, fireOn, isFacingRight, isFacingLeft, canFire };
+enum Logic { moveRight, moveLeft, isJumping, fireOn, isFacingRight, isFacingLeft, canFire, changeDirection };
 
 class LogicSystem: public System
 {

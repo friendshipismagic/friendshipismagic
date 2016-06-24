@@ -10,6 +10,8 @@
 	{"name":"BulletR","filename":"Graphics/bulletr.png"},
 	{"name":"icons/settings","filename":"Graphics/settings_icon.png"},
 	{"name":"menu/main/background","filename":"Graphics/test fond title.png"},
-	{"name":"LifeBar","filename":"Graphics/life_bar.png"}
+	{"name":"LifeBar","filename":"Graphics/life_bar.png"},
+	{"name":"WaterGun","filename":"Graphics/water_gun.png"},
+	{"name":"Player","filename":"Graphics/player.png"}
 ]
 }

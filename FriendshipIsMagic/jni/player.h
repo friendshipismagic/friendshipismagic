@@ -1,16 +1,10 @@
 #pragma once
-#include <Box2D/Box2D.h>
-#include <SFML/System.hpp>
 
-class Player
+namespace Player
 {
-    public:
-        Player(b2World*,float ,float);
-        Player();
-        b2Body* getBody();
-        sf::Vector2f getPos();
-        void setPos(sf::Vector2f);
-    private:
-        sf::Vector2f mPos;
-        b2Body* mBody;
+    const float SpawnLocationX = 1;
+    const float SpawnLocationY = 1;
+    const float HealthBarTopPadding = -0.5;
+    const float WeaponHorizontalPadding = -0.1;
+    const float WeaponTopPadding = 0.15;
 };

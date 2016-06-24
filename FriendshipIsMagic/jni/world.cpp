@@ -2,6 +2,7 @@
 #include "physicsystem.h"
 #include <string.h>
 #include "filestream.hpp"
+#include "player.h"
 
 World::World(State::Context context)
 : mContext(context)
@@ -16,7 +17,7 @@ World::World(State::Context context)
     physics =  new PhysicSystem(this, context, logics);
     mSystems.push_back(physics);
 
-    graphics = new GraphicSystem(this, context, physics);
+    graphics = new GraphicSystem(this, context, physics, logics);
     mSystems.push_back(graphics);
 
     timers = new TimerSystem(this, context);
@@ -158,7 +159,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
         int life = components["health"].asInt();
         health->insertHealth(entity, life);
 
-        Entity healthBarID = createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt", 0, -0.5);
+        Entity healthBarID = createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt", 0, Player::HealthBarTopPadding);
         graphics->insertDependency(entity, healthBarID);
         health->insertHealthBar(entity, healthBarID);
 
@@ -249,7 +250,7 @@ void World::sigCollisionWeaponItem(Entity entityPlayer, Entity entityItem)
 {
     mEntitiesToDestroy.push_back(entityItem);
     mEntitiesToDestroy.push_back(mPlayerWeaponID);
-    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt", 0.1, 0);
+    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
     graphics->insertDependency(mPlayerID, mPlayerWeaponID);
     insertDependency(mPlayerID, mPlayerWeaponID);
 }
@@ -301,8 +302,8 @@ void World::deleteDependency(Entity entityFather, Entity entitySon)
 
 void World::createPlayer()
 {
-    mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 1, 1);
-    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0.1, 0);
+    mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", Player::SpawnLocationX, Player::SpawnLocationY);
+    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
     graphics->insertDependency(mPlayerID, mPlayerWeaponID);
     insertDependency(mPlayerID, mPlayerWeaponID);
     sensorOne = mPlayerID + 1;
@@ -310,8 +311,8 @@ void World::createPlayer()
 
 void World::createCoPlayer()
 {
-    mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", 5, 1);
-    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0.1, 0);
+    mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", Player::SpawnLocationX, Player::SpawnLocationY);
+    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
     graphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     sensorTwo = mCoPlayerID + 1;

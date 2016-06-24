@@ -9,9 +9,10 @@ LogicSystem::LogicSystem(World* world, State::Context context, InputSystem* inpu
     mLogics.insert(std::make_pair(Logic::moveLeft, false));
     mLogics.insert(std::make_pair(Logic::fireOn, false));
     mLogics.insert(std::make_pair(Logic::isJumping, false));
-    mLogics.insert(std::make_pair(Logic::isFacingLeft, false));
+    mLogics.insert(std::make_pair(Logic::isFacingLeft, true));
     mLogics.insert(std::make_pair(Logic::isFacingRight, false));
     mLogics.insert(std::make_pair(Logic::canFire, false));
+    mLogics.insert(std::make_pair(Logic::changeDirection, false));
 }
 
 void LogicSystem::update(sf::Time dt)
@@ -21,16 +22,30 @@ void LogicSystem::update(sf::Time dt)
     mLogics[Logic::fireOn] = mInputs->getInputState(Input::fire);
     mLogics[Logic::isJumping] = mInputs->getInputState(Input::jump);
 
-    if (mLogics[Logic::moveRight])
+    if (mLogics[Logic::moveRight] && !mLogics[Logic::moveLeft])
     {
+        if (mLogics[Logic::isFacingLeft])
+            mLogics[Logic::changeDirection] = true;
+        else
+            mLogics[Logic::changeDirection] = false;
+
         mLogics[Logic::isFacingLeft] = false;
         mLogics[Logic::isFacingRight] = true;
     }
-    if (mLogics[Logic::moveLeft])
+    if (mLogics[Logic::moveLeft] && !mLogics[Logic::moveRight])
     {
+        if (mLogics[Logic::isFacingRight])
+            mLogics[Logic::changeDirection] = true;
+        else
+            mLogics[Logic::changeDirection] = false;
+
         mLogics[Logic::isFacingLeft] = true;
         mLogics[Logic::isFacingRight] = false;
     }
+    if (mLogics[Logic::moveLeft] && mLogics[Logic::moveRight])
+        mLogics[Logic::changeDirection] = false;
+    if (!mLogics[Logic::moveLeft] && !mLogics[Logic::moveRight])
+        mLogics[Logic::changeDirection] = false;
 
 }
 

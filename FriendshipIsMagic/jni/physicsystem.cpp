@@ -20,8 +20,6 @@ PhysicSystem::PhysicSystem(World* world, State::Context context, LogicSystem* lo
     mPositionProvider = new PositionProvider(&posFunction);
 
     mJumpTimer = sf::Time::Zero;
-    isFacingLeft = false;
-    isFacingRight = true;
 }
 
 void PhysicSystem::update(sf::Time dt)
@@ -31,6 +29,8 @@ void PhysicSystem::update(sf::Time dt)
     bool mLeft = logics->getLogic(Logic::moveLeft);
     bool mJump = logics->getLogic(Logic::isJumping);
     bool mFire = logics->getLogic(Logic::fireOn);
+    bool isFacingLeft = logics->getLogic(Logic::isFacingLeft);
+
     mJumpTimer += dt;
 
     if (mRight)
@@ -39,9 +39,6 @@ void PhysicSystem::update(sf::Time dt)
         b2Vec2 vel(mPlayerBody->GetLinearVelocity());
         vel.x = 2.5f;
         mPlayerBody->SetLinearVelocity(vel);
-
-        isFacingRight = true;
-        isFacingLeft = false;
     }
     if (mLeft)
     {
@@ -49,16 +46,12 @@ void PhysicSystem::update(sf::Time dt)
         b2Vec2 vel(mPlayerBody->GetLinearVelocity());
         vel.x = -2.5f;
         mPlayerBody->SetLinearVelocity(vel);
-
-        isFacingLeft = true;
-        isFacingRight = false;
     }
     if ((!mLeft && !mRight) || (mLeft && mRight))
     {
         b2Vec2 vel(mPlayerBody->GetLinearVelocity());
         vel.x = 0.;
         mPlayerBody->SetLinearVelocity(vel);
-
     }
     if (mJump && (collisionListener->getNumFootContacts() >= 1) && mJumpTimer.asSeconds() > 0.5)
     {
@@ -173,4 +166,13 @@ void PhysicSystem::deletePosition(Entity entity)
 {
     if(mPositions.find(entity) != mPositions.end())
         mPositions.erase(entity);
+}
+
+void PhysicSystem::mirror(Entity entity)
+{
+    if(mPositions.find(entity) != mPositions.end())
+    {
+        sf::Vector2f pos = mPositions[entity];
+        mPositions[entity] = sf::Vector2f({-pos.x, pos.y});
+    }
 }

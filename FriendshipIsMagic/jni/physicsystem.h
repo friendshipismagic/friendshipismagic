@@ -32,6 +32,8 @@ class PhysicSystem: public System
 
         int getScale() { return mScale; };
 
+        void mirror(Entity entity);
+
     private:
 
         LogicSystem* logics;
@@ -49,6 +51,4 @@ class PhysicSystem: public System
         std::map<Entity, b2Body*> mBodies;
 
         sf::Time mJumpTimer;
-        bool isFacingRight;
-        bool isFacingLeft;
 };
