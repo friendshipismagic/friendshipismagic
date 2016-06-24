@@ -135,7 +135,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     Entity entity = mMasks.size(); //This id is not own by anyone, so we can provide it for the new Entity
     for(auto m: mMasks)
     {
-        if (m.second == Systems::Mask::NONE) //We seek for an empty entity
+        if ((m.second == Systems::Mask::NONE) && (m.first != mPlayerID) && (m.first != mCoPlayerID)) //We seek for an empty entity
         {
             entity = m.first;
             mMasks.erase(entity);
