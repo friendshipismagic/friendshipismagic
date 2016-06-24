@@ -9,6 +9,10 @@ InputSystem::InputSystem(World* world, State::Context& context)
     mInputs.insert(std::make_pair(Input::right, false));
     mInputs.insert(std::make_pair(Input::left, false));
     mInputs.insert(std::make_pair(Input::fire, false));
+
+    mTouchTime.resize(10);
+    mTouchPos.resize(10);
+    mTouchInputs.resize(10);
 }
 
 void InputSystem::handleEvent(const sf::Event& event)
@@ -21,6 +25,13 @@ void InputSystem::handleEvent(const sf::Event& event)
         case sf::Event::KeyReleased:
             handlePlayerInput(event.key.code, false);
             break;
+        /*case sf::Event::TouchBegan:
+            mTouchTime[event.touch.finger] = sf::Clock();
+            mTouchPos[event.touch.finger] = mContext.window->mapPixelToCoords({event.touch.x, event.touch.y});
+            break;
+        case sf::Event::TouchEnded:
+            mInputs[mTouchInputs[event.touch.finger]] = false;
+            break;*/
         default:
             break;
     }

@@ -19,4 +19,5 @@ class Application
 
         StateStack mStateStack;
         sf::RenderWindow* mWindow;
+        bool mPause=false;
 };

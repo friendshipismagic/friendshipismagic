@@ -50,11 +50,17 @@ void World::update(sf::Time dt)
         destroyEntity(entity);
     }
 
+    auto pos = physics->getPosition(mPlayerID);
+
+    mGameView.setCenter(pos);
+
+
     mEntitiesToDestroy.clear();
 }
 
 void World::draw()
 {
+    mContext.window->setView(mGameView);
     graphics->draw();
 }
 

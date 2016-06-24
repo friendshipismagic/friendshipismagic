@@ -45,4 +45,9 @@ class World
         int mLineCount = 0;
         int mColumnCount = 0;
 
+        int mCoPlayerID = 2;
+        int mCoPlayerWeaponID = 3;
+        int sensorTwo = 0;
+
+        sf::View mGameView;
 };

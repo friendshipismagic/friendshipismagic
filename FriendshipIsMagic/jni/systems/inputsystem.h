@@ -4,7 +4,7 @@
 #include "../states/state.h"
 #include "systemprovider.h"
 
-enum Input { right, left, jump, fire };
+enum Input { idle, right, left, jump, fire };
 
 class InputSystem: public System
 {
@@ -21,5 +21,8 @@ class InputSystem: public System
 
     private:
 
+        std::vector<sf::Clock> mTouchTime;
+        std::vector<sf::Vector2f> mTouchPos;
+        std::vector<Input> mTouchInputs;
         std::map<Input, bool> mInputs;
 };
