@@ -51,6 +51,12 @@ public:
 	unsigned short int getSrcPort() const {
 		return mSrcPort;
 	}
+	bool isClient();
+
+
+	sf::IpAddress getLocalAddress();
+
+	sf::IpAddress getPublicAddress();
 
 private:
 	sf::UdpSocket listener;

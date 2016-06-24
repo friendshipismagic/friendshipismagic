@@ -12,6 +12,8 @@
 // EventListener Class
 //-----------------------------------------------------
 #include <SFML/Network/Packet.hpp>
+#include <SFML/System/Mutex.hpp>
+#include <queue>          // std::queue
 
 using namespace std;
 template<typename T> class EventSpeaker;
@@ -24,6 +26,11 @@ public:
 protected:
 //constructor is protected because this class is abstract, it’s only meant to be inherited!
 	EventListener();
+	void pushBuf(T);
+	T frontBuf();
+	void popBuf();
+	T popFrontBuf();
+	bool emptyBuf();
 private:
 	// -------------------------
 	// Disabling default copy constructor and default
@@ -31,7 +38,8 @@ private:
 	// -------------------------
 	EventListener(const EventListener& yRef);
 	EventListener& operator=(const EventListener& yRef);
-
+	sf::Mutex mQueueMutex;
+	std::queue<T> mBuf;
 };
 
 using UDPListener = EventListener<sf::Packet> ;

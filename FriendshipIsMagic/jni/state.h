@@ -5,6 +5,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
+
 class StateStack;
 
 namespace States
@@ -14,7 +15,8 @@ namespace States
         Title,
         Menu,
         Pause,
-        Game
+        Game,
+		Settings
     };
 }
 
@@ -53,4 +55,5 @@ class State
         Context getContext() const;
         StateStack* mStack;
         Context mContext;
+
 };

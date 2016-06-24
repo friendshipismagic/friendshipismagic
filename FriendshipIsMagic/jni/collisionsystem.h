@@ -3,6 +3,8 @@
 #include "state.h"
 #include <Box2D/Box2D.h>
 
+#include <SFML/System.hpp>
+
 class CollisionSystem: public System, public b2ContactListener
 {
     public:

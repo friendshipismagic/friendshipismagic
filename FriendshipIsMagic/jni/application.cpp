@@ -1,5 +1,6 @@
 #include "application.h"
 #include "titlestate.h"
+#include "settings-state.h"
 #include "gamestate.h"
 
 Application::Application(State::Context context)
@@ -19,6 +20,7 @@ void Application::registerStates(State::Context context)
 {
     mStateStack.registerState(States::Title, new TitleState(mStateStack, context));
     mStateStack.registerState(States::Game, new GameState(mStateStack, context));
+    mStateStack.registerState(States::Settings, new SettingsState(mStateStack, context));
 }
 
 void Application::processInput()

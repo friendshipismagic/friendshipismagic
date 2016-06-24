@@ -115,8 +115,22 @@ int UDPAgent::getPeriod() {
 	return period;
 }
 
+bool UDPAgent::isClient(){
+	if (mode == Mode::Client)
+		return true;
+	return false;
+}
+
 void UDPAgent::agentPrintLn(){
 	std::cout << "\n";
+}
+
+sf::IpAddress UDPAgent::getLocalAddress(){
+	return sf::IpAddress::getLocalAddress();
+}
+
+sf::IpAddress UDPAgent::getPublicAddress(){
+	return sf::IpAddress::getPublicAddress();
 }
 
 void UDPAgent::agentPrintLn(string str){

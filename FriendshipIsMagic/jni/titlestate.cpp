@@ -9,6 +9,7 @@ TitleState::TitleState(StateStack& mystack, Context context)
 {
     mFont = context.fonts->get("font");
     mText.setFont(*mFont);
+
     mText.setPosition(250.,300.);
     mText.setString("press any button");
     mBackgroundSprite.setTexture(*getContext().textures->get("menu/main/background"));
@@ -25,8 +26,15 @@ bool TitleState::handleEvent(const sf::Event& event)
 {
     if (event.type == sf::Event::KeyPressed)
     {
+
+    	if(event.key.code == sf::Keyboard::S){
+    		std::cout << "S pressed!!!!"<< std::endl;
+    		 requestStackPop();
+    		 requestStackPush(States::Settings);
+    	}else{
         requestStackPop();
         requestStackPush(States::Game);
+    	}
     }
 
     if(event.type == sf::Event::Closed)
