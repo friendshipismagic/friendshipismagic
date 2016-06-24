@@ -1,6 +1,7 @@
 #include "world.h"
 #include "physicsystem.h"
 #include <string.h>
+#include "filestream.hpp"
 
 World::World(State::Context context)
 : mSystems()
@@ -56,8 +57,8 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
     mMasks.push_back(mask); //We add the entity's mask in the vector
 
     //We open the JSON file
-    std::ifstream file(fileName.c_str());
-    if (!file)
+    FileStream file;
+    if(!file.open(fileName))
     {
         std::cerr << "Error: can't open file " << fileName << std::endl;
         return -1;
@@ -65,11 +66,13 @@ int World::createEntity(Systems::Mask mask, std::string fileName)
 
     Json::Value root;
     Json::Reader reader;
-    if( !reader.parse(file, root, false) )
+    if( !reader.parse(file.readAll(), root, false) )
     {
         std::cout << "Error while reading " + fileName + "file:\n" << reader.getFormattedErrorMessages();
+        file.close();
         return -1;
     }
+    else file.close();
 
     Json::Value components = root["components"];
 
