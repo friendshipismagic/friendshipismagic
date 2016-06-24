@@ -95,7 +95,7 @@ void PhysicSystem::update(sf::Time dt)
 
 const sf::Vector2f& PhysicSystem::getPosition(unsigned int index)
 {
-    if (index < mPositions.size())
+    if (mPositions.find(index) != mPositions.end())
         return mPositions[index];
 
     return errorPos;
@@ -103,12 +103,18 @@ const sf::Vector2f& PhysicSystem::getPosition(unsigned int index)
 
 void PhysicSystem::insertBody(int entity, b2Body* body)
 {
-    mBodies.insert(std::make_pair(entity, body));
+    if(mBodies.find(entity) == mBodies.end())
+        mBodies.insert(std::make_pair(entity, body));
+    else
+        mBodies[entity] = body;
 }
 
 void PhysicSystem::insertPosition(int entity, b2Vec2 pos)
 {
-    mPositions.insert(std::make_pair(entity, sf::Vector2f({pos.x, pos.y})));
+    if(mPositions.find(entity) == mPositions.end())
+        mPositions.insert(std::make_pair(entity, sf::Vector2f({pos.x, pos.y})));
+    else
+        mPositions[entity] = sf::Vector2f({pos.x, pos.y});
 }
 
 b2Body* PhysicSystem::createBody(int entity, float x, float y, float width, float height, float rotation, bool isDynamic)
@@ -165,5 +171,6 @@ void PhysicSystem::deleteBody(int entity)
 
 void PhysicSystem::deletePosition(int entity)
 {
-    mPositions.erase(entity);
+    if(mPositions.find(entity) != mPositions.end())
+        mPositions.erase(entity);
 }

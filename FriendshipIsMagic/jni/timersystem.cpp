@@ -33,17 +33,30 @@ void TimerSystem::update(sf::Time dt)
 void TimerSystem::insertTimer(int entity, float time)
 {
     sf::Time t = sf::seconds(time);
-    mTimes.insert(std::make_pair(entity, t));
-    mCurrentTimers.insert(std::make_pair(entity, sf::Time::Zero));
+
+    if (mTimes.find(entity) == mTimes.end())
+        mTimes.insert(std::make_pair(entity, t));
+    else
+        mTimes[entity] = t;
+
+    if(mCurrentTimers.find(entity) == mCurrentTimers.end())
+        mCurrentTimers.insert(std::make_pair(entity, sf::Time::Zero));
+    else
+        mCurrentTimers[entity] = sf::Time::Zero;
 }
 
 void TimerSystem::deleteTimer(int entity)
 {
-    mTimes.erase(entity);
-    mCurrentTimers.erase(entity);
+    if (mTimes.find(entity) != mTimes.end())
+        mTimes.erase(entity);
+    if(mCurrentTimers.find(entity) != mCurrentTimers.end())
+        mCurrentTimers.erase(entity);
 }
 
 void TimerSystem::timerOn(int entity)
 {
-    mCurrentTimers.insert(std::make_pair(entity, sf::Time::Zero));
+    if(mCurrentTimers.find(entity) == mCurrentTimers.end())
+        mCurrentTimers.insert(std::make_pair(entity, sf::Time::Zero));
+    else
+        mCurrentTimers[entity] = sf::Time::Zero;
 }

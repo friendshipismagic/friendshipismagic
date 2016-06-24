@@ -67,16 +67,16 @@ void World::draw()
 int World::createEntity(Systems::Mask mask, std::string fileName, float x, float y)
 {
     int entity = mMasks.size(); //This id is not own by anyone, so we can provide it for the new Entity
-    /*for(auto mask : mMasks)
+    for(auto m: mMasks)
     {
-        if (mask.second == Systems::Mask::NONE) //We seek for an empty entity
+        if (m.second == Systems::Mask::NONE) //We seek for an empty entity
         {
-            entity = mask.first;
+            entity = m.first;
+            mMasks.erase(entity);
             break;
         }
-    }*/
-    //std::cout << entity << std::endl;
-    mMasks.insert(std::make_pair(entity, mask)); //We add the entity's mask in the map
+    }
+    insertMask(entity, mask); //We add the entity's mask in the map
     int scale = physics->getScale();
 
     //We open the JSON file
@@ -218,7 +218,7 @@ void World::sigDestroyEntity(int entity)
     }
     if(entity == mPlayerID)
         createPlayer();
-     if(entity == mCoPlayerID)
+    if(entity == mCoPlayerID)
         createCoPlayer();
 }
 
@@ -294,4 +294,12 @@ void World::createCoPlayer()
     graphics->attachSprite(mCoPlayerID, mCoPlayerWeaponID);
     insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     sensorTwo = mCoPlayerID + 1;
+}
+
+void World::insertMask(int entity, Systems::Mask mask)
+{
+    if (mMasks.find(entity) != mMasks.end())
+        mMasks[entity] = mask;
+    else
+        mMasks.insert(std::make_pair(entity, mask));
 }

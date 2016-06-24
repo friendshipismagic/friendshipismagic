@@ -10,7 +10,6 @@ GraphicSystem::GraphicSystem(World* world, State::Context context, PhysicSystem*
     background = new sf::Sprite();
     background->setTexture(*t);
     background->setPosition(-100, 0);
-
 }
 
 void GraphicSystem::update(sf::Time dt)
@@ -33,7 +32,7 @@ void GraphicSystem::draw()
 {
     mWindow->draw(*background);
 
-    for(std::pair<const int, sf::Sprite> sprite: mSprites)
+    for(auto sprite: mSprites)
     {
         mWindow->draw(sprite.second);
     }
@@ -61,12 +60,16 @@ void GraphicSystem::insertSprite(int entity, std::string id, float rotation, flo
     sprite.setScale(w/width, h/height);
     sprite.setPosition(-1000,-1000); // the first position needs to be invisible
 
-    mSprites.insert(std::make_pair(entity, sprite));
+    if(mSprites.find(entity) == mSprites.end())
+        mSprites.insert(std::make_pair(entity, sprite));
+    else
+        mSprites[entity] = sprite;
 }
 
 void GraphicSystem::deleteSprite(int entity)
 {
-    mSprites.erase(entity);
+    if (mSprites.find(entity) != mSprites.end())
+        mSprites.erase(entity);
     if (mDependencies.find(entity) != mDependencies.end())
         mDependencies.erase(entity);
 }

@@ -49,6 +49,8 @@ class World
         void createPlayer();
         void createCoPlayer();
 
+        void insertMask(int entity, Systems::Mask mask);
+
     private:
 
         State::Context mContext;
