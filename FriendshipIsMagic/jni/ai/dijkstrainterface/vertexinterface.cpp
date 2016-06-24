@@ -67,6 +67,7 @@ vector<VertexInterface*> VertexInterface::getSuccessors(VertexInterface* A, Grap
 		// Informations about the neighbour
 		int index = VertexInterface::coordinatesToMatrix(coord.first,coord.second,g);
 		VertexInterface* neighbour = graph[index];
+		if (neighbour == nullptr) continue;
 		char neighbourType = neighbour->getType();
 
 		if(neighbourType != 'W')
