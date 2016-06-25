@@ -32,6 +32,9 @@ World::World(State::Context context)
     mItems = new ItemSystem(this, context);
     mSystems.push_back(mItems);
 
+    mScores = new ScoreSystem(this, context);
+    mSystems.push_back(mScores);
+
     mGraphics->setPositionProvider(mPhysics->getPositionProvider());
 
     createPlayer();
@@ -83,10 +86,19 @@ void World::update(sf::Time dt)
 
     mEntitiesToDestroy.clear();
 
-    if(mMasks[mPlayerID] == Systems::Mask::NONE)
+    bool playerDead = mMasks[mPlayerID] == Systems::Mask::NONE;
+    bool coPlayerDead = mMasks[mCoPlayerID] == Systems::Mask::NONE;
+    if(playerDead)
+    {
         createPlayer();
-    if(mMasks[mCoPlayerID] == Systems::Mask::NONE)
+        mScores->addToScore(mPlayerID, -1000);
+    }
+    if(coPlayerDead)
+    {
         createCoPlayer();
+        mScores->addToScore(mCoPlayerID, -1000);
+    }
+
 }
 
 void World::draw()
@@ -194,6 +206,10 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
 
         insertDependency(entity, healthBarID);
     }
+    if ((mask & Systems::Component::SCORE) == Systems::Component::SCORE)
+    {
+        mScores->insertScore(entity, 0);
+    }
 
     return entity;
 }
@@ -234,6 +250,10 @@ void World::destroyEntity(Entity entity)
     if ((mask & Systems::Component::HEALTH) == Systems::Component::HEALTH)
     {
         mHealth->deleteHealth(entity);
+    }
+    if ((mask & Systems::Component::OWNER) == Systems::Component::OWNER)
+    {
+        mWeapons->deleteOwner(entity);
     }
 
     mMasks[entity] = Systems::Mask::NONE;
