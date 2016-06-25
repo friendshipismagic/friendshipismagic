@@ -15,7 +15,8 @@ namespace Systems
         TIMER = 1 << 4,
         DAMAGE = 1 << 5,
         WEAPONTYPE = 1 << 6,
-        HEALTH = 1 << 7
+        HEALTH = 1 << 7,
+        ITEMTYPE = 1 << 8
     };
 
     enum Mask
@@ -24,11 +25,10 @@ namespace Systems
         TAKEN = -1,
         GRAPHICELEMENT = SPRITE | POSITION, // 5
         BULLET = BODY | SPRITE | TIMER | DAMAGE | POSITION,
-        PLAYER = SENSOR | BODY | SPRITE | HEALTH | POSITION, //143
+        PLAYER = SENSOR | BODY | SPRITE | HEALTH | POSITION | WEAPONTYPE, //143
         BLOC = BODY | SPRITE | POSITION,
         WEAPON = SPRITE | TIMER | WEAPONTYPE | POSITION, //85
-        ITEM = SPRITE | TIMER | POSITION,
-        WEAPONITEM = SPRITE | BODY | TIMER | WEAPONTYPE | POSITION
+        ITEM = SPRITE | TIMER | POSITION | ITEMTYPE | BODY
     };
 };
 

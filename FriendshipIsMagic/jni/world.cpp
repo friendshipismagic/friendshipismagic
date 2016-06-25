@@ -8,33 +8,37 @@ World::World(State::Context context)
 : mContext(context)
 , mSystems()
 {
-    inputs = new InputSystem(this, context);
-    mSystems.push_back(inputs);
+    mInputs = new InputSystem(this, context);
+    mSystems.push_back(mInputs);
 
-    logics = new LogicSystem(this, context, inputs);
-    mSystems.push_back(logics);
+    mLogics = new LogicSystem(this, context, mInputs);
+    mSystems.push_back(mLogics);
 
-    physics =  new PhysicSystem(this, context, logics);
-    mSystems.push_back(physics);
+    mPhysics =  new PhysicSystem(this, context, mLogics);
+    mSystems.push_back(mPhysics);
 
-    graphics = new GraphicSystem(this, context, physics, logics);
-    mSystems.push_back(graphics);
+    mGraphics = new GraphicSystem(this, context, mPhysics, mLogics);
+    mSystems.push_back(mGraphics);
 
-    timers = new TimerSystem(this, context);
-    mSystems.push_back(timers);
+    mTimers = new TimerSystem(this, context);
+    mSystems.push_back(mTimers);
 
-    weapons = new WeaponSystem(this, context);
-    mSystems.push_back(weapons);
+    mWeapons = new WeaponSystem(this, context);
+    mSystems.push_back(mWeapons);
 
-    health = new HealthSystem(this, context, graphics);
-    mSystems.push_back(health);
+    mHealth = new HealthSystem(this, context, mGraphics);
+    mSystems.push_back(mHealth);
 
-    graphics->setPositionProvider(physics->getPositionProvider());
+    mItems = new ItemSystem(this, context);
+    mSystems.push_back(mItems);
+
+    mGraphics->setPositionProvider(mPhysics->getPositionProvider());
 
     createPlayer();
     createCoPlayer();
 
-    createEntity(Systems::Mask::WEAPONITEM, "Entities/uziitem.txt", 6, 4);
+    createEntity(Systems::Mask::ITEM, "Entities/uziitem.txt", 6, 4);
+    createEntity(Systems::Mask::ITEM, "Entities/swapitem.txt", 7, 5);
     createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt", 3, 6.5);
     createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 3, 5.2);
     createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.2);
@@ -42,7 +46,7 @@ World::World(State::Context context)
 
 void World::handleEvent(const sf::Event& event)
 {
-    inputs->handleEvent(event);
+    mInputs->handleEvent(event);
 }
 
 void World::update(sf::Time dt)
@@ -67,7 +71,7 @@ void World::update(sf::Time dt)
 
 void World::draw()
 {
-    graphics->draw();
+    mGraphics->draw();
 }
 
 Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, float y)
@@ -83,7 +87,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
         }
     }
     insertMask(entity, mask); //We add the entity's mask in the map
-    int scale = physics->getScale();
+    int scale = mPhysics->getScale();
 
     //We open the JSON file
     FileStream file;
@@ -109,7 +113,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     {
         Json::Value body = components["body"];
 
-        b2Body* newBody = physics->createBody(entity,
+        b2Body* newBody = mPhysics->createBody(entity,
                                               x,
                                               y,
                                               body["width"].asFloat(),
@@ -122,46 +126,51 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
         newBody->SetGravityScale(body["gravityScale"].asFloat());
         newBody->SetLinearVelocity(b2Vec2({body["vx"].asFloat(), body["vy"].asFloat()}));
 
-        //physics->insertPosition(entity, newBody->GetPosition());
-        physics->insertBody(entity, newBody);
+        mPhysics->insertBody(entity, newBody);
     }
     if ((mask & Systems::Component::SENSOR) == Systems::Component::SENSOR)
     {
-        physics->addSensor(entity, entity + 1);
+        mPhysics->addSensor(entity, entity + 1);
         mMasks.insert(std::make_pair(entity + 1, Systems::Mask::TAKEN));
     }
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
     {
         Json::Value timer = components["timer"];
-        timers->insertTimer(entity, timer["time"].asFloat());
+        mTimers->insertTimer(entity, timer["time"].asFloat());
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {
-        physics->insertPosition(entity, b2Vec2({scale*x, scale*y}));
+        mPhysics->insertPosition(entity, b2Vec2({scale*x, scale*y}));
     }
     if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
     {
         Json::Value sprite = components["sprite"];
-        graphics->insertSprite(entity, sprite["texture"].asString(), sprite["rotation"].asFloat(), sprite["width"].asFloat(), sprite["height"].asFloat());
+        mGraphics->insertSprite(entity, sprite["texture"].asString(), sprite["rotation"].asFloat(), sprite["width"].asFloat(), sprite["height"].asFloat());
+    }
+    if ((mask & Systems::Component::ITEMTYPE) == Systems::Component::ITEMTYPE)
+    {
+        ItemType type = mItems->fromString(components["type"].asString());
+        mItems->insertType(entity, type);
+        if (type == ItemType::weapon)
+            mWeapons->insertWeaponType(entity, components["weaponType"].asString());
     }
     if ((mask & Systems::Component::WEAPONTYPE) == Systems::Component::WEAPONTYPE)
     {
-        std::string weaponType = components["weaponType"].asString();
-        weapons->insertWeaponType(entity, weaponType);
+        mWeapons->insertWeaponType(entity, components["weaponType"].asString());
     }
     if ((mask & Systems::Component::DAMAGE) == Systems::Component::DAMAGE)
     {
         int damage = components["damage"].asInt();
-        weapons->insertDamage(entity, damage);
+        mWeapons->insertDamage(entity, damage);
     }
     if ((mask & Systems::Component::HEALTH) == Systems::Component::HEALTH)
     {
         int life = components["health"].asInt();
-        health->insertHealth(entity, life);
+        mHealth->insertHealth(entity, life);
 
         Entity healthBarID = createEntity(Systems::Mask::GRAPHICELEMENT, "Entities/healthbar.txt", 0, Player::HealthBarTopPadding);
-        graphics->insertDependency(entity, healthBarID);
-        health->insertHealthBar(entity, healthBarID);
+        mGraphics->insertDependency(entity, healthBarID);
+        mHealth->insertHealthBar(entity, healthBarID);
 
         insertDependency(entity, healthBarID);
     }
@@ -177,31 +186,34 @@ void World::destroyEntity(Entity entity)
 
     if ((mask & Systems::Component::BODY) == Systems::Component::BODY)
     {
-        physics->deleteBody(entity);
+        mPhysics->deleteBody(entity);
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {
-        physics->deletePosition(entity);
+        mPhysics->deletePosition(entity);
     }
     if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
     {
-        graphics->deleteSprite(entity);
+        mGraphics->deleteSprite(entity);
     }
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
     {
-        timers->deleteTimer(entity);
+        mTimers->deleteTimer(entity);
     }
-    if ((mask & Systems::Component::WEAPONTYPE) == Systems::Component::WEAPONTYPE)
+    if ((mask & Systems::Component::ITEMTYPE) == Systems::Component::ITEMTYPE)
     {
-        weapons->deleteWeaponType(entity);
+        if (mItems->getType(entity) == ItemType::weapon)
+            mWeapons->deleteWeaponType(entity);
+
+        mItems->deleteType(entity);
     }
     if ((mask & Systems::Component::DAMAGE) == Systems::Component::DAMAGE)
     {
-        weapons->deleteDamage(entity);
+        mWeapons->deleteDamage(entity);
     }
     if ((mask & Systems::Component::HEALTH) == Systems::Component::HEALTH)
     {
-        health->deleteHealth(entity);
+        mHealth->deleteHealth(entity);
     }
 
     mMasks[entity] = Systems::Mask::NONE;
@@ -238,21 +250,55 @@ void World::sigTimerCall(Entity entity)
         mEntitiesToDestroy.push_back(entity);
     else if(mask == Systems::Mask::WEAPON)
     {
-        logics->setLogic(Logic::canFire, true);
+        mLogics->setLogic(Logic::canFire, true);
     }
-    else if(mask == Systems::Mask::WEAPONITEM)
+    else if(mask == Systems::Mask::ITEM)
     {
         mEntitiesToDestroy.push_back(entity);
     }
 }
 
-void World::sigCollisionWeaponItem(Entity entityPlayer, Entity entityItem)
+void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
 {
     mEntitiesToDestroy.push_back(entityItem);
-    mEntitiesToDestroy.push_back(mPlayerWeaponID);
-    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapons->getWeaponType(entityItem) + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
-    graphics->insertDependency(mPlayerID, mPlayerWeaponID);
-    insertDependency(mPlayerID, mPlayerWeaponID);
+    ItemType type = mItems->getType(entityItem);
+
+    if (type == ItemType::weapon)
+    {
+        Entity weapon = mPlayerWeaponID;
+        if (entityPlayer == mCoPlayerID)
+            weapon = mCoPlayerWeaponID;
+
+        mEntitiesToDestroy.push_back(weapon);
+        std::string weaponType = mWeapons->getWeaponType(entityItem);
+        weapon = createEntity(Systems::Mask::WEAPON, "Entities/" + weaponType + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
+        mGraphics->insertDependency(entityPlayer, weapon);
+        insertDependency(entityPlayer, weapon);
+        mWeapons->insertWeaponType(entityPlayer, weaponType);
+
+        if (entityPlayer == mCoPlayerID)
+             mCoPlayerWeaponID = weapon;
+        else
+            mPlayerWeaponID = weapon;
+    }
+    else if (type == ItemType::swapstuff)
+    {
+        std::string coweapon = mWeapons->getWeaponType(mCoPlayerID);
+        std::string weapon = mWeapons->getWeaponType(mPlayerID);
+
+        mEntitiesToDestroy.push_back(mPlayerWeaponID);
+        mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + coweapon + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
+        mGraphics->insertDependency(mPlayerID, mPlayerWeaponID);
+        insertDependency(mPlayerID, mPlayerWeaponID);
+
+        mEntitiesToDestroy.push_back(mCoPlayerWeaponID);
+        mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapon + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
+        mGraphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
+        insertDependency(mCoPlayerID, mCoPlayerWeaponID);
+
+        mWeapons->insertWeaponType(mPlayerID, coweapon);
+        mWeapons->insertWeaponType(mCoPlayerID, weapon);
+    }
 }
 
 void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
@@ -260,14 +306,14 @@ void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
     mEntitiesToDestroy.push_back(entityBullet);
     if ((mMasks[entityVictim] & Systems::Component::HEALTH) == Systems::Component::HEALTH)
     {
-        int damage = weapons->getDamage(entityBullet);
-        health->addToHealth(entityVictim, damage);
+        int damage = mWeapons->getDamage(entityBullet);
+        mHealth->addToHealth(entityVictim, damage);
     }
 }
 
 void World::timerOn(Entity entity)
 {
-    timers->timerOn(entity);
+    mTimers->timerOn(entity);
 }
 
 void World::insertDependency(Entity entityFather, Entity entitySon)
@@ -304,7 +350,7 @@ void World::createPlayer()
 {
     mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", Player::SpawnLocationX, Player::SpawnLocationY);
     mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
-    graphics->insertDependency(mPlayerID, mPlayerWeaponID);
+    mGraphics->insertDependency(mPlayerID, mPlayerWeaponID);
     insertDependency(mPlayerID, mPlayerWeaponID);
     sensorOne = mPlayerID + 1;
 }
@@ -313,7 +359,7 @@ void World::createCoPlayer()
 {
     mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", Player::SpawnLocationX, Player::SpawnLocationY);
     mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
-    graphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
+    mGraphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     sensorTwo = mCoPlayerID + 1;
 }

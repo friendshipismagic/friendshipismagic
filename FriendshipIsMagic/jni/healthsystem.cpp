@@ -24,7 +24,7 @@ void HealthSystem::update(sf::Time dt)
 
 int HealthSystem::getCurrentHealth(Entity entity)
 {
-    assert(mCurrentHealth.find(entity) == mCurrentHealth.end());
+    assert(mCurrentHealth.find(entity) != mCurrentHealth.end());
     return mCurrentHealth[entity];
 }
 

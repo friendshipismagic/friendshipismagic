@@ -27,9 +27,9 @@ void CollisionSystem::BeginContact(b2Contact* contact)
     if((maskB == Systems::Mask::BULLET) && (maskA != Systems::Mask::BULLET))
         mGameWorld->sigCollisionBullet(entityB, entityA);
 
-    if((maskA == Systems::Mask::PLAYER) && (maskB == Systems::Mask::WEAPONITEM))
+    if((maskA == Systems::Mask::PLAYER) && (maskB == Systems::Mask::ITEM))
     {
-        mGameWorld->sigCollisionWeaponItem(entityA, entityB);
+        mGameWorld->sigCollisionItem(entityA, entityB);
     }
 
     //check if fixture A was the foot sensor

@@ -10,6 +10,7 @@
 #include "logicsystem.h"
 #include "weaponsystem.h"
 #include "healthsystem.h"
+#include "itemsystem.h"
 #include <Box2D/Box2D.h>
 #include <set>
 #include "entity.h"
@@ -28,7 +29,7 @@ class World
         void destroyEntity(Entity entity);
         void sigDestroyEntity(Entity entity);
         void sigTimerCall(Entity entity);
-        void sigCollisionWeaponItem(Entity entityPlayer, Entity entityItem);
+        void sigCollisionItem(Entity entityPlayer, Entity entityItem);
         void sigCollisionBullet(Entity entityBullet, Entity entityVictim);
         void timerOn(Entity entity);
 
@@ -61,13 +62,14 @@ class World
         std::map<Entity, Entity> mFathers;
 
         std::vector<Entity> mEntitiesToDestroy;
-        GraphicSystem* graphics;
-        TimerSystem* timers;
-        PhysicSystem* physics;
-        InputSystem* inputs;
-        LogicSystem* logics;
-        WeaponSystem* weapons;
-        HealthSystem* health;
+        GraphicSystem* mGraphics;
+        TimerSystem* mTimers;
+        PhysicSystem* mPhysics;
+        InputSystem* mInputs;
+        LogicSystem* mLogics;
+        WeaponSystem* mWeapons;
+        HealthSystem* mHealth;
+        ItemSystem* mItems;
 
         Entity mPlayerID = 0;
         Entity mPlayerWeaponID = 1;
