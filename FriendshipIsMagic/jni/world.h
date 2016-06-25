@@ -12,6 +12,7 @@
 #include "healthsystem.h"
 #include "itemsystem.h"
 #include "scoresystem.h"
+#include "soundsystem.h"
 #include <Box2D/Box2D.h>
 #include <set>
 #include "entity.h"
@@ -72,6 +73,7 @@ class World
         HealthSystem* mHealth;
         ItemSystem* mItems;
         ScoreSystem* mScores;
+        SoundSystem* mSounds;
 
         Entity mPlayerID = 0;
         Entity mPlayerWeaponID = 1;

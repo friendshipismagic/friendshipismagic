@@ -35,6 +35,9 @@ World::World(State::Context context)
     mScores = new ScoreSystem(this, context);
     mSystems.push_back(mScores);
 
+    mSounds = new SoundSystem(this, context);
+    mSystems.push_back(mSounds);
+
     mGraphics->setPositionProvider(mPhysics->getPositionProvider());
 
     createPlayer();
@@ -77,6 +80,8 @@ void World::update(sf::Time dt)
 
         mLogics->setLogic(Logic::canFire, false);
         timerOn(mPlayerWeaponID);
+
+        mSounds->play("Gun");
     }
 
     for(Entity entity : mEntitiesToDestroy)
@@ -353,6 +358,11 @@ void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
 
         int damage = mWeapons->getDamage(weapon);
         mHealth->addToHealth(entityVictim, damage);
+    }
+
+    if ((entityVictim == mPlayerID) || (entityVictim == mCoPlayerID))
+    {
+        mSounds->play("Hit");
     }
 }
 

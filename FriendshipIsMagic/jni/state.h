@@ -24,16 +24,18 @@ class State
 
         struct Context
         {
-            Context(sf::RenderWindow& win, TextureHolder& textu, FontHolder& fon)
+            Context(sf::RenderWindow& win, TextureHolder& textu, FontHolder& fon, SoundBufferHolder& s)
             {
                 window = &win;
                 textures = &textu;
                 fonts = &fon;
+                sounds = &s;
             }
 
             sf::RenderWindow* window;
             TextureHolder* textures;
             FontHolder* fonts;
+            SoundBufferHolder* sounds;
         };
 
     public:

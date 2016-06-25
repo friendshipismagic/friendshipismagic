@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <memory>
 #include "json.h"
 #include <iostream>
@@ -35,7 +36,7 @@ void ResourceHolder<Resource>::loadFromFile(std::string fileName)
 {
     Json::Value root;
     Json::Reader reader;
- 
+
     #ifdef ANDROID_BUILD
         auto file = AAssetManager_open(sf::getNativeActivity()->assetManager, fileName.c_str(), AASSET_MODE_UNKNOWN);
         std::size_t size = AAsset_getLength(file);
@@ -43,7 +44,7 @@ void ResourceHolder<Resource>::loadFromFile(std::string fileName)
         AAsset_read(file,buffer,size);
         AAsset_close(file);
 
-        if (!reader.parse(buffer, root, false)) 
+        if (!reader.parse(buffer, root, false))
         {
             throw std::runtime_error("Error while reading" + fileName + "file:\n" + reader.getFormattedErrorMessages());
 
@@ -98,3 +99,4 @@ void ResourceHolder<Resource>::load(std::string id, std::string filename)
 
 using TextureHolder = ResourceHolder<sf::Texture>;
 using FontHolder = ResourceHolder<sf::Font>;
+using SoundBufferHolder = ResourceHolder<sf::SoundBuffer>;
