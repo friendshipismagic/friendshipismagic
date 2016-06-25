@@ -4,7 +4,6 @@
 GraphicSystem::GraphicSystem(World* world, State::Context context, PhysicSystem* physics, LogicSystem* logics)
 : System(world, context)
 , mWindow(context.window)
-, mSprites()
 , mPhysics(physics)
 , mLogics(logics)
 {
@@ -12,6 +11,7 @@ GraphicSystem::GraphicSystem(World* world, State::Context context, PhysicSystem*
     background = new sf::Sprite();
     background->setTexture(*t);
     background->setPosition(-100, 0);
+    addToScene(background, 0);
 }
 
 void GraphicSystem::update(sf::Time dt)
@@ -37,9 +37,12 @@ void GraphicSystem::draw()
 {
     mWindow->draw(*background);
 
-    for(auto sprite: mSprites)
+    for(auto layerScene: mScene)
     {
-        mWindow->draw(sprite.second);
+        for(sf::Sprite* sprite: layerScene.second)
+        {
+            mWindow->draw(*sprite);
+        }
     }
 }
 
@@ -64,12 +67,17 @@ void GraphicSystem::insertSprite(Entity entity, std::string id, float rotation, 
         mSprites.insert(std::make_pair(entity, sprite));
     else
         mSprites[entity] = sprite;
+
+    addToScene(&mSprites[entity], 1);
 }
 
 void GraphicSystem::deleteSprite(Entity entity)
 {
     if (mSprites.find(entity) != mSprites.end())
+    {
+        eraseFromScene(&mSprites[entity]);
         mSprites.erase(entity);
+    }
 
     if (mSons.find(entity) != mSons.end())
     {
@@ -83,6 +91,7 @@ void GraphicSystem::deleteSprite(Entity entity)
         deleteDependency(mFathers[entity], entity);
         mFathers.erase(entity);
     }
+
 }
 
 void GraphicSystem::setSize(Entity entity, float w, float h)
@@ -142,5 +151,35 @@ void GraphicSystem::deleteDependency(Entity entityFather, Entity entitySon)
     if (mFathers.find(entitySon) == mFathers.end())
     {
         mFathers.erase(entitySon);
+    }
+}
+
+void GraphicSystem::addToScene(sf::Sprite* node, int layer)
+{
+    if (mScene.find(layer) != mScene.end())
+        mScene[layer].push_back(node);
+    else
+    {
+        std::vector<sf::Sprite*> layerScene;
+        layerScene.push_back(node);
+        mScene.insert(std::make_pair(layer, layerScene));
+    }
+}
+
+void GraphicSystem::eraseFromScene(sf::Sprite* node)
+{
+    for(unsigned int layer = 0; layer < mScene.size() ;layer++)
+    {
+        if (mScene.find(layer) != mScene.end())
+        {
+            auto layerScene = mScene[layer];
+            for(unsigned int i = 0; i < layerScene.size(); i++)
+            {
+                if (layerScene[i] == node)
+                    layerScene.erase(layerScene.begin() + i);
+            }
+            mScene[layer] = layerScene;
+        }
+
     }
 }

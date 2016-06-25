@@ -27,6 +27,9 @@ class GraphicSystem : public System
         void setSize(Entity entity, float w , float h);
         void mirror(Entity entity, int m);
 
+        void addToScene(sf::Sprite* node, int layer);
+        void eraseFromScene(sf::Sprite* node);
+
     private:
 
         sf::RenderWindow* mWindow;
@@ -37,6 +40,8 @@ class GraphicSystem : public System
 
         std::map<Entity, std::set<Entity> > mSons;
         std::map<Entity, Entity> mFathers;
+
+        std::map<int, std::vector<sf::Sprite*> > mScene;
 
         PositionProvider* mPositionProvider;
         PhysicSystem* mPhysics;
