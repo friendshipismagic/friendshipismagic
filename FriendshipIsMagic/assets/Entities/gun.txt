@@ -3,6 +3,7 @@
 {
 "sprite":{"texture":"WaterGun", "width":20, "height":16, "rotation":0},
 "timer":{"time":0.6},
-"weaponType":"gun"
+"weaponType":"gun",
+"damage":-20
 }
 }

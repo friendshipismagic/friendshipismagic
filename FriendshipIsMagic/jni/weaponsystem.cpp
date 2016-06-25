@@ -51,3 +51,23 @@ void WeaponSystem::deleteDamage(Entity entity)
     if(mDamages.find(entity) != mDamages.end())
         mDamages.erase(entity);
 }
+
+Entity WeaponSystem::getOwner(Entity entity)
+{
+    assert(mBulletOwner.find(entity) != mBulletOwner.end());
+    return mBulletOwner[entity];
+}
+
+void WeaponSystem::insertOwner(Entity entity, Entity owner)
+{
+    if (mBulletOwner.find(entity) == mBulletOwner.end())
+        mBulletOwner.insert(std::make_pair(entity, owner));
+    else
+        mBulletOwner[entity] = owner;
+}
+
+void WeaponSystem::deleteOwner(Entity entity)
+{
+    if(mBulletOwner.find(entity) != mBulletOwner.end())
+        mBulletOwner.erase(entity);
+}

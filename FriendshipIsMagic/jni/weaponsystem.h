@@ -23,9 +23,13 @@ class WeaponSystem: public System
         void insertDamage(Entity entity, int damage);
         void deleteDamage(Entity entity);
 
+        Entity getOwner(Entity entity);
+        void insertOwner(Entity entity, Entity owner);
+        void deleteOwner(Entity entity);
+
     private:
 
         std::map<Entity, std::string> mWeaponTypes;
         std::map<Entity, int> mDamages;
-
+        std::map<Entity, Entity> mBulletOwner;
 };

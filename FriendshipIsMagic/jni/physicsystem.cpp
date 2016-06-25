@@ -28,8 +28,6 @@ void PhysicSystem::update(sf::Time dt)
     bool mRight = logics->getLogic(Logic::moveRight);
     bool mLeft = logics->getLogic(Logic::moveLeft);
     bool mJump = logics->getLogic(Logic::isJumping);
-    bool mFire = logics->getLogic(Logic::fireOn);
-    bool isFacingLeft = logics->getLogic(Logic::isFacingLeft);
 
     mJumpTimer += dt;
 
@@ -58,20 +56,6 @@ void PhysicSystem::update(sf::Time dt)
         mPlayerBody->SetAwake(true);
         mPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mPlayerBody->GetMass()*6), mPlayerBody->GetWorldCenter(), true );
         mJumpTimer = sf::Time::Zero;
-    }
-    if (mFire && (logics->getLogic(Logic::canFire)))
-    {
-        if(isFacingLeft)
-        {
-            mGameWorld->createEntity(Systems::BULLET, "Entities/bulletL.txt", mPlayerBody->GetPosition().x - 0.4, mPlayerBody->GetPosition().y);
-        }
-        else
-        {
-            mGameWorld->createEntity(Systems::BULLET, "Entities/bulletR.txt", mPlayerBody->GetPosition().x + 0.4, mPlayerBody->GetPosition().y);
-        }
-
-        logics->setLogic(Logic::canFire, false);
-        mGameWorld->timerOn(mGameWorld->getPlayerWeaponID());
     }
 
     float32 timeStep = 1.0f / 60.0f;

@@ -56,6 +56,26 @@ void World::update(sf::Time dt)
         (*itr)->update(dt);
     }
 
+    if (mLogics->getLogic(Logic::fireOn) && mLogics->getLogic(Logic::canFire))
+    {
+        sf::Vector2f pos = mPhysics->getPosition(mPlayerID);
+        int scale = mPhysics->getScale();
+
+        if(mLogics->getLogic(Logic::isFacingLeft))
+        {
+            int bullet = createEntity(Systems::BULLET, "Entities/bulletL.txt", pos.x/scale - 0.4, pos.y/scale);
+            mWeapons->insertOwner(bullet, mPlayerID);
+        }
+        else
+        {
+            int bullet = createEntity(Systems::BULLET, "Entities/bulletR.txt", pos.x/scale + 0.4, pos.y/scale);
+            mWeapons->insertOwner(bullet, mPlayerID);
+        }
+
+        mLogics->setLogic(Logic::canFire, false);
+        timerOn(mPlayerWeaponID);
+    }
+
     for(Entity entity : mEntitiesToDestroy)
     {
         destroyEntity(entity);
@@ -248,7 +268,7 @@ void World::sigTimerCall(Entity entity)
 
     if(mask == Systems::Mask::BULLET)
         mEntitiesToDestroy.push_back(entity);
-    else if(mask == Systems::Mask::WEAPON)
+    else if(entity == mPlayerWeaponID)
     {
         mLogics->setLogic(Logic::canFire, true);
     }
@@ -283,8 +303,8 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
     }
     else if (type == ItemType::swapstuff)
     {
-        std::string coweapon = mWeapons->getWeaponType(mCoPlayerID);
-        std::string weapon = mWeapons->getWeaponType(mPlayerID);
+        std::string coweapon = mWeapons->getWeaponType(mCoPlayerWeaponID);
+        std::string weapon = mWeapons->getWeaponType(mPlayerWeaponID);
 
         mEntitiesToDestroy.push_back(mPlayerWeaponID);
         mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + coweapon + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
@@ -296,8 +316,8 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
         mGraphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
         insertDependency(mCoPlayerID, mCoPlayerWeaponID);
 
-        mWeapons->insertWeaponType(mPlayerID, coweapon);
-        mWeapons->insertWeaponType(mCoPlayerID, weapon);
+        mWeapons->insertWeaponType(mPlayerWeaponID, coweapon);
+        mWeapons->insertWeaponType(mCoPlayerWeaponID, weapon);
     }
 }
 
@@ -306,7 +326,12 @@ void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
     mEntitiesToDestroy.push_back(entityBullet);
     if ((mMasks[entityVictim] & Systems::Component::HEALTH) == Systems::Component::HEALTH)
     {
-        int damage = mWeapons->getDamage(entityBullet);
+        Entity owner = mWeapons->getOwner(entityBullet);
+        Entity weapon = mPlayerWeaponID;
+        if (owner == mCoPlayerID)
+            weapon = mCoPlayerWeaponID;
+
+        int damage = mWeapons->getDamage(weapon);
         mHealth->addToHealth(entityVictim, damage);
     }
 }

@@ -3,6 +3,7 @@
 {
 "sprite":{"texture":"Skull", "width":20, "height":16, "rotation":0},
 "timer":{"time":0.1},
-"weaponType":"uzi"
+"weaponType":"uzi",
+"damage":-10
 }
 }
