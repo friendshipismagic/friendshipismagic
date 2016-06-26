@@ -1,7 +1,6 @@
 #include "physicsystem.h"
-#include "bloc.h"
 #include <functional>
-#include "world.h"
+#include "../world.h"
 #include "collisionsystem.h"
 
 PhysicSystem::PhysicSystem(World* world, State::Context& context, LogicSystem* logics)

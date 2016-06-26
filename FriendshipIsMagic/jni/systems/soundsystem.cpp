@@ -1,5 +1,5 @@
 #include "soundsystem.h"
-#include "world.h"
+#include "../world.h"
 
 SoundSystem::SoundSystem(World* world, State::Context& context)
 : System(world, context)

@@ -1,6 +1,6 @@
 #include "healthsystem.h"
-#include "world.h"
-#include "player.h"
+#include "../world.h"
+#include "../player.h"
 
 HealthSystem::HealthSystem(World* world, State::Context& context, GraphicSystem* graphics)
 : System(world, context)

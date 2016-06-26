@@ -1,9 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "system.h"
-#include "state.h"
+#include "../states/state.h"
 #include "systemprovider.h"
-#include "entity.h"
+#include "../entity.h"
 
 class World;
 

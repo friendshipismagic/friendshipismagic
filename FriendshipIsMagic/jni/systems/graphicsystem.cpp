@@ -1,5 +1,5 @@
 #include "graphicsystem.h"
-#include "world.h"
+#include "../world.h"
 
 
 GraphicSystem::GraphicSystem(World* world, State::Context& context, PhysicSystem* physics, LogicSystem* logics)

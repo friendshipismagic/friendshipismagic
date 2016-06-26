@@ -8,8 +8,8 @@
 #ifndef NETWORK_SYSTEM_H_
 #define NETWORK_SYSTEM_H_
 #include "system.h"
-#include "network/udp-agent.h"
-#include "command/command.h"
+#include "../network/udp-agent.h"
+#include "../command/command.h"
 #include "inputsystem.h"
 
 class NetworkSystem : public System, public UDPListener{

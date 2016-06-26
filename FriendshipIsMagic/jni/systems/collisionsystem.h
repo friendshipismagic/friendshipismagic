@@ -1,6 +1,6 @@
 #pragma once
 #include "system.h"
-#include "state.h"
+#include "../states/state.h"
 #include <Box2D/Box2D.h>
 
 #include <SFML/System.hpp>

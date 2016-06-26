@@ -1,5 +1,5 @@
 #include "logicsystem.h"
-#include "world.h"
+#include "../world.h"
 
 LogicSystem::LogicSystem(World* world, State::Context& context, InputSystem* inputs, NetworkSystem* network)
 : System(world, context)

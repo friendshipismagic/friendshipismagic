@@ -1,6 +1,6 @@
 #pragma once
 #include "system.h"
-#include "state.h"
+#include "../states/state.h"
 #include "inputsystem.h"
 #include "network-system.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "system.h"
-#include "state.h"
-#include "entity.h"
+#include "../states/state.h"
+#include "../entity.h"
 
 enum ItemType { none, weapon, swapstuff, increaseMaxLife, heal};
 

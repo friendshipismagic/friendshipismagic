@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "system.h"
-#include "state.h"
+#include "../states/state.h"
 #include "systemprovider.h"
 
 enum Input { right, left, jump, fire };

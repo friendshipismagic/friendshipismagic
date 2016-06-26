@@ -1,5 +1,5 @@
 #include "weaponsystem.h"
-#include "world.h"
+#include "../world.h"
 
 WeaponSystem::WeaponSystem(World* world, State::Context& context)
 : System(world, context)

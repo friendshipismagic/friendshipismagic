@@ -2,12 +2,12 @@
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
 #include "system.h"
-#include "state.h"
-#include "player.h"
+#include "../states/state.h"
+#include "../player.h"
 #include "systemprovider.h"
 #include "collisionsystem.h"
 #include "logicsystem.h"
-#include "entity.h"
+#include "../entity.h"
 
 
 class World;

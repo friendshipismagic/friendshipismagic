@@ -1,9 +1,9 @@
 #include "filestream.hpp"
 
 #ifdef ANDROID_BUILD
-    #include "android/filestreamimpl.hpp"
+    #include "../android/filestreamimpl.hpp"
 #else
-    #include "vanilla/filestreamimpl.hpp"
+    #include "../vanilla/filestreamimpl.hpp"
 #endif
 
 FileStream::FileStream() {

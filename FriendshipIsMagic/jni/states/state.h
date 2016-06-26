@@ -1,10 +1,10 @@
 #pragma once
-#include "resourceholder.h"
+#include "../ressources/resourceholder.h"
 #include <map>
 #include <vector>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
-#include "network/udp-agent.h"
+#include "../network/udp-agent.h"
 
 
 class StateStack;

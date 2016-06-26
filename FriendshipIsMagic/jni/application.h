@@ -1,7 +1,7 @@
 #pragma once
-#include "state.h"
+#include "states/state.h"
 #include <SFML/Graphics.hpp>
-#include "statestack.h"
+#include "states/statestack.h"
 
 class Application
 {

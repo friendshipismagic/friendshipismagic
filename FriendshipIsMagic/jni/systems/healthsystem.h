@@ -1,8 +1,8 @@
 #pragma once
 #include "system.h"
-#include "state.h"
+#include "../states/state.h"
 #include "graphicsystem.h"
-#include "entity.h"
+#include "../entity.h"
 
 class HealthSystem: public System
 {

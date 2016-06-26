@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "system.h"
-#include "state.h"
+#include "../states/state.h"
 #include "systemprovider.h"
 #include "physicsystem.h"
-#include "entity.h"
+#include "../entity.h"
 #include <set>
 #include "logicsystem.h"
 

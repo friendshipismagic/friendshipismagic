@@ -10,9 +10,9 @@
 
 #include "state.h"
 
-#include "network/udp-agent.h"
+#include "../network/udp-agent.h"
 //#include <SFML/System/Mutex.hpp>
-#include "command/command.h"
+#include "../command/command.h"
 //#include <queue>          // std::queue
 
 class SettingsState: public State , public UDPListener{

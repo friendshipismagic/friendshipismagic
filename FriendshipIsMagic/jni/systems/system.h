@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/System.hpp>
-#include "state.h"
+#include "../states/state.h"
 
 class World;
 
