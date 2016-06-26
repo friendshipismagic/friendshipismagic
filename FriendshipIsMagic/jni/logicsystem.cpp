@@ -30,10 +30,28 @@ LogicSystem::LogicSystem(World* world, State::Context& context, InputSystem* inp
 
 void LogicSystem::update(sf::Time dt)
 {
-    mLogics[Logic::moveRight] = mInputs->getInputState(Input::right);
-    mLogics[Logic::moveLeft] = mInputs->getInputState(Input::left);
-    mLogics[Logic::fireOn] = mInputs->getInputState(Input::fire);
-    mLogics[Logic::isJumping] = mInputs->getInputState(Input::jump);
+	if(mContext.UDPMode == UDPAgent::Mode::Server){
+		mLogics[Logic::moveRight] = mInputs->getInputState(Input::right);
+		mLogics[Logic::moveLeft] = mInputs->getInputState(Input::left);
+		mLogics[Logic::fireOn] = mInputs->getInputState(Input::fire);
+		mLogics[Logic::isJumping] = mInputs->getInputState(Input::jump);
+
+		//coPLayer
+		mLogics[Logic::coMoveRight] = mNetwork->getInputState(Input::right);
+		mLogics[Logic::coMoveLeft] = mNetwork->getInputState(Input::left);
+		mLogics[Logic::coFireOn] = mNetwork->getInputState(Input::fire);
+		mLogics[Logic::coIsJumping] = mNetwork->getInputState(Input::jump);
+	}else if(mContext.UDPMode == UDPAgent::Mode::Client){
+		mLogics[Logic::moveRight] = mNetwork->getInputState(Input::right);
+		mLogics[Logic::moveLeft] = mNetwork->getInputState(Input::left);
+		mLogics[Logic::fireOn] = mNetwork->getInputState(Input::fire);
+		mLogics[Logic::isJumping] = mNetwork->getInputState(Input::jump);
+		//coPLayer
+		mLogics[Logic::coMoveRight] = mInputs->getInputState(Input::right);
+		mLogics[Logic::coMoveLeft] = mInputs->getInputState(Input::left);
+		mLogics[Logic::coFireOn] = mInputs->getInputState(Input::fire);
+		mLogics[Logic::coIsJumping] = mInputs->getInputState(Input::jump);
+	}
 
     if (mLogics[Logic::moveRight] && !mLogics[Logic::moveLeft])
     {
@@ -60,11 +78,7 @@ void LogicSystem::update(sf::Time dt)
     if (!mLogics[Logic::moveLeft] && !mLogics[Logic::moveRight])
         mLogics[Logic::changeDirection] = false;
 
-    //coPLayer
-    mLogics[Logic::coMoveRight] = mNetwork->getInputState(Input::right);
-	mLogics[Logic::coMoveLeft] = mNetwork->getInputState(Input::left);
-	mLogics[Logic::coFireOn] = mNetwork->getInputState(Input::fire);
-	mLogics[Logic::coIsJumping] = mNetwork->getInputState(Input::jump);
+
 
 
 	if (mLogics[Logic::coMoveRight])
