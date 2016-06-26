@@ -59,6 +59,17 @@ class MapElementRef : public MapElement {
         }
 };
 
+XMLNode *deepCopy( const XMLNode *src, XMLDocument *destDoc )
+{
+    XMLNode *current = src->ShallowClone( destDoc );
+    for( const XMLNode *child=src->FirstChild(); child; child=child->NextSibling() )
+    {
+        current->InsertEndChild( deepCopy( child, destDoc ) );
+    }
+
+    return current;
+}
+
 
 class MapElementData : public MapElement {
     private:
@@ -190,10 +201,35 @@ class MapVisitor : public XMLVisitor {
                 } else {
                     if (!id) return true;
                     std::cout << "\tfound group id '" << id << "'" << std::endl;
-                    auto element = new MapElementData(id,0,0);
-                    mCurrentLayer->addElement(element);
-                    mIds[id] = element;
-                    //groups.push_back(&element);
+                    auto mapElt= new MapElementData(id,0,0);
+                    mCurrentLayer->addElement(mapElt);
+                    mIds[id] = mapElt;
+
+                    XMLDocument document;
+                    auto decl = document.NewDeclaration("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+                    auto root = document.NewElement("svg");
+                        root->SetAttribute("xmlns:dc","http://purl.org/dc/elements/1.1/");
+                        root->SetAttribute("xmlns:cc","http://creativecommons.org/ns#");
+                        root->SetAttribute("xmlns:rdf","http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+                        root->SetAttribute("xmlns:svg","http://www.w3.org/2000/svg");
+                        root->SetAttribute("xmlns", "http://www.w3.org/2000/svg");
+                        root->SetAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");
+                        root->SetAttribute("xmlns:sodipodi","http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd");
+                        root->SetAttribute("xmlns:inkscape=","http://www.inkscape.org/namespaces/inkscape");
+   //width="210mm"
+   //height="297mm"
+   //viewBox="0 0 744.09448819 1052.3622047"
+   //id="svg2"
+                        root->SetAttribute("version","1.1");
+   //inkscape:version="0.91 r13725"
+   //sodipodi:docname="dessin.svg"
+                        document.InsertEndChild(root);
+                        // etc
+                    
+
+                    root->InsertEndChild(deepCopy(&element, &document));
+                    document.SaveFile(std::string("res/" + std::string(id) + ".svg").c_str());
+
                     return false;
                 }
             }
@@ -214,7 +250,8 @@ class MapVisitor : public XMLVisitor {
                 auto ref = mIds[s_href];
 
                 if (ref == nullptr) {
-                    std::cout << "hoho" << std::endl;
+                    std::cout << "hoho, problème d'id inexistant" << std::endl;
+                    return true;
                 }
                 auto element = new MapElementRef(ref, 0, 0);
 
@@ -232,7 +269,8 @@ class MapVisitor : public XMLVisitor {
 
         bool VisitExit(const XMLElement& element) override {
             
-            if (std::strcmp(element.Name(), "g")){
+            if (std::strcmp(element.Name(), "g") == 0){
+                std::cout << "<< quit group " << std::endl;
                 auto mode = element.Attribute("inkscape:groupmode");
                 auto label = element.Attribute("inkscape:label");
 
@@ -240,7 +278,7 @@ class MapVisitor : public XMLVisitor {
                     mCurrentLayer = nullptr;
 
                     std::cout << "Close layer '" << label << "'" << std::endl;
-                }
+                } 
             }
 
             return true;
