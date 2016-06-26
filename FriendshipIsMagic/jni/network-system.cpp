@@ -8,6 +8,9 @@
 #include "network-system.h"
 #include <SFML/System.hpp>
 
+//Network system
+
+
 void printString(sf::Packet pkt){
 	int t,r;
 	pkt >> t >> r;

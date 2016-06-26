@@ -10,7 +10,7 @@ class CollisionSystem: public System, public b2ContactListener
     public:
 
         CollisionSystem(World* world, State::Context context);
-        void update(sf::Time dt);
+        virtual void update(sf::Time dt);
 
         void BeginContact(b2Contact* contact);
         void EndContact(b2Contact* contact);

@@ -11,10 +11,10 @@ World::World(State::Context& context)
     mInputs = new InputSystem(this, context);
     mSystems.push_back(mInputs);
 
-    network = new NetworkSystem(this, context, inputs);
-    mSystems.push_back(network);
+    mNetwork = new NetworkSystem(this, context, mInputs);
+    mSystems.push_back(mNetwork);
 
-    mlogics = new LogicSystem(this, context, inputs, network);
+    mLogics = new LogicSystem(this, context, mInputs, mNetwork);
     mSystems.push_back(mLogics);
 
     mPhysics =  new PhysicSystem(this, context, mLogics);
@@ -58,11 +58,11 @@ World::World(State::Context& context)
 }
 //Server mode
 void World::startUDPServer(int srcPort){
-	network->startUDPServer(srcPort);
+	mNetwork->startUDPServer(srcPort);
 }
 //Client mode
 void World::startUDPClient(int srcPort, sf::IpAddress destIp, int destPort){
-	network->startUDPClient(srcPort, destIp, destPort);
+	mNetwork->startUDPClient(srcPort, destIp, destPort);
 }
 void World::handleEvent(const sf::Event& event)
 {
@@ -317,7 +317,7 @@ void World::sigDestroyEntity(Entity entity)
 {
     if(mEntitiesToDestroy.find(entity) == mEntitiesToDestroy.end())
     {
-        //std::cout << "Entity " << entity << " " << mMasks[entity] << std::endl;
+        std::cout << "Entity " << entity << " " << mMasks[entity] << std::endl;
         mEntitiesToDestroy.insert(entity);
         if (mSons.find(entity) != mSons.end())
         {
@@ -485,10 +485,3 @@ void World::insertMask(Entity entity, Systems::Mask mask)
         mMasks.insert(std::make_pair(entity, mask));
 }
 
-void World::insertMask(Entity entity, Systems::Mask mask)
-{
-    if (mMasks.find(entity) != mMasks.end())
-        mMasks[entity] = mask;
-    else
-        mMasks.insert(std::make_pair(entity, mask));
-}

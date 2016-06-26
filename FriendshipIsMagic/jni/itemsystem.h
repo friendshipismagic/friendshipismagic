@@ -10,7 +10,7 @@ class ItemSystem: public System
     public:
 
         ItemSystem(World* world, State::Context context);
-        void update(sf::Time dt);
+        virtual void update(sf::Time dt);
         ItemType getType(Entity entity);
 
         void insertType(Entity entity, ItemType type);

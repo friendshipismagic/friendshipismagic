@@ -10,7 +10,9 @@
 
 class GraphicSystem : public System
 {
+
     public:
+		//test
 
         GraphicSystem(World* world, State::Context& context, PhysicSystem* physics, LogicSystem* logics);
 

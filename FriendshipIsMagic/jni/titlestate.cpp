@@ -54,10 +54,12 @@ bool TitleState::handleEvent(const sf::Event& event)
 
         case sf::Event::Closed:
             requestStackPop();
-
+            break;
+        default:
+        	break;
+    }
     return true;
 }
-
 bool TitleState::update(sf::Time dt)
 {
     mTextEffectTime += dt;

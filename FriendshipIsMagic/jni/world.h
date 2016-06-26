@@ -71,7 +71,7 @@ class World
         TimerSystem* mTimers;
         PhysicSystem* mPhysics;
         InputSystem* mInputs;
-        NetworkSystem* network;
+        NetworkSystem* mNetwork;
         LogicSystem* mLogics;
         WeaponSystem* mWeapons;
         HealthSystem* mHealth;

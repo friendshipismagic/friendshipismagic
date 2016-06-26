@@ -15,7 +15,7 @@ void ItemSystem::update(sf::Time dt)
 ItemType ItemSystem::getType(Entity entity)
 {
     if(mTypes.find(entity) == mTypes.end())
-        throw std::runtime_error("ItemSystem : Failed to find type of " + entity);
+        throw std::runtime_error("ItemSystem : Failed to find type of " + std::to_string(entity));
     return mTypes[entity];
 }
 
