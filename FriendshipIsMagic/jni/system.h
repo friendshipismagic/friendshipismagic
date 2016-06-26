@@ -18,15 +18,17 @@ namespace Systems
         HEALTH = 1 << 7,
         ITEMTYPE = 1 << 8,
         OWNER = 1 << 9,
-        SCORE = 1 << 10
+        SCORE = 1 << 10,
+        PADDING = 1 << 11
     };
 
     enum Mask
     {
         NONE = 0,
-        TAKEN = -1,
+        TAKEN = 1 << 30,
         GRAPHICELEMENT = SPRITE | POSITION, // 5
-        BULLET = BODY | SPRITE | TIMER | OWNER | POSITION, // 535
+        HEALTHBAR = GRAPHICELEMENT | PADDING,
+        BULLET = BODY | SPRITE | TIMER | OWNER | POSITION | PADDING, // 535 + 2^11
         PLAYER = SENSOR | BODY | SPRITE | HEALTH | POSITION | SCORE, // 1167
         BLOC = BODY | SPRITE | POSITION, // 7
         WEAPON = SPRITE | TIMER | WEAPONTYPE | POSITION | DAMAGE, //117

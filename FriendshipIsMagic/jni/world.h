@@ -63,7 +63,7 @@ class World
         std::map<Entity, std::set<Entity> > mSons;
         std::map<Entity, Entity> mFathers;
 
-        std::vector<Entity> mEntitiesToDestroy;
+        std::set<Entity> mEntitiesToDestroy;
         GraphicSystem* mGraphics;
         TimerSystem* mTimers;
         PhysicSystem* mPhysics;
@@ -82,4 +82,6 @@ class World
         Entity mCoPlayerID = 2;
         Entity mCoPlayerWeaponID = 3;
         Entity sensorTwo = 0;
+
+        bool paddingRight = false;
 };

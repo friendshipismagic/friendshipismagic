@@ -33,6 +33,7 @@ class PhysicSystem: public System
         int getScale() { return mScale; };
 
         void mirror(Entity entity);
+        void mirrorVelocity(Entity entity);
 
     private:
 

@@ -160,3 +160,13 @@ void PhysicSystem::mirror(Entity entity)
         mPositions[entity] = sf::Vector2f({-pos.x, pos.y});
     }
 }
+
+void PhysicSystem::mirrorVelocity(Entity entity)
+{
+    if(mBodies.find(entity) != mBodies.end())
+    {
+        b2Body* body = mBodies[entity];
+        b2Vec2 vel = body->GetLinearVelocity();
+        body->SetLinearVelocity(b2Vec2({-vel.x, vel.y}));
+    }
+}
