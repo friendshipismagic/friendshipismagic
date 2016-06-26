@@ -1,7 +1,7 @@
 #include "world.h"
-#include "systems/physicsystem.h"
+#include "../systems/physicsystem.h"
 #include <string.h>
-#include "ressources/filestream.hpp"
+#include "../ressources/filestream.hpp"
 #include "player.h"
 
 World::World(State::Context& context)

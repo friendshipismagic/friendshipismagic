@@ -1,7 +1,7 @@
 #pragma once
 #include "system.h"
 #include "../states/state.h"
-#include "../entity.h"
+#include "../core/entity.h"
 
 namespace Weapon
 {

@@ -1,5 +1,5 @@
 #include "collisionsystem.h"
-#include "../world.h"
+#include "../core/world.h"
 
 CollisionSystem::CollisionSystem(World* world, State::Context context)
 : System(world, context)

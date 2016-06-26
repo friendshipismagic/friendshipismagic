@@ -3,7 +3,7 @@
 #include "system.h"
 #include "../states/state.h"
 #include "systemprovider.h"
-#include "../entity.h"
+#include "../core/entity.h"
 
 class World;
 

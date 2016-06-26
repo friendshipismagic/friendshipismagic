@@ -1,7 +1,7 @@
 #include "application.h"
-#include "states/titlestate.h"
-#include "states/settings-state.h"
-#include "states/gamestate.h"
+#include "../states/titlestate.h"
+#include "../states/settings-state.h"
+#include "../states/gamestate.h"
 
 Application::Application(State::Context& context)
 : mStateStack(context)

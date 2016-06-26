@@ -5,8 +5,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "ressources/resourceholder.h"
-#include "states/state.h"
+#include "../ressources/resourceholder.h"
+#include "../states/state.h"
 #include "application.h"
 //#include <iostream>
 #include <fstream>

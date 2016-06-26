@@ -2,7 +2,7 @@
 #include "system.h"
 #include "../states/state.h"
 #include "graphicsystem.h"
-#include "../entity.h"
+#include "../core/entity.h"
 
 class HealthSystem: public System
 {

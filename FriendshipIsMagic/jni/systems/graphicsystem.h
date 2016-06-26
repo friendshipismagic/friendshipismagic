@@ -4,7 +4,7 @@
 #include "../states/state.h"
 #include "systemprovider.h"
 #include "physicsystem.h"
-#include "../entity.h"
+#include "../core/entity.h"
 #include <set>
 #include "logicsystem.h"
 

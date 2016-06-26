@@ -1,5 +1,5 @@
 #include "scoresystem.h"
-#include "../world.h"
+#include "../core/world.h"
 
 ScoreSystem::ScoreSystem(World* world, State::Context context)
 : System(world, context)

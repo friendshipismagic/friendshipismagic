@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "state.h"
-#include "../world.h"
+#include "../core/world.h"
 
 class GameState: public State
 {

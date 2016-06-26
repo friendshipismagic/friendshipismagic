@@ -3,11 +3,11 @@
 #include <Box2D/Box2D.h>
 #include "system.h"
 #include "../states/state.h"
-#include "../player.h"
+#include "../core/player.h"
 #include "systemprovider.h"
 #include "collisionsystem.h"
 #include "logicsystem.h"
-#include "../entity.h"
+#include "../core/entity.h"
 
 
 class World;

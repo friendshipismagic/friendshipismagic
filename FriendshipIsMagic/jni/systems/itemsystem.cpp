@@ -1,5 +1,5 @@
 #include "itemsystem.h"
-#include "../world.h"
+#include "../core/world.h"
 
 ItemSystem::ItemSystem(World* world, State::Context context)
 : System(world, context)
