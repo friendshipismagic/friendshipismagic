@@ -3,7 +3,7 @@
 #include "state.h"
 #include "entity.h"
 
-enum ItemType { none, weapon, swapstuff};
+enum ItemType { none, weapon, swapstuff, increaseMaxLife, heal};
 
 class ItemSystem: public System
 {

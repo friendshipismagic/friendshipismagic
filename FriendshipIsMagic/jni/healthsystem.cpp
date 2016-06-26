@@ -1,5 +1,6 @@
 #include "healthsystem.h"
 #include "world.h"
+#include "player.h"
 
 HealthSystem::HealthSystem(World* world, State::Context context, GraphicSystem* graphics)
 : System(world, context)
@@ -12,13 +13,12 @@ void HealthSystem::update(sf::Time dt)
 {
     for(auto health : mCurrentHealth)
     {
-        float maxLife = mMaxHealth[health.first];
         int currentLife = health.second;
 
         if(currentLife <= 0)
             mGameWorld->sigDestroyEntity(health.first);
 
-        graphics->setSize(mHealthBarCorrelation[health.first], 50*currentLife/maxLife, 10);
+        graphics->setSize(mHealthBarCorrelation[health.first], Player::HealthBarNormalSize*currentLife/Player::NormalMaxLife, 10);
     }
 }
 
@@ -26,6 +26,12 @@ int HealthSystem::getCurrentHealth(Entity entity)
 {
     assert(mCurrentHealth.find(entity) != mCurrentHealth.end());
     return mCurrentHealth[entity];
+}
+
+int HealthSystem::getMaxHealth(Entity entity)
+{
+    assert(mMaxHealth.find(entity) != mMaxHealth.end());
+    return mMaxHealth[entity];
 }
 
 void HealthSystem::insertHealth(Entity entity, int health)

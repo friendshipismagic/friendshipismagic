@@ -12,6 +12,7 @@ class HealthSystem: public System
         void update(sf::Time dt);
 
         int getCurrentHealth(Entity entity);
+        int getMaxHealth(Entity entity);
         void insertHealth(Entity entity, int health);
         void deleteHealth(Entity entity);
         void insertHealthBar(Entity entityOwner, Entity entityHealthBar);

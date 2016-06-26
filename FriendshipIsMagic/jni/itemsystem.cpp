@@ -39,6 +39,10 @@ ItemType ItemSystem::fromString(std::string type)
         return ItemType::weapon;
     if (type.compare("swapstuff") == 0)
         return ItemType::swapstuff;
+     if (type.compare("heal") == 0)
+        return ItemType::heal;
+     if (type.compare("increaseMaxLife") == 0)
+        return ItemType::increaseMaxLife;
 
     return ItemType::none;
 }

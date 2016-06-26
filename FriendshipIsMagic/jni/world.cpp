@@ -47,6 +47,8 @@ World::World(State::Context context)
     createEntity(Systems::Mask::ITEM, "Entities/swapitem.txt", 7, 5);
     createEntity(Systems::Mask::ITEM, "Entities/raygunitem.txt", 8, 5);
     createEntity(Systems::Mask::ITEM, "Entities/shotgunitem.txt", 1, 5);
+    createEntity(Systems::Mask::ITEM, "Entities/healitem.txt", 3, 5.5);
+    createEntity(Systems::Mask::ITEM, "Entities/increasemaxlifeitem.txt", 4, 5.5);
     createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt", 3, 6.5);
     createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 9, 5.2);
     createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.2);
@@ -362,11 +364,13 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
         std::string weapon = mWeapons->getWeaponType(mPlayerWeaponID);
 
         sigDestroyEntity(mPlayerWeaponID);
+        deleteDependency(mPlayerID, mPlayerWeaponID);
         mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + coweapon + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
         mGraphics->insertDependency(mPlayerID, mPlayerWeaponID);
         insertDependency(mPlayerID, mPlayerWeaponID);
 
         sigDestroyEntity(mCoPlayerWeaponID);
+        deleteDependency(mCoPlayerID, mCoPlayerWeaponID);
         mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapon + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
         mGraphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
         insertDependency(mCoPlayerID, mCoPlayerWeaponID);
@@ -374,12 +378,18 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
         mWeapons->insertWeaponType(mPlayerWeaponID, coweapon);
         mWeapons->insertWeaponType(mCoPlayerWeaponID, weapon);
     }
+    else if (type == ItemType::heal)
+        mHealth->addToHealth(entityPlayer, +50);
+    else if (type == ItemType::increaseMaxLife)
+        mHealth->insertHealth(entityPlayer, mHealth->getMaxHealth(entityPlayer) + 50 );
 }
 
 void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
 {
     Entity owner = mWeapons->getOwner(entityBullet);
-    std::string weaponType = mWeapons->getWeaponType(owner);
+    std::string weaponType = mWeapons->getWeaponType(mPlayerWeaponID);
+     if (owner == mCoPlayerID)
+        weaponType = mCoPlayerWeaponID;
     if(entityVictim != owner)
     {
         if((weaponType.compare("shotgun")) != 0 && (weaponType.compare("raygun") != 0))
