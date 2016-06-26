@@ -23,9 +23,9 @@ class PhysicSystem: public System
         void insertPosition(Entity entity, b2Vec2 pos);
         void insertBody(Entity entity, b2Body* body);
 
-        b2Body* createBody(Entity entity, float x, float y, float width, float height, float rotation, bool isDynamic);
+        b2Body* createBody(Entity entity, float x, float y, float width, float height, float rotation, bool isDynamic, bool isSensor);
 
-        void addSensor(Entity entity, Entity sensorID);
+        void addSensor(Entity entity, Entity owner, float x, float y, float w, float h);
 
         void deleteBody(Entity entity);
         void deletePosition(Entity entity);

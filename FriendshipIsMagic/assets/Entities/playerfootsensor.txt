@@ -1,0 +1,6 @@
+{
+"components":
+{
+"sensor":{"width":0.06, "height":0.1, "x":0, "y":0.3445, "isPlayerSensor":true}
+}
+}

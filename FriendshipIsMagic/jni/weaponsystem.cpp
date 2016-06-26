@@ -14,7 +14,9 @@ void WeaponSystem::update(sf::Time dt)
 
 std::string WeaponSystem::getWeaponType(Entity entity)
 {
-    assert(mWeaponTypes.find(entity) != mWeaponTypes.end());
+    //std::cout << entity << " " << mGameWorld->getMask(entity) << std::endl;
+    if(mWeaponTypes.find(entity) == mWeaponTypes.end())
+        throw std::runtime_error("WeaponSystem : Failed to find type of " + entity);
     return mWeaponTypes[entity];
 }
 

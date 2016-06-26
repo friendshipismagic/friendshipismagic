@@ -2,8 +2,8 @@
 "components":
 {
 "sprite":{"texture":"BulletL", "width":150, "height":100, "rotation":0},
-"body":{"isBullet":true, "width":0.75, "height":0.5, "rotation":0, "isDynamic":true,"x":3, "y":3, "vx":-10, "vy":0, "gravityScale":0},
+"body":{"isBullet":true, "width":0.75, "height":0.5, "rotation":0, "isDynamic":true,"isSensor":true, "vx":-10, "vy":0, "gravityScale":0},
 "timer":{"time":0.1},
-"padding": {"x":1.15, "y":0}
+"padding": {"x":1.15, "y":-0.3}
 }
 }

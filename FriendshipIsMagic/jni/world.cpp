@@ -172,7 +172,8 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
                                               body["width"].asFloat(),
                                               body["height"].asFloat(),
                                               body["rotation"].asFloat(),
-                                              body["isDynamic"].asBool()
+                                              body["isDynamic"].asBool(),
+                                              body["isSensor"].asBool()
                                               );
 
         newBody->SetBullet(body["isBullet"].asBool());
@@ -183,9 +184,18 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     }
     if ((mask & Systems::Component::SENSOR) == Systems::Component::SENSOR)
     {
-        mPhysics->addSensor(entity, entity + 1);
-        mMasks.insert(std::make_pair(entity + 1, Systems::Mask::TAKEN));
-        insertDependency(entity, entity + 1);
+        Json::Value sensor = components["sensor"];
+        Entity owner = mPlayerID;
+        if(!sensor["isPlayerSensor"].asBool())
+            owner = mCoPlayerID;
+
+        mPhysics->addSensor(entity,
+                          owner,
+                          sensor["x"].asFloat(),
+                          sensor["y"].asFloat(),
+                          sensor["width"].asFloat(),
+                          sensor["height"].asFloat()
+                          );
     }
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
     {
@@ -279,6 +289,11 @@ void World::destroyEntity(Entity entity)
     }
 
     mMasks[entity] = Systems::Mask::NONE;
+
+    if (mSons.find(entity) != mSons.end())
+    {
+        mSons.erase(entity);
+    }
 }
 
 Systems::Mask World::getMask(Entity entity)
@@ -294,18 +309,10 @@ void World::sigDestroyEntity(Entity entity)
         mEntitiesToDestroy.insert(entity);
         if (mSons.find(entity) != mSons.end())
         {
-            for (Entity entitySon : mSons[entity])
+            for (auto itr = mSons[entity].begin(); itr != mSons[entity].end() ; itr++)
             {
-                deleteDependency(entity, entitySon);
-                sigDestroyEntity(entitySon);
+                sigDestroyEntity(*itr);
             }
-            mSons.erase(entity);
-        }
-        if (mFathers.find(entity) != mFathers.end())
-        {
-            //std::cout << "father " << mFathers[entity] << " " << mMasks[mFathers[entity]] << std::endl;
-            deleteDependency(mFathers[entity], entity);
-            mFathers.erase(entity);
         }
     }
 }
@@ -372,9 +379,11 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
 void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
 {
     Entity owner = mWeapons->getOwner(entityBullet);
+    std::string weaponType = mWeapons->getWeaponType(owner);
     if(entityVictim != owner)
     {
-        sigDestroyEntity(entityBullet);
+        if((weaponType.compare("shotgun")) != 0 && (weaponType.compare("raygun") != 0))
+            sigDestroyEntity(entityBullet);
         if ((mMasks[entityVictim] & Systems::Component::HEALTH) == Systems::Component::HEALTH)
         {
             Entity weapon = mPlayerWeaponID;
@@ -419,9 +428,10 @@ void World::insertDependency(Entity entityFather, Entity entitySon)
 void World::deleteDependency(Entity entityFather, Entity entitySon)
 {
     if (mSons.find(entityFather) != mSons.end())
-        mSons[entityFather].erase(entitySon);
+        if (mSons[entityFather].find(entitySon) != mSons[entityFather].end())
+            mSons[entityFather].erase(entitySon);
 
-    if (mFathers.find(entitySon) == mFathers.end())
+    if (mFathers.find(entitySon) != mFathers.end())
     {
         mFathers.erase(entitySon);
     }
@@ -433,7 +443,8 @@ void World::createPlayer()
     mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
     mGraphics->insertDependency(mPlayerID, mPlayerWeaponID);
     insertDependency(mPlayerID, mPlayerWeaponID);
-    sensorOne = mPlayerID + 1;
+    sensorOne = createEntity(Systems::Mask::FOOTSENSOR, "Entities/playerfootsensor.txt", 0, 0);
+    insertDependency(mPlayerID, sensorOne);
 }
 
 void World::createCoPlayer()
@@ -442,7 +453,8 @@ void World::createCoPlayer()
     mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
     mGraphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     insertDependency(mCoPlayerID, mCoPlayerWeaponID);
-    sensorTwo = mCoPlayerID + 1;
+    sensorTwo = createEntity(Systems::Mask::FOOTSENSOR, "Entities/coplayerfootsensor.txt", 0, 0);
+    insertDependency(mCoPlayerID, sensorTwo);
 }
 
 void World::insertMask(Entity entity, Systems::Mask mask)

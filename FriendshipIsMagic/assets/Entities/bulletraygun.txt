@@ -2,7 +2,7 @@
 "components":
 {
 "sprite":{"texture":"BulletL", "width":100, "height":20, "rotation":0},
-"body":{"isBullet":true, "width":0.5, "height":0.1, "rotation":0, "isDynamic":true,"x":3, "y":3, "vx":-10, "vy":0, "gravityScale":0},
+"body":{"isBullet":true, "width":0.5, "height":0.1, "rotation":0, "isDynamic":true,"isSensor":true, "vx":-10, "vy":0, "gravityScale":0},
 "timer":{"time":3},
 "padding": {"x":0.9, "y":0}
 }

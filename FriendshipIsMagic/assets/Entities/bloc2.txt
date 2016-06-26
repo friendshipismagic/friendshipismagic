@@ -2,6 +2,6 @@
 "components":
 {
 "sprite":{"texture":"BlueBlock", "width":100, "height":100, "rotation":0},
-"body":{"isBullet":false, "width":0.5, "height":0.5, "rotation":0, "isDynamic":false, "x":3 , "y":5.2 ,"vx":0, "vy":0, "gravityScale":1}
+"body":{"isBullet":false, "width":0.5, "height":0.5, "rotation":0, "isDynamic":true, "isSensor":false,"vx":0, "vy":0, "gravityScale":1}
 }
 }
