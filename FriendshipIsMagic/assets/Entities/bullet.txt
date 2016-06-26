@@ -1,9 +1,0 @@
-{
-"components":
-{
-"sprite":{"texture":"BulletL", "width":20, "height":20, "rotation":0},
-"body":{"isBullet":true, "width":0.1, "height":0.1, "rotation":0, "isDynamic":true,"x":3, "y":3, "vx":10, "vy":0, "gravityScale":0},
-"timer":{"time":0.3},
-"damage":-10
-}
-}

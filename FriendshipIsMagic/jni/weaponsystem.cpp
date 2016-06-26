@@ -16,7 +16,7 @@ std::string WeaponSystem::getWeaponType(Entity entity)
 {
     //std::cout << entity << " " << mGameWorld->getMask(entity) << std::endl;
     if(mWeaponTypes.find(entity) == mWeaponTypes.end())
-        throw std::runtime_error("WeaponSystem : Failed to find type of " + std::to_string(entity));
+        throw std::runtime_error("WeaponSystem : Failed to find type of ");
     return mWeaponTypes[entity];
 }
 

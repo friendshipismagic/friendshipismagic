@@ -47,3 +47,4 @@ libs/*.jar
 *.o
 *.db
 *.svg
+*.wav

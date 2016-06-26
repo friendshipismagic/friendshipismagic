@@ -14,7 +14,7 @@
 void printString(sf::Packet pkt){
 	int t,r;
 	pkt >> t >> r;
-	std::cout << std::to_string(t) << std::to_string(r) << std::endl;
+	std::cout << t << r << std::endl;
 }
 NetworkSystem::NetworkSystem(World* world, State::Context& context, InputSystem* input)
 :System(world, context)
@@ -88,7 +88,7 @@ void NetworkSystem::startUDPServer(int srcPort){
 	running = true;
 	}
 	catch(UDPException* e){
-		std::cout << "Can't bind socket to port " << std::to_string(srcPort) << std::endl;
+		std::cout << "Can't bind socket to port " << srcPort << std::endl;
 		exit(-1);
 	}
 }
@@ -101,7 +101,7 @@ void NetworkSystem::startUDPClient(int srcPort, sf::IpAddress destIp, int destPo
 		running = true;
 	}
 	catch(UDPException* e){
-		std::cout << "Can't bind socket to port " << std::to_string(srcPort) << std::endl;
+		std::cout << "Can't bind socket to port " << srcPort << std::endl;
 		exit(-1);
 	}
 }

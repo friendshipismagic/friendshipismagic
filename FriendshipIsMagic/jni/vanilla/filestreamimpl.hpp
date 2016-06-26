@@ -7,6 +7,7 @@
 class FileStreamImpl {
 
     public:
+
 		FileStreamImpl();
         using FilePtr = std::fstream*;
 
