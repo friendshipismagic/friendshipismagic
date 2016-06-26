@@ -266,6 +266,7 @@ void World::destroyEntity(Entity entity)
 
     if ((mask & Systems::Component::BODY) == Systems::Component::BODY)
     {
+
         mPhysics->deleteBody(entity);
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)

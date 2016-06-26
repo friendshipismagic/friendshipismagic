@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 #include "system.h"
 #include "systemprovider.h"
 #include "state.h"

@@ -75,6 +75,7 @@ void GraphicSystem::insertSprite(Entity entity, std::string id, float rotation, 
 
 void GraphicSystem::deleteSprite(Entity entity)
 {
+
     if (mSprites.find(entity) != mSprites.end())
     {
         eraseFromScene(&mSprites[entity]);
@@ -83,15 +84,12 @@ void GraphicSystem::deleteSprite(Entity entity)
 
     if (mSons.find(entity) != mSons.end())
     {
-        for (Entity entitySon : mSons[entity])
-        {
-            deleteDependency(entity, entitySon);
-        }
+        mSons.erase(entity);
     }
+
     if (mFathers.find(entity) != mFathers.end())
     {
         deleteDependency(mFathers[entity], entity);
-        mFathers.erase(entity);
     }
 
 }
@@ -147,13 +145,14 @@ void GraphicSystem::insertDependency(Entity entityFather, Entity entitySon)
 
 void GraphicSystem::deleteDependency(Entity entityFather, Entity entitySon)
 {
-    if (mSons.find(entityFather) != mSons.end())
-        mSons[entityFather].erase(entitySon);
+	if (mSons.find(entityFather) != mSons.end())
+		if (mSons[entityFather].find(entitySon) != mSons[entityFather].end())
+			mSons[entityFather].erase(entitySon);
 
-    if (mFathers.find(entitySon) == mFathers.end())
-    {
-        mFathers.erase(entitySon);
-    }
+	if (mFathers.find(entitySon) != mFathers.end())
+	{
+		mFathers.erase(entitySon);
+	}
 }
 
 void GraphicSystem::addToScene(sf::Sprite* node, int layer)
