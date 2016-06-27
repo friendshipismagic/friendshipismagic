@@ -359,7 +359,7 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
 
         sigDestroyEntity(weapon);
         std::string weaponType = mWeapons->getWeaponType(entityItem);
-        weapon = createEntity(Systems::Mask::WEAPON, "Entities/" + weaponType + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
+        weapon = createEntity(Systems::Mask::WEAPON, "Entities/" + weaponType + ".txt", 0, 0);
         mGraphics->insertDependency(entityPlayer, weapon);
         insertDependency(entityPlayer, weapon);
         mWeapons->insertWeaponType(entityPlayer, weaponType);
@@ -368,6 +368,11 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
             mCoPlayerWeaponID = weapon;
         else
             mPlayerWeaponID = weapon;
+
+        if(mLogics->getLogic(Logic::coIsFacingRight) && (weapon == mCoPlayerWeaponID) )
+            mGraphics->mirror(weapon, -1);
+        else if(mLogics->getLogic(Logic::isFacingRight) && (weapon == mPlayerWeaponID) )
+            mGraphics->mirror(weapon, -1);
     }
     else if (type == ItemType::swapstuff)
     {
@@ -376,18 +381,23 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
 
         sigDestroyEntity(mPlayerWeaponID);
         deleteDependency(mPlayerID, mPlayerWeaponID);
-        mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + coweapon + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
+        mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + coweapon + ".txt", 0, 0);
         mGraphics->insertDependency(mPlayerID, mPlayerWeaponID);
         insertDependency(mPlayerID, mPlayerWeaponID);
 
         sigDestroyEntity(mCoPlayerWeaponID);
         deleteDependency(mCoPlayerID, mCoPlayerWeaponID);
-        mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapon + ".txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
+        mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/" + weapon + ".txt", 0, 0);
         mGraphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
         insertDependency(mCoPlayerID, mCoPlayerWeaponID);
 
         mWeapons->insertWeaponType(mPlayerWeaponID, coweapon);
         mWeapons->insertWeaponType(mCoPlayerWeaponID, weapon);
+
+        if(mLogics->getLogic(Logic::coIsFacingRight))
+            mGraphics->mirror(mCoPlayerWeaponID, -1);
+        else if(mLogics->getLogic(Logic::isFacingRight))
+            mGraphics->mirror(mPlayerWeaponID, -1);
     }
     else if (type == ItemType::heal)
         mHealth->addToHealth(entityPlayer, +50);
@@ -403,7 +413,7 @@ void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
         weaponType = mCoPlayerWeaponID;
     if(entityVictim != owner)
     {
-        if((weaponType.compare("shotgun")) != 0 && (weaponType.compare("raygun") != 0))
+        if((weaponType.compare("shotgun")) != 0 && (weaponType.compare("raygun") != 0) && (mMasks[entityVictim] != Systems::Mask::ITEM))
             sigDestroyEntity(entityBullet);
         if ((mMasks[entityVictim] & Systems::Component::HEALTH) == Systems::Component::HEALTH)
         {
@@ -461,7 +471,7 @@ void World::deleteDependency(Entity entityFather, Entity entitySon)
 void World::createPlayer()
 {
     mPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", Player::SpawnLocationX, Player::SpawnLocationY);
-    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
+    mPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0, 0);
     mGraphics->insertDependency(mPlayerID, mPlayerWeaponID);
     insertDependency(mPlayerID, mPlayerWeaponID);
     sensorOne = createEntity(Systems::Mask::FOOTSENSOR, "Entities/playerfootsensor.txt", 0, 0);
@@ -470,8 +480,8 @@ void World::createPlayer()
 
 void World::createCoPlayer()
 {
-    mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/player.txt", Player::SpawnLocationX, Player::SpawnLocationY);
-    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", Player::WeaponHorizontalPadding, Player::WeaponTopPadding);
+    mCoPlayerID = createEntity(Systems::Mask::PLAYER, "Entities/coplayer.txt", Player::SpawnLocationX, Player::SpawnLocationY);
+    mCoPlayerWeaponID = createEntity(Systems::Mask::WEAPON, "Entities/gun.txt", 0, 0);
     mGraphics->insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     insertDependency(mCoPlayerID, mCoPlayerWeaponID);
     sensorTwo = createEntity(Systems::Mask::FOOTSENSOR, "Entities/coplayerfootsensor.txt", 0, 0);

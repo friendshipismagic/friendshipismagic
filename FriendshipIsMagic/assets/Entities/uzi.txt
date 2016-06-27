@@ -1,9 +1,10 @@
 {
 "components":
 {
-"sprite":{"texture":"Skull", "width":20, "height":16, "rotation":0},
+"sprite":{"texture":"Uzi", "width":40, "height":30, "rotation":0},
 "timer":{"time":0.1},
 "weaponType":"uzi",
-"damage":-10
+"damage":-10,
+"padding": {"x":0.1, "y":0.15}
 }
 }

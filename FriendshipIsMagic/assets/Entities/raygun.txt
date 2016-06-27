@@ -1,9 +1,10 @@
 {
 "components":
 {
-"sprite":{"texture":"WaterGun", "width":20, "height":16, "rotation":0},
+"sprite":{"texture":"Raygun", "width":70, "height":30, "rotation":0},
 "timer":{"time":2},
 "weaponType":"raygun",
-"damage":-80
+"damage":-80,
+"padding": {"x":0.1, "y":0.15}
 }
 }

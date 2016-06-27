@@ -15,6 +15,12 @@
 	{"name":"WaterGun","filename":"Graphics/water_gun.png"},
 	{"name":"Player","filename":"Graphics/player.png"},
 	{"name":"RedBlock","filename":"Graphics/redblock.png"},
-	{"name":"BlueBlock","filename":"Graphics/blueblock.png"}
+	{"name":"BlueBlock","filename":"Graphics/blueblock.png"},
+	{"name":"Raygun","filename":"Graphics/raygun.png"},
+	{"name":"Shotgun","filename":"Graphics/shotgun.png"},
+	{"name":"Gun","filename":"Graphics/gun.png"},
+	{"name":"Uzi","filename":"Graphics/uzi.png"},
+	{"name":"CoPlayer","filename":"Graphics/coplayer.png"},
+	{"name":"Heal","filename":"Graphics/healitem.png"}
 ]
 }
