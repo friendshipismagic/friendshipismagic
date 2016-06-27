@@ -5,6 +5,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include <json.h>
+#include <cstdio>
 
 using namespace tinyxml2;
 
@@ -59,6 +60,15 @@ class MapElementRef : public MapElement {
         }
 };
 
+
+class GroupVisitor {
+    
+    public:
+
+
+
+};
+
 XMLNode *deepCopy( const XMLNode *src, XMLDocument *destDoc )
 {
     XMLNode *current = src->ShallowClone( destDoc );
@@ -76,6 +86,9 @@ class MapElementData : public MapElement {
         std::string mObjectId;
         sf::Vector2f mPos;
 
+        std::vector< std::vector<sf::Vector2f> > mPolygons;
+        std::vector< sf::FloatRect > mRects;
+
     public:
         std::string getObjectId() const override{
             return mObjectId;
@@ -90,11 +103,48 @@ class MapElementData : public MapElement {
             mPos (x,y){
         }
 
+        void addPolygon(const std::vector<sf::Vector2f>& polygon) {
+            mPolygons.push_back(polygon); 
+            std::cout << "add polygon" << std::endl;
+        }
+
+        void addRect(float x, float y, float w, float h) {
+            mRects.push_back({x,y,w,h});
+            std::cout << "add rect" << std::endl;
+        }
+
         Json::Value getJsonObject() const {
-           auto value = Json::Value();
-           value["ref"] = getObjectId();
-           value["x"] = mPos.x;
-           value["y"] = mPos.y;
+            auto value = Json::Value();
+            value["ref"] = getObjectId();
+            value["x"] = mPos.x;
+            value["y"] = mPos.y;
+
+            auto physics = Json::Value();
+            for(auto p : mPolygons) {
+                auto jpoly = Json::Value();
+                jpoly["type"] = "polygon";
+                for(auto coords : p) {
+                    auto jcoords = Json::Value();
+                    jcoords["x"] = coords.x;
+                    jcoords["y"] = coords.y;
+                    jpoly["points"].append(jcoords);
+                }
+                physics.append(jpoly);
+            }
+
+            for(auto rect : mRects) {
+                auto jrect = Json::Value();
+                jrect["type"] = "rect";
+                auto jcoords = Json::Value();
+                jrect["x"] = rect.left;
+                jrect["y"] = rect.top;
+                jrect["w"] = rect.width;
+                jrect["h"] = rect.height;
+                physics.append(jrect);
+            }
+            
+            value["physics"] = physics;
+
            return value;
         }
 };
@@ -182,6 +232,96 @@ class MapVisitor : public XMLVisitor {
         }
 
     private:
+        void ParsePhysicBox(MapElementData* elt, XMLElement* element) {
+            if (std::strcmp(element->Name(),"rect")==0) {
+                auto x = element->Attribute("x");
+                auto y = element->Attribute("y");
+                auto width = element->Attribute("width");
+                auto height = element->Attribute("height");
+
+                if(x == nullptr || y == nullptr || width == nullptr || height == nullptr) {
+                    std::cout << "## ERROR, can't parse rect" << std::endl;
+                    return;
+                }
+
+                elt->addRect(std::atoi(x),std::atoi(y),std::atoi(width),std::atoi(height));
+            }
+            else if (std::strcmp(element->Name(), "path")==0) {
+                std::cout << "found path" << std::endl;
+                std::vector<sf::Vector2f> points;
+
+                auto cpath = element->Attribute("d");
+
+                if (cpath == nullptr) {
+                    std::cout << "## ERROR, can't parse path" << std::endl;
+                    return;
+                }
+
+                std::string path(cpath);
+
+                std::istringstream values (cpath);
+
+                while(!values.eof())
+                {
+                    sf::Vector2f pos;
+                    char comma;
+                    values >> pos.x;
+                    if (values.fail()) {
+                        values.clear();
+                        std::string mode;
+                        values >> mode;
+                        if (mode =="z") break;
+                        values >> pos.x >> comma >> pos.y;
+
+                    } else values >> comma >> pos.y;
+
+                    if (values.fail()) {
+                        std::cout << "Cant parse path" << std::endl;
+                        return;
+                    }
+
+                    std::cout << "x:" << pos.x << " y:" << pos.y << std::endl;
+                    points.push_back(pos);
+                }
+                elt->addPolygon(points);
+
+            }
+
+
+
+        }
+
+        void CleanupAddition(MapElementData* elt, XMLElement* element) {
+                
+            if(element == nullptr){
+                std::cout << "elt is null" << std::endl;
+                return;
+            }
+
+
+            for(auto next=element; next!=nullptr; ) {
+
+                std::cout << "parsing " << element->Name() << std::endl;
+                XMLPrinter printer; 
+                element->Accept(&printer);
+                std::cout << printer.CStr() << std::endl;
+                auto phy = next->Attribute("fim:physics");
+
+                if (phy != nullptr && std::strcmp(phy, "block")==0) {
+                    ParsePhysicBox(elt, next);
+                    auto previous = next;
+                    next=previous->NextSiblingElement();
+                    previous->Parent()->DeleteChild(previous);
+                    continue;
+                }
+                auto child = next->FirstChildElement();
+                CleanupAddition(elt,child);
+                next=next->NextSiblingElement();
+
+            }
+
+        }
+
         bool VisitEnter(const XMLElement& element, const XMLAttribute* attrs) {
             if(std::string(element.Name()) == "g") { // On a trouvé un groupe
 
@@ -215,7 +355,7 @@ class MapVisitor : public XMLVisitor {
                         root->SetAttribute("xmlns", "http://www.w3.org/2000/svg");
                         root->SetAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");
                         root->SetAttribute("xmlns:sodipodi","http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd");
-                        root->SetAttribute("xmlns:inkscape=","http://www.inkscape.org/namespaces/inkscape");
+                        root->SetAttribute("xmlns:inkscape","http://www.inkscape.org/namespaces/inkscape");
    //width="210mm"
    //height="297mm"
    //viewBox="0 0 744.09448819 1052.3622047"
@@ -225,9 +365,11 @@ class MapVisitor : public XMLVisitor {
    //sodipodi:docname="dessin.svg"
                         document.InsertEndChild(root);
                         // etc
-                    
 
                     root->InsertEndChild(deepCopy(&element, &document));
+                    
+                    CleanupAddition(mapElt, root);
+                    
                     document.SaveFile(std::string("res/" + std::string(id) + ".svg").c_str());
 
                     return false;
@@ -240,6 +382,9 @@ class MapVisitor : public XMLVisitor {
                 }
                 auto href = element.Attribute("xlink:href");
                 auto id = element.Attribute("id");
+                auto x = element.FloatAttribute("x");
+                auto y = element.FloatAttribute("y");
+
                 if(href == nullptr) return true;
 
                 std::string s_href = href;
@@ -253,7 +398,7 @@ class MapVisitor : public XMLVisitor {
                     std::cout << "hoho, problème d'id inexistant" << std::endl;
                     return true;
                 }
-                auto element = new MapElementRef(ref, 0, 0);
+                auto element = new MapElementRef(ref, x, y);
 
                 if(id != nullptr)
                     mIds[id] = element;
