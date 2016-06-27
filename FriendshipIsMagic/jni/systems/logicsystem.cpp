@@ -130,6 +130,7 @@ void LogicSystem::update(sf::Time dt)
 
 
 
+
 }
 
 bool LogicSystem::getLogic(Logic l)
