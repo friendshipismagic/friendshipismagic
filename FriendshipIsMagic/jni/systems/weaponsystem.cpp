@@ -56,7 +56,8 @@ void WeaponSystem::deleteDamage(Entity entity)
 
 Entity WeaponSystem::getOwner(Entity entity)
 {
-    assert(mBulletOwner.find(entity) != mBulletOwner.end());
+    if(mBulletOwner.find(entity) == mBulletOwner.end())
+        throw std::runtime_error("WeaponSystem : Failed to find owner of ");
     return mBulletOwner[entity];
 }
 

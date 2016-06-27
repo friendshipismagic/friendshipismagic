@@ -22,10 +22,16 @@ void CollisionSystem::BeginContact(b2Contact* contact)
     Systems::Mask maskB = mGameWorld->getMask(entityB);
 
     if((maskA == Systems::Mask::BULLET) && (maskB != Systems::Mask::BULLET))
+    {
+        std::cout <<"collision " <<  entityA << std::endl;
         mGameWorld->sigCollisionBullet(entityA, entityB);
+    }
 
     if((maskB == Systems::Mask::BULLET) && (maskA != Systems::Mask::BULLET))
+    {
+        std::cout <<"collision " <<  entityB << std::endl;
         mGameWorld->sigCollisionBullet(entityB, entityA);
+    }
 
     if((maskA == Systems::Mask::PLAYER) && (maskB == Systems::Mask::ITEM))
     {

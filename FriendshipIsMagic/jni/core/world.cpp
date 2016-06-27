@@ -101,7 +101,6 @@ void World::update(sf::Time dt)
         sf::Vector2f pos = mPhysics->getPosition(mPlayerID);
         int scale = mPhysics->getScale();
         std::string weaponType = mWeapons->getWeaponType(mPlayerWeaponID);
-
         if(mLogics->getLogic(Logic::isFacingLeft))
         {
             int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
@@ -119,6 +118,33 @@ void World::update(sf::Time dt)
 
         mLogics->setLogic(Logic::canFire, false);
         timerOn(mPlayerWeaponID);
+
+        mSounds->play(weaponType);
+    }
+
+    if (mLogics->getLogic(Logic::coFireOn) && mLogics->getLogic(Logic::coCanFire))
+    {
+        sf::Vector2f pos = mPhysics->getPosition(mCoPlayerID);
+        int scale = mPhysics->getScale();
+        std::string weaponType = mWeapons->getWeaponType(mCoPlayerWeaponID);
+
+        if(mLogics->getLogic(Logic::coIsFacingLeft))
+        {
+            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+            mWeapons->insertOwner(bullet, mCoPlayerID);
+        }
+        else
+        {
+            paddingRight = true;
+            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+            paddingRight = false;
+            mWeapons->insertOwner(bullet, mCoPlayerID);
+            mGraphics->mirror(bullet, -1);
+            mPhysics->mirrorVelocity(bullet);
+        }
+
+        mLogics->setLogic(Logic::coCanFire, false);
+        timerOn(mCoPlayerWeaponID);
 
         mSounds->play(weaponType);
     }
@@ -144,6 +170,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     }
     insertMask(entity, mask); //We add the entity's mask in the map
     int scale = mPhysics->getScale();
+    std::cout << "creation " << mask << " " << entity << std::endl;
 
     //We open the JSON file
     FileStream file;
@@ -340,6 +367,10 @@ void World::sigTimerCall(Entity entity)
     {
         mLogics->setLogic(Logic::canFire, true);
     }
+    else if(entity == mCoPlayerWeaponID)
+    {
+        mLogics->setLogic(Logic::coCanFire, true);
+    }
     else if(mask == Systems::Mask::ITEM)
     {
         sigDestroyEntity(entity);
@@ -409,8 +440,8 @@ void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
 {
     Entity owner = mWeapons->getOwner(entityBullet);
     std::string weaponType = mWeapons->getWeaponType(mPlayerWeaponID);
-     if (owner == mCoPlayerID)
-        weaponType = mCoPlayerWeaponID;
+    if (owner == mCoPlayerID)
+        weaponType = mWeapons->getWeaponType(mCoPlayerWeaponID);
     if(entityVictim != owner)
     {
         if((weaponType.compare("shotgun")) != 0 && (weaponType.compare("raygun") != 0) && (mMasks[entityVictim] != Systems::Mask::ITEM))

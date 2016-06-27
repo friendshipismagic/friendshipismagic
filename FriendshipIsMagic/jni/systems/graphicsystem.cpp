@@ -33,6 +33,10 @@ void GraphicSystem::update(sf::Time dt)
     {
         mirror(mGameWorld->getPlayerID(), -1);
     }
+    if (mLogics->getLogic(Logic::coChangeDirection))
+    {
+        mirror(mGameWorld->getCoPlayerID(), -1);
+    }
 }
 
 void GraphicSystem::draw()

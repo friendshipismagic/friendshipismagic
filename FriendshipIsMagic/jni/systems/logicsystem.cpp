@@ -16,16 +16,16 @@ LogicSystem::LogicSystem(World* world, State::Context& context, InputSystem* inp
 
     mLogics.insert(std::make_pair(Logic::changeDirection, false));
 
-
     //===== CoPLayer
     mLogics.insert(std::make_pair(Logic::coMoveRight, false));
 	mLogics.insert(std::make_pair(Logic::coMoveLeft, false));
 	mLogics.insert(std::make_pair(Logic::coFireOn, false));
 	mLogics.insert(std::make_pair(Logic::coIsJumping, false));
-	mLogics.insert(std::make_pair(Logic::coIsFacingLeft, false));
+	mLogics.insert(std::make_pair(Logic::coIsFacingLeft, true));
 	mLogics.insert(std::make_pair(Logic::coIsFacingRight, false));
 	mLogics.insert(std::make_pair(Logic::coCanFire, false));
 
+    mLogics.insert(std::make_pair(Logic::coChangeDirection, false));
 }
 
 void LogicSystem::update(sf::Time dt)
@@ -79,18 +79,30 @@ void LogicSystem::update(sf::Time dt)
         mLogics[Logic::changeDirection] = false;
 
 
+	if (mLogics[Logic::coMoveRight] && !mLogics[Logic::coMoveLeft])
+    {
+        if (mLogics[Logic::coIsFacingLeft])
+            mLogics[Logic::coChangeDirection] = true;
+        else
+            mLogics[Logic::coChangeDirection] = false;
 
+        mLogics[Logic::coIsFacingLeft] = false;
+        mLogics[Logic::coIsFacingRight] = true;
+    }
+    if (mLogics[Logic::coMoveLeft] && !mLogics[Logic::coMoveRight])
+    {
+        if (mLogics[Logic::coIsFacingRight])
+            mLogics[Logic::coChangeDirection] = true;
+        else
+            mLogics[Logic::coChangeDirection] = false;
 
-	if (mLogics[Logic::coMoveRight])
-	{
-		mLogics[Logic::coIsFacingLeft] = false;
-		mLogics[Logic::coIsFacingRight] = true;
-	}
-	if (mLogics[Logic::coMoveLeft])
-	{
-		mLogics[Logic::coIsFacingLeft] = true;
-		mLogics[Logic::coIsFacingRight] = false;
-	}
+        mLogics[Logic::coIsFacingLeft] = true;
+        mLogics[Logic::coIsFacingRight] = false;
+    }
+    if (mLogics[Logic::coMoveLeft] && mLogics[Logic::coMoveRight])
+        mLogics[Logic::coChangeDirection] = false;
+    if (!mLogics[Logic::coMoveLeft] && !mLogics[Logic::coMoveRight])
+        mLogics[Logic::coChangeDirection] = false;
 
 }
 

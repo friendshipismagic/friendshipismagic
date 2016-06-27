@@ -95,7 +95,7 @@ void UDPAgent::AgentRoutine(){
 				//agentPrintLn("Non blocking result");
 				break;
             case sf::Socket::Disconnected:
-                agentPrintLn("Socket closed!");
+                //agentPrintLn("Socket closed!");
                 break;
 			default:
 				if(debug) agentPrintLn("Socket receiving error!");
