@@ -93,7 +93,7 @@ LOCAL_CPPFLAGS += -DANDROID_BUILD
 
 include $(BUILD_SHARED_LIBRARY)
 
-#$(call import-add-path,./deps)
+$(call import-add-path,./deps)
 #$(call import-module,gdx-box2d)
 $(call import-module,sfml)
 
