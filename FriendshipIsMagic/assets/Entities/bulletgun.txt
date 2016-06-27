@@ -4,6 +4,6 @@
 "sprite":{"texture":"BulletL", "width":20, "height":20, "rotation":0},
 "body":{"isBullet":true, "width":0.1, "height":0.1, "rotation":0, "isDynamic":true,"isSensor":true, "vx":-10, "vy":0, "gravityScale":0},
 "timer":{"time":0.3},
-"padding": {"x":0.4, "y":0}
+"padding": {"x":0.4, "y":0.1}
 }
 }

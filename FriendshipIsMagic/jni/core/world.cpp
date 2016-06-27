@@ -83,83 +83,83 @@ void World::handleEvent(const sf::Event& event)
 void World::update(sf::Time dt)
 {
 	if(mNetwork.isInitialized()){
-		for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
-		{
-			(*itr)->update(dt);
-		}
+    for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
+    {
+        (*itr)->update(dt);
+    }
 
-		for(Entity entity : mEntitiesToDestroy)
-		{
-			destroyEntity(entity);
-		}
+    for(Entity entity : mEntitiesToDestroy)
+    {
+        destroyEntity(entity);
+    }
 
-		mEntitiesToDestroy.clear();
+    mEntitiesToDestroy.clear();
 
-		bool playerDead = mMasks[mPlayerID] == Systems::Mask::NONE;
-		bool coPlayerDead = mMasks[mCoPlayerID] == Systems::Mask::NONE;
-		if(playerDead)
-		{
-			createPlayer();
-			mScores.addToScore(mPlayerID, -1000);
-		}
-		if(coPlayerDead)
-		{
-			createCoPlayer();
-			mScores.addToScore(mCoPlayerID, -1000);
-		}
+    bool playerDead = mMasks[mPlayerID] == Systems::Mask::NONE;
+    bool coPlayerDead = mMasks[mCoPlayerID] == Systems::Mask::NONE;
+    if(playerDead)
+    {
+        createPlayer();
+        mScores.addToScore(mPlayerID, -1000);
+    }
+    if(coPlayerDead)
+    {
+        createCoPlayer();
+        mScores.addToScore(mCoPlayerID, -1000);
+    }
 
-		if (mLogics.getLogic(Logic::fireOn) && mLogics.getLogic(Logic::canFire))
-		{
-			sf::Vector2f pos = mPhysics.getPosition(mPlayerID);
-			int scale = mPhysics.getScale();
-			std::string weaponType = mWeapons.getWeaponType(mPlayerWeaponID);
-			if(mLogics.getLogic(Logic::isFacingLeft))
-			{
-				int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
-				mWeapons.insertOwner(bullet, mPlayerID);
-			}
-			else
-			{
-				paddingRight = true;
-				int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
-				paddingRight = false;
-				mWeapons.insertOwner(bullet, mPlayerID);
-				mGraphics.mirror(bullet, -1);
-				mPhysics.mirrorVelocity(bullet);
-			}
+    if (mLogics.getLogic(Logic::fireOn) && mLogics.getLogic(Logic::canFire))
+    {
+        sf::Vector2f pos = mPhysics.getPosition(mPlayerID);
+        int scale = mPhysics.getScale();
+        std::string weaponType = mWeapons.getWeaponType(mPlayerWeaponID);
+        if(mLogics.getLogic(Logic::isFacingLeft))
+        {
+            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+            mWeapons.insertOwner(bullet, mPlayerID);
+        }
+        else
+        {
+            paddingRight = true;
+            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+            paddingRight = false;
+            mWeapons.insertOwner(bullet, mPlayerID);
+            mGraphics.mirror(bullet, -1);
+            mPhysics.mirrorVelocity(bullet);
+        }
 
-			mLogics.setLogic(Logic::canFire, false);
-			timerOn(mPlayerWeaponID);
+        mLogics.setLogic(Logic::canFire, false);
+        timerOn(mPlayerWeaponID);
 
-			mSounds.play(weaponType);
-		}
+        mSounds.play(weaponType);
+    }
 
-		if (mLogics.getLogic(Logic::coFireOn) && mLogics.getLogic(Logic::coCanFire))
-		{
-			sf::Vector2f pos = mPhysics.getPosition(mCoPlayerID);
-			int scale = mPhysics.getScale();
-			std::string weaponType = mWeapons.getWeaponType(mCoPlayerWeaponID);
+    if (mLogics.getLogic(Logic::coFireOn) && mLogics.getLogic(Logic::coCanFire))
+    {
+        sf::Vector2f pos = mPhysics.getPosition(mCoPlayerID);
+        int scale = mPhysics.getScale();
+        std::string weaponType = mWeapons.getWeaponType(mCoPlayerWeaponID);
 
-			if(mLogics.getLogic(Logic::coIsFacingLeft))
-			{
-				int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
-				mWeapons.insertOwner(bullet, mCoPlayerID);
-			}
-			else
-			{
-				paddingRight = true;
-				int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
-				paddingRight = false;
-				mWeapons.insertOwner(bullet, mCoPlayerID);
-				mGraphics.mirror(bullet, -1);
-				mPhysics.mirrorVelocity(bullet);
-			}
+        if(mLogics.getLogic(Logic::coIsFacingLeft))
+        {
+            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+            mWeapons.insertOwner(bullet, mCoPlayerID);
+        }
+        else
+        {
+            paddingRight = true;
+            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+            paddingRight = false;
+            mWeapons.insertOwner(bullet, mCoPlayerID);
+            mGraphics.mirror(bullet, -1);
+            mPhysics.mirrorVelocity(bullet);
+        }
 
-			mLogics.setLogic(Logic::coCanFire, false);
-			timerOn(mCoPlayerWeaponID);
+        mLogics.setLogic(Logic::coCanFire, false);
+        timerOn(mCoPlayerWeaponID);
 
-			mSounds.play(weaponType);
-		}
+        mSounds.play(weaponType);
+    }
 	}
 	else
 		mNetwork.update( dt);
@@ -186,7 +186,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     insertMask(entity, mask); //We add the entity's mask in the map
 
     int scale = mPhysics.getScale();
-    
+
 
     //We open the JSON file
     FileStream file;

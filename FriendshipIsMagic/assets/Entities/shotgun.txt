@@ -1,7 +1,7 @@
 {
 "components":
 {
-"sprite":{"texture":"Shotgun", "width":70, "height":30, "rotation":0},
+"sprite":{"texture":"Shotgun", "width":70, "height":20, "rotation":0},
 "timer":{"time":2},
 "weaponType":"shotgun",
 "damage":-150,

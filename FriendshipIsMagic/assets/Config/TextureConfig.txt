@@ -21,6 +21,10 @@
 	{"name":"Gun","filename":"Graphics/gun.png"},
 	{"name":"Uzi","filename":"Graphics/uzi.png"},
 	{"name":"CoPlayer","filename":"Graphics/coplayer.png"},
-	{"name":"Heal","filename":"Graphics/healitem.png"}
+	{"name":"Heal","filename":"Graphics/healitem.png"},
+	{"name":"Swap","filename":"Graphics/swapitem.png"},
+	{"name":"MonsterItem","filename":"Graphics/monsteritem.png"},
+	{"name":"IncreaseLife","filename":"Graphics/increasemaxlife.png"},
+	{"name":"Ray","filename":"Graphics/ray.png"}
 ]
 }
