@@ -48,11 +48,6 @@ void NetworkSystem::updateCoPlayerInput(sf::Packet pkt){
 	mInputs[Input::left] = left;
 	mInputs[Input::fire] = fire;
 	mInputs[Input::jump] = jump;
-
-
-	//if(mContext.UDPMode == UDPAgent::Mode::Server && jump)
-		//std::cout << "received " << std::hex << ordre << std::dec << std::endl;
-	//	std::cout << "Received client inputs: " << std::to_string(right) << std::to_string(left) << std::to_string(fire) << std::to_string(jump) << std::endl;
 }
 
 void NetworkSystem::Sync(sf::Packet pkt){

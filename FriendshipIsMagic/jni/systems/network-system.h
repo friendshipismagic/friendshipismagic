@@ -32,6 +32,11 @@ public:
 	void updateCoPlayerInput(sf::Packet pkt);
 	bool getInputState(Input input);
 	void Sync(sf::Packet pkt);
+
+	sf::Time getPeriode() const { return periode;}
+
+	void setPeriode(sf::Time periode) {this->periode = periode;}
+
 private:
 	InputSystem* mInput;
 	PhysicSystem* mPhysics;
