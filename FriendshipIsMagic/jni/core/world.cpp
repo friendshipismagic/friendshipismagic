@@ -191,7 +191,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     insertMask(entity, mask); //We add the entity's mask in the map
 
     int scale = mPhysics.getScale();
-
+    
 
     //We open the JSON file
     FileStream file;
