@@ -9,7 +9,6 @@
 #include "network-system.h"
 #include "physicsystem.h"
 #include "healthsystem.h"
-
 #include "../core/world.h"
 
 
@@ -105,6 +104,8 @@ void NetworkSystem::syncFromClient(sf::Packet pkt){
 	mLogics[Logic::isFacingRight] = !boolean;
 
 }
+*/
+
 
 void NetworkSystem::syncFromServer(sf::Packet pkt){
 	//P1pos
