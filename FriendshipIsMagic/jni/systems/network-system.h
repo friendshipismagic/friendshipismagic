@@ -10,18 +10,22 @@
 #include <SFML/System/Time.hpp>
 
 #include "system.h"
+#include "inputsystem.h"
+#include "logicsystem.h"
 
 #include "../network/udp-agent.h"
 #include "../command/command.h"
-#include "inputsystem.h"
-#define DEFAULT_SYNC_PERIOD 500
+
+#define DEFAULT_SYNC_PERIOD 2000
+#define DEFAULT_INPUT_SYNC_FRAME_COUNT 0
 
 class PhysicSystem;
 class HealthSystem;
 
+
 class NetworkSystem : public System, public UDPListener{
 public:
-	NetworkSystem(World* world, State::Context& context, InputSystem* input, PhysicSystem* aPhysics, HealthSystem* aHealth);
+	NetworkSystem(World* world, State::Context& context, InputSystem* input, PhysicSystem* aPhysics, HealthSystem* aHealth, LogicSystem* aLogic);
 	virtual ~NetworkSystem();
 	void update(sf::Time dt);
 	void startUDPServer(int srcPort);
@@ -29,23 +33,25 @@ public:
 	void notify(sf::Packet pkt);
 
 	bool isRunning() const { return running;}
-	void updateCoPlayerInput(sf::Packet pkt);
+	//void updateCoPlayerInput(sf::Packet pkt);
 	bool getInputState(Input input);
-	void Sync(sf::Packet pkt);
+	bool getLogicState(Logic logic);
+	//void Sync(sf::Packet pkt);
 
-	sf::Time getPeriode() const { return periode;}
-
-	void setPeriode(sf::Time periode) {this->periode = periode;}
+	void SyncFromClient(sf::Packet pkt);
+	void SyncFromServer(sf::Packet pkt);
 
 private:
 	InputSystem* mInput;
 	PhysicSystem* mPhysics;
 	HealthSystem* mHealth;
+	LogicSystem* mLogic;
 	std::unique_ptr<UDPAgent> mUDP;
 	std::map<Input, bool> mInputs;
+	std::map<Logic, bool> mLogics;
 	PacketCommand mCmd;
-	sf::Clock mClock;
-	sf::Time periode ;
+	//sf::Clock mClock;
+	//sf::Time periode;
 
 	sf::Clock clk;
 

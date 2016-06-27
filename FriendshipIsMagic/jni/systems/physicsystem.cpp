@@ -2,6 +2,7 @@
 #include <functional>
 #include "../core/world.h"
 #include "collisionsystem.h"
+#include "logicsystem.h"
 
 PhysicSystem::PhysicSystem(World* world, State::Context& context, LogicSystem* logics)
 : System(world, context)
@@ -112,12 +113,25 @@ void PhysicSystem::update(sf::Time dt)
     }
 }
 
+void PhysicSystem::syncPos(Entity entity){
+		sf::Vector2f pos = mPositions[entity];
+		mBodies[entity]->SetTransform(b2Vec2({pos.x/mScale, pos.y/mScale}), 0);
+
+
+}
+
 const sf::Vector2f& PhysicSystem::getPosition(Entity entity)
 {
     if (mPositions.find(entity) != mPositions.end())
         return mPositions[entity];
 
     return errorPos;
+}
+
+void PhysicSystem::setPosition(Entity entity, sf::Vector2f pos)
+{
+    if (mPositions.find(entity) != mPositions.end())
+         mPositions[entity] = pos;
 }
 
 void PhysicSystem::insertBody(Entity entity, b2Body* body)

@@ -20,8 +20,25 @@
  */
 
 using SayHelloCommand = CommandMessage<2>;
+
 using ShareInputCommand = CommandMessage<4, bool, bool, bool, bool>;
-using SyncCommand = CommandMessage<5, std::map<Entity, sf::Vector2f>, std::map<Entity, int>, std::map<Entity, int> >;
+
+//============================================
+using SyncFromServerCommand = CommandMessage<5,
+		sf::Vector2f, 			// P1Pos
+		Entity, 				// P1Gun
+		Entity,					// P2Gun
+		sf::Uint16, 			// P1Health
+		sf::Uint16, 			// P2Health
+		sf::Uint16, 			// P1MaxH
+		sf::Uint16,  			// P2MaxH
+		bool, 					// P1Fire
+		bool 					// P1IsLeft
+>;
+
+//============================================	P2pos, 			P2Fire	P2isLeft
+using SyncFromClientCommand = CommandMessage<6, sf::Vector2f, 	bool, 	bool >;
+
 //using SayPlayerInfoCommand = CommandMessage<4,Player>;
 
 

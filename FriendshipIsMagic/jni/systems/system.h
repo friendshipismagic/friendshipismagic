@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/System.hpp>
 #include "../states/state.h"
+//#include "../core/world.h"
 
 class World;
 
@@ -36,16 +37,16 @@ namespace Systems
     };
 };
 
+
 class System
 {
     public:
 
         System(World* world, State::Context& context)
         : mContext(context)
-        , mGameWorld(world)
-        {
+        , mGameWorld(world){}
 
-        }
+        //virtual ~System() = 0;
         void virtual update(sf::Time dt) = 0;
 
     protected:
@@ -54,3 +55,5 @@ class System
         World* mGameWorld;
 
 };
+
+

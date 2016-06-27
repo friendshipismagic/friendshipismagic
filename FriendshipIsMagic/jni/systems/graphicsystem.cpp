@@ -1,4 +1,7 @@
 #include "graphicsystem.h"
+#include "logicsystem.h"
+
+#include "physicsystem.h"
 #include "../core/world.h"
 
 

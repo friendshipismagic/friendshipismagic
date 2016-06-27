@@ -2,11 +2,17 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
-#include "../systems/system.h"
+
 #include "../systems/systemprovider.h"
 #include "../states/state.h"
-#include "../systems/graphicsystem.h"
+
+#include <Box2D/Box2D.h>
+#include <set>
+#include "entity.h"
+#include "../systems/system.h"
+
 #include "../systems/inputsystem.h"
+#include "../systems/physicsystem.h"
 #include "../systems/timersystem.h"
 #include "../systems/logicsystem.h"
 #include "../systems/weaponsystem.h"
@@ -15,9 +21,8 @@
 #include "../systems/scoresystem.h"
 #include "../systems/soundsystem.h"
 #include "../systems/network-system.h"
-#include <Box2D/Box2D.h>
-#include <set>
-#include "entity.h"
+#include "../systems/graphicsystem.h"
+
 
 class World
 {

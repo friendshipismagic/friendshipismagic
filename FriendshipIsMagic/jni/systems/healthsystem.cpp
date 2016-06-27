@@ -1,6 +1,7 @@
 #include "healthsystem.h"
 #include "../core/world.h"
 #include "../core/player.h"
+#include "graphicsystem.h"
 
 HealthSystem::HealthSystem(World* world, State::Context& context, GraphicSystem* graphics)
 : System(world, context)
@@ -13,7 +14,7 @@ void HealthSystem::update(sf::Time dt)
 {
     for(auto health : mCurrentHealth)
     {
-        int currentLife = health.second;
+    	health_t currentLife = health.second;
 
         if(currentLife <= 0)
             mGameWorld->sigDestroyEntity(health.first);
@@ -22,19 +23,29 @@ void HealthSystem::update(sf::Time dt)
     }
 }
 
-int HealthSystem::getCurrentHealth(Entity entity)
+HealthSystem::health_t HealthSystem::getCurrentHealth(Entity entity)
 {
     assert(mCurrentHealth.find(entity) != mCurrentHealth.end());
     return mCurrentHealth[entity];
 }
+void HealthSystem::setCurrentHealth(Entity entity, health_t hp)
+{
+    assert(mCurrentHealth.find(entity) != mCurrentHealth.end());
+    mCurrentHealth[entity] = hp;
+}
 
-int HealthSystem::getMaxHealth(Entity entity)
+HealthSystem::health_t HealthSystem::getMaxHealth(Entity entity)
 {
     assert(mMaxHealth.find(entity) != mMaxHealth.end());
     return mMaxHealth[entity];
 }
+void HealthSystem::setMaxHealth(Entity entity, health_t maxHp)
+{
+    assert(mMaxHealth.find(entity) != mMaxHealth.end());
+    mMaxHealth[entity] = maxHp;
+}
 
-void HealthSystem::insertHealth(Entity entity, int health)
+void HealthSystem::insertHealth(Entity entity, health_t health)
 {
     if (mMaxHealth.find(entity) == mMaxHealth.end())
         mMaxHealth.insert(std::make_pair(entity, health));
@@ -62,7 +73,7 @@ void HealthSystem::deleteHealth(Entity entity)
 void HealthSystem::addToHealth(Entity entity, int amount)
 {
     mCurrentHealth[entity] += amount;
-    int maxHealth = mMaxHealth[entity];
+    health_t maxHealth = mMaxHealth[entity];
     if (mCurrentHealth[entity] > maxHealth)
         mCurrentHealth[entity] = maxHealth;
 }

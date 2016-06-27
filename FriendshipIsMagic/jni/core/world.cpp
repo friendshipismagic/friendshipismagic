@@ -1,14 +1,14 @@
 #include "world.h"
-#include "../systems/physicsystem.h"
 #include <string.h>
 #include "../ressources/filestream.hpp"
 #include "player.h"
+
 
 World::World(State::Context& context)
 : mContext(context)
 , mSystems()
 , mInputs(this, context)
-, mNetwork(this, context, &mInputs, &mPhysics, &mHealth)
+, mNetwork(this, context, &mInputs, &mPhysics, &mHealth, &mLogics)
 , mLogics(this, context,  &mInputs, &mNetwork)
 , mPhysics(this,context, &mLogics)
 , mGraphics(this, context, &mPhysics, &mLogics)

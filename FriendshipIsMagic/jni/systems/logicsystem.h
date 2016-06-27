@@ -2,7 +2,8 @@
 #include "system.h"
 #include "../states/state.h"
 #include "inputsystem.h"
-#include "network-system.h"
+
+class NetworkSystem;
 
 
 enum Logic { 	moveRight, 		moveLeft, 	isJumping, 		fireOn, 	isFacingRight, 		isFacingLeft, 	canFire,
