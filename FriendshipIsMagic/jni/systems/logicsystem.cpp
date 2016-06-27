@@ -77,6 +77,7 @@ void LogicSystem::update(sf::Time dt)
 
 	}
 	else if(mContext.UDPMode == UDPAgent::Mode::Client){
+		std::cout << " FireOn P1 : " << mNetwork->getLogicState(Logic::fireOn) << " FacingLeft : "<< mNetwork->getLogicState(Logic::isFacingLeft) << std::endl;
 		bool oldIsFacingLeft = mLogics[Logic::isFacingLeft] ;
 		mLogics[Logic::fireOn] = mNetwork->getLogicState(Logic::fireOn);
 		mLogics[Logic::isFacingLeft] = mNetwork->getLogicState(Logic::isFacingLeft);
@@ -94,31 +95,6 @@ void LogicSystem::update(sf::Time dt)
 		mLogics[Logic::coMoveLeft] = mInputs->getInputState(Input::left);
 		mLogics[Logic::coFireOn] = mInputs->getInputState(Input::fire);
 		mLogics[Logic::coIsJumping] = mInputs->getInputState(Input::jump);
-
-		if (mLogics[Logic::moveRight] && !mLogics[Logic::moveLeft])
-		{
-			if (mLogics[Logic::isFacingLeft])
-				mLogics[Logic::changeDirection] = true;
-			else
-				mLogics[Logic::changeDirection] = false;
-
-			mLogics[Logic::isFacingLeft] = false;
-			mLogics[Logic::isFacingRight] = true;
-		}
-		if (mLogics[Logic::moveLeft] && !mLogics[Logic::moveRight])
-		{
-			if (mLogics[Logic::isFacingRight])
-				mLogics[Logic::changeDirection] = true;
-			else
-				mLogics[Logic::changeDirection] = false;
-
-			mLogics[Logic::isFacingLeft] = true;
-			mLogics[Logic::isFacingRight] = false;
-		}
-		if (mLogics[Logic::moveLeft] && mLogics[Logic::moveRight])
-			mLogics[Logic::changeDirection] = false;
-		if (!mLogics[Logic::moveLeft] && !mLogics[Logic::moveRight])
-			mLogics[Logic::changeDirection] = false;
 
 
 		if (mLogics[Logic::coMoveRight] && !mLogics[Logic::coMoveLeft])
@@ -146,6 +122,7 @@ void LogicSystem::update(sf::Time dt)
 		if (!mLogics[Logic::coMoveLeft] && !mLogics[Logic::coMoveRight])
 			mLogics[Logic::coChangeDirection] = false;
 	}
+
 
 
 

@@ -86,32 +86,32 @@ void NetworkSystem::SyncFromClient(sf::Packet pkt){
 void NetworkSystem::SyncFromServer(sf::Packet pkt){
 	//P1pos
 	sf::Vector2f v;
-	pkt >>v;
+	Entity gunP1, gunP2;
+	HealthSystem::health_t HP1 = 0, HP2 = 0, MHP1 = 0, MHP2 = 0;
+	bool fireOn, isFacingLeft;
+
+	pkt >> v >> gunP1 >> gunP2 >> HP1 >> HP2 >> MHP1 >> MHP2 >> fireOn >> isFacingLeft;
+	//std::cout << v.x << v.y << "\t gun P1: "<<gunP1 << " gun P2 : "<< gunP2 << " HP P1 : " << HP1 << " HP P2 : "<< HP2 << " " << MHP1 << MHP2 << " FireOn P1 : " << fireOn << " FacingLeft : "<< isFacingLeft << std::endl;
 	mPhysics->setPosition(mGameWorld->getPlayerID(),v);
 	mPhysics->syncPos(mGameWorld->getPlayerID());
 
 	//P1 and P2 guns
-	Entity gunP1, gunP2;
-	pkt >>gunP1 >> gunP2;
 	mGameWorld->setPlayerWeaponID(gunP1);
 	mGameWorld->setCoPlayerWeaponID(gunP2);
 
 	//Heal and max Heal
-	int HP1 = 0, HP2 = 0, MHP1 = 0, MHP2 = 0;
-	pkt >> HP1 >> HP2 >> MHP1 >> MHP2;
+
 	mHealth->setCurrentHealth(mGameWorld->getPlayerID(), HP1);
 	mHealth->setCurrentHealth(mGameWorld->getCoPlayerID(), HP2);
 	mHealth->setMaxHealth(mGameWorld->getPlayerID(), MHP1);
 	mHealth->setMaxHealth(mGameWorld->getCoPlayerID(), MHP2);
 
-	bool boolean;
-	pkt >> boolean;
+	// fireOn
+	mLogics[Logic::fireOn] = fireOn;
 
-	mLogics[Logic::fireOn] = boolean;
-
-	pkt >> boolean;
-	mLogics[Logic::isFacingLeft] = boolean;
-	mLogics[Logic::isFacingRight] = !boolean;
+	// Orientation
+	mLogics[Logic::isFacingLeft] = isFacingLeft;
+	mLogics[Logic::isFacingRight] = !isFacingLeft;
 
 }
 
@@ -140,6 +140,7 @@ void NetworkSystem::update(sf::Time dt){
 	if(cpt++ >= DEFAULT_INPUT_SYNC_FRAME_COUNT){
 		cpt=0;
 		if(mContext.UDPMode == UDPAgent::Mode::Server){
+			//std::cout << mPhysics->getPosition(mGameWorld->getPlayerID()).x << mPhysics->getPosition(mGameWorld->getPlayerID()).y << "\t gun P1: "<< mGameWorld->getPlayerWeaponID() << " gun P2 : "<< mGameWorld->getCoPlayerWeaponID() << " HP P1 : " << mHealth->getCurrentHealth(mGameWorld->getPlayerID()) << " HP P2 : "<< mHealth->getCurrentHealth(mGameWorld->getCoPlayerID()) << " " << mHealth->getMaxHealth(mGameWorld->getPlayerID()) << mHealth->getMaxHealth(mGameWorld->getCoPlayerID()) << " FireOn P1 : " << mLogic->getLogic(Logic::fireOn) << " FacingLeft : "<< mLogic->getLogic(Logic::isFacingLeft) << std::endl;
 			mUDP->send(SyncFromServerCommand::make(
 					mPhysics->getPosition(mGameWorld->getPlayerID()),
 					mGameWorld->getPlayerWeaponID(),
@@ -154,7 +155,7 @@ void NetworkSystem::update(sf::Time dt){
 		}
 		else if(mContext.UDPMode == UDPAgent::Mode::Client){
 			//std::cout<< "sync tick" <<std::endl;
-			std::cout << "Etat fire:" << mLogic->getLogic(Logic::coFireOn) << std::endl;
+
 			mUDP->send(SyncFromClientCommand::make(
 					mPhysics->getPosition(mGameWorld->getCoPlayerID()),
 					mLogic->getLogic(Logic::coFireOn),
