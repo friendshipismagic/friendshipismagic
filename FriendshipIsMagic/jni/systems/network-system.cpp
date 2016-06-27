@@ -56,7 +56,7 @@ void NetworkSystem::updateCoPlayerInput(sf::Packet pkt){
 }
 
 void NetworkSystem::Sync(sf::Packet pkt){
-	pkt >> mPhysics->getPositions();
+	pkt >> mPhysics->getPositions() >> mHealth->getCurrentHealth() >> mHealth->getMaxHealth();
 }
 
 void NetworkSystem::update(sf::Time dt){
