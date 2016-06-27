@@ -99,21 +99,6 @@ void PhysicSystem::update(sf::Time dt)
 		mCoPlayerBody->ApplyLinearImpulse( b2Vec2(0, -mCoPlayerBody->GetMass()*6), mCoPlayerBody->GetWorldCenter(), true );
 		mJumpTimer = sf::Time::Zero;
 	}
-	/*if (mCoFire && (logics->getLogic(Logic::coCanFire)))
-	{
-		if(coIsFacingLeft)
-		{
-			mGameWorld->createEntity(Systems::BULLET, "Entities/bulletL.txt", mCoPlayerBody->GetPosition().x - 0.4, mCoPlayerBody->GetPosition().y);
-		}
-		else
-		{
-			mGameWorld->createEntity(Systems::BULLET, "Entities/bulletR.txt", mCoPlayerBody->GetPosition().x + 0.4, mCoPlayerBody->GetPosition().y);
-		}
-
-		logics->setLogic(Logic::coCanFire, false);
-		mGameWorld->timerOn(mGameWorld->getPlayerWeaponID());
-	}*/
-    //===== Fin CoPLayer
 
     float32 timeStep = 1.0f / 60.0f;
     int32 velocityIterations = 8;
