@@ -1,4 +1,7 @@
 #include <iostream>
+#include <cmath>
+#include <limits>
+#include <fstream>
 #include "tinyxml2.h"
 #include <vector>
 #include <string>
@@ -42,9 +45,13 @@ class MapElementRef : public MapElement {
             return MapElement::Type::REF;
         }
 
-        MapElementRef(MapElement* referee, float x, float y) :
-            mRef (referee),
+        MapElementRef(float x, float y) :
+            mRef (nullptr),
             mPos (x,y){
+        }
+
+        void setReferee(MapElement* referee) {
+            mRef = referee;
         }
 
         Json::Value getJsonObject() const {
@@ -90,6 +97,15 @@ class MapElementData : public MapElement {
         std::vector< sf::FloatRect > mRects;
 
     public:
+
+        void setPosition(const sf::Vector2f& pos) {
+            mPos = pos;
+        }
+
+        const sf::Vector2f& getPosition() const {
+            return mPos;
+        }
+
         std::string getObjectId() const override{
             return mObjectId;
         }
@@ -98,9 +114,11 @@ class MapElementData : public MapElement {
             return MapElement::Type::ELT;
         }
 
-        MapElementData(std::string objectId, float x, float y) :
-            mObjectId(objectId),
-            mPos (x,y){
+        MapElementData(std::string objectId) :
+            mObjectId(objectId){
+
+            mPos.x = mPos.y = std::numeric_limits<float>::max();
+
         }
 
         void addPolygon(const std::vector<sf::Vector2f>& polygon) {
@@ -221,10 +239,14 @@ class Map{
 class MapVisitor : public XMLVisitor {
 
     std::map<std::string, MapElement*> mIds;
+    
+    std::map<MapElement*, std::string> mIdsMissing;
+
 
     Map mMap;
 
     Layer* mCurrentLayer = nullptr;
+
 
     public:
         Map&  getMap() {
@@ -294,7 +316,6 @@ class MapVisitor : public XMLVisitor {
         void CleanupAddition(MapElementData* elt, XMLElement* element) {
                 
             if(element == nullptr){
-                std::cout << "elt is null" << std::endl;
                 return;
             }
 
@@ -302,9 +323,7 @@ class MapVisitor : public XMLVisitor {
             for(auto next=element; next!=nullptr; ) {
 
                 std::cout << "parsing " << element->Name() << std::endl;
-                XMLPrinter printer; 
-                element->Accept(&printer);
-                std::cout << printer.CStr() << std::endl;
+                
                 auto phy = next->Attribute("fim:physics");
 
                 if (phy != nullptr && std::strcmp(phy, "block")==0) {
@@ -313,6 +332,15 @@ class MapVisitor : public XMLVisitor {
                     next=previous->NextSiblingElement();
                     previous->Parent()->DeleteChild(previous);
                     continue;
+                } else {
+                    if (std::strcmp(next->Name(),"rect")==0) {
+                        auto x = next->Attribute("x");
+                        auto y = next->Attribute("y");
+                        if(x == nullptr || y == nullptr) return;
+                        sf::Vector2f pos = elt->getPosition();
+                        elt->setPosition({std::min<float>(pos.x,atof(x)), std::min<float>(pos.y,atof(y))});
+
+                    }
                 }
                 auto child = next->FirstChildElement();
                 CleanupAddition(elt,child);
@@ -341,7 +369,7 @@ class MapVisitor : public XMLVisitor {
                 } else {
                     if (!id) return true;
                     std::cout << "\tfound group id '" << id << "'" << std::endl;
-                    auto mapElt= new MapElementData(id,0,0);
+                    auto mapElt= new MapElementData(id);
                     mCurrentLayer->addElement(mapElt);
                     mIds[id] = mapElt;
 
@@ -384,6 +412,24 @@ class MapVisitor : public XMLVisitor {
                 auto id = element.Attribute("id");
                 auto x = element.FloatAttribute("x");
                 auto y = element.FloatAttribute("y");
+                
+                auto xtr = element.Attribute("transform");
+                if(xtr==nullptr) throw std::runtime_error("No transform in use element");
+
+                auto transform = std::string(xtr);
+
+                std::size_t first_parenthesis = transform.find('(');
+                auto transformType = transform.substr(0,first_parenthesis);
+                std::cout << "Transform type is " << transformType << std::endl;
+
+                if (transformType == "translate") {
+                    std::size_t comma_pos = transform.find(',');
+                    x += atof(transform.substr(first_parenthesis+1, comma_pos-first_parenthesis-2).c_str());
+                    y +=atof(transform.substr(comma_pos+1, transform.size()-1-comma_pos).c_str());
+                } 
+                else if (transformType == "matrix") {
+                    throw std::runtime_error("matrix transform not supported yet");
+                }
 
                 if(href == nullptr) return true;
 
@@ -394,11 +440,12 @@ class MapVisitor : public XMLVisitor {
 
                 auto ref = mIds[s_href];
 
-                if (ref == nullptr) {
-                    std::cout << "hoho, problème d'id inexistant" << std::endl;
-                    return true;
-                }
-                auto element = new MapElementRef(ref, x, y);
+                auto element = new MapElementRef(x, y);
+
+                if (ref == nullptr) 
+                    mIdsMissing.insert({element, href});
+                else
+                    element->setReferee(ref);
 
                 if(id != nullptr)
                     mIds[id] = element;
@@ -461,6 +508,14 @@ int main(int argc, char** argv) {
     auto jmap = map.getJsonObject();
 
     std::cout << jmap.toStyledString() <<std::endl;
+
+    Json::StyledWriter writer;
+
+    std::ofstream stream("res/map.json");
+    if(stream)
+        stream << writer.write(jmap);
+
+    else std::cout << "ERROR WRITING" << std::endl;
 
 
 	return 0;
