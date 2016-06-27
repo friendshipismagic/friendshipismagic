@@ -68,17 +68,17 @@ class World
         std::map<Entity, Entity> mFathers;
 
         std::set<Entity> mEntitiesToDestroy;
-        GraphicSystem* mGraphics;
-        TimerSystem* mTimers;
-        PhysicSystem* mPhysics;
-        InputSystem* mInputs;
-        NetworkSystem* mNetwork;
-        LogicSystem* mLogics;
-        WeaponSystem* mWeapons;
-        HealthSystem* mHealth;
-        ItemSystem* mItems;
-        ScoreSystem* mScores;
-        SoundSystem* mSounds;
+        InputSystem mInputs;
+        NetworkSystem mNetwork;
+        LogicSystem mLogics;
+        PhysicSystem mPhysics;
+        GraphicSystem mGraphics;
+        TimerSystem mTimers;
+        WeaponSystem mWeapons;
+        HealthSystem mHealth;
+        ItemSystem mItems;
+        ScoreSystem mScores;
+        SoundSystem mSounds;
 
         Entity mPlayerID = 0;
         Entity mPlayerWeaponID = 1;

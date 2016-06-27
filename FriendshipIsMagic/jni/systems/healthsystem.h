@@ -18,7 +18,8 @@ class HealthSystem: public System
         void insertHealthBar(Entity entityOwner, Entity entityHealthBar);
 
         void addToHealth(Entity entity, int amount);
-
+        std::map<Entity, int> getCurrentHealth(){return mCurrentHealth;};
+	   std::map<Entity, int> getMaxHealth(){return mMaxHealth;};
     private:
 
         std::map<Entity, int> mCurrentHealth;

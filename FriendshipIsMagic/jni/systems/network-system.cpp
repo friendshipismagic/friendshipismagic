@@ -6,30 +6,33 @@
  */
 
 #include "network-system.h"
+#include "physicsystem.h"
+#include "healthsystem.h"
 #include <SFML/System.hpp>
+
 
 //Network system
 
 
-void printString(sf::Packet pkt){
-	int t,r;
-	pkt >> t >> r;
-	std::cout << t << r << std::endl;
-}
-NetworkSystem::NetworkSystem(World* world, State::Context& context, InputSystem* input)
+
+NetworkSystem::NetworkSystem(World* world, State::Context& context, InputSystem* input, PhysicSystem* aPhysics, HealthSystem* aHealth)
 :System(world, context)
 , mInput(input)
+, mPhysics(aPhysics)
+, mHealth(aHealth)
 , mUDP(nullptr)
-, mInputs(){
+{
 
 	mInputs.insert(std::make_pair(Input::jump, false));
 	mInputs.insert(std::make_pair(Input::right, false));
 	mInputs.insert(std::make_pair(Input::left, false));
 	mInputs.insert(std::make_pair(Input::fire, false));
-	// TODO Auto-generated constructor stub
+	//TO DO finir sync
+	periode = sf::milliseconds(DEFAULT_SYNC_PERIOD);
 	using std::placeholders::_1;
-	mCmd.setCommand(PrintStringCommand::id,printString);
 	mCmd.setCommand(ShareInputCommand::id,std::bind(&NetworkSystem::updateCoPlayerInput, this, _1));
+	mCmd.setCommand(SyncCommand::id,std::bind(&NetworkSystem::Sync, this, _1));
+
 }
 
 
@@ -52,12 +55,27 @@ void NetworkSystem::updateCoPlayerInput(sf::Packet pkt){
 	//	std::cout << "Received client inputs: " << std::to_string(right) << std::to_string(left) << std::to_string(fire) << std::to_string(jump) << std::endl;
 }
 
+void NetworkSystem::Sync(sf::Packet pkt){
+	pkt >> mPhysics->getPositions();
+}
+
 void NetworkSystem::update(sf::Time dt){
+
 	if(mUDP == nullptr){
 		std::cout << "UDP error"<< std::endl;
 		return;
 	}
 	sf::Packet pkt ;
+	sf::Time time = clk.getElapsedTime();
+	//TO DO finir sync
+	if(time > periode){
+		if(mContext.UDPMode == UDPAgent::Mode::Server){
+			//std::cout<< "sync tick" <<std::endl;
+			pkt = SyncCommand::make(mPhysics->getPositions(), mHealth->getCurrentHealth(), mHealth->getMaxHealth());
+		}
+		clk.restart();
+	}
+
 	pkt = ShareInputCommand::make(
 			mInput->getInputState(Input::right),
 			mInput->getInputState(Input::left),
@@ -78,6 +96,8 @@ void NetworkSystem::update(sf::Time dt){
 	}
 
 }
+
+
 //Server mode
 void NetworkSystem::startUDPServer(int srcPort){
 
@@ -105,6 +125,7 @@ void NetworkSystem::startUDPClient(int srcPort, sf::IpAddress destIp, int destPo
 		exit(-1);
 	}
 }
+
 
 void NetworkSystem::notify(sf::Packet pkt){
 	pushBuf(pkt);

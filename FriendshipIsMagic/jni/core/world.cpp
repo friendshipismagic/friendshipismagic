@@ -7,41 +7,32 @@
 World::World(State::Context& context)
 : mContext(context)
 , mSystems()
+, mInputs(this, context)
+, mNetwork(this, context, &mInputs, &mPhysics, &mHealth)
+, mLogics(this, context,  &mInputs, &mNetwork)
+, mPhysics(this,context, &mLogics)
+, mGraphics(this, context, &mPhysics, &mLogics)
+, mTimers(this, context )
+, mWeapons(this, context)
+, mHealth(this, context, &mGraphics)
+, mItems(this, context)
+, mScores(this, context)
+, mSounds(this, context)
 {
-    mInputs = new InputSystem(this, context);
-    mSystems.push_back(mInputs);
 
-    mNetwork = new NetworkSystem(this, context, mInputs);
-    mSystems.push_back(mNetwork);
+    mSystems.push_back(&mInputs);
+    mSystems.push_back(&mNetwork);
+    mSystems.push_back(&mLogics);
+    mSystems.push_back(&mPhysics);
+    mSystems.push_back(&mGraphics);
+    mSystems.push_back(&mTimers);
+    mSystems.push_back(&mWeapons);
+    mSystems.push_back(&mHealth);
+    mSystems.push_back(&mItems);
+    mSystems.push_back(&mScores);
+    mSystems.push_back(&mSounds);
 
-    mLogics = new LogicSystem(this, context, mInputs, mNetwork);
-    mSystems.push_back(mLogics);
-
-    mPhysics =  new PhysicSystem(this, context, mLogics);
-    mSystems.push_back(mPhysics);
-
-    mGraphics = new GraphicSystem(this, context, mPhysics, mLogics);
-    mSystems.push_back(mGraphics);
-
-    mTimers = new TimerSystem(this, context);
-    mSystems.push_back(mTimers);
-
-    mWeapons = new WeaponSystem(this, context);
-    mSystems.push_back(mWeapons);
-
-    mHealth = new HealthSystem(this, context, mGraphics);
-    mSystems.push_back(mHealth);
-
-    mItems = new ItemSystem(this, context);
-    mSystems.push_back(mItems);
-
-    mScores = new ScoreSystem(this, context);
-    mSystems.push_back(mScores);
-
-    mSounds = new SoundSystem(this, context);
-    mSystems.push_back(mSounds);
-
-    mGraphics->setPositionProvider(mPhysics->getPositionProvider());
+    mGraphics.setPositionProvider(mPhysics.getPositionProvider());
 
     createPlayer();
     createCoPlayer();
@@ -58,15 +49,15 @@ World::World(State::Context& context)
 }
 //Server mode
 void World::startUDPServer(int srcPort){
-	mNetwork->startUDPServer(srcPort);
+	mNetwork.startUDPServer(srcPort);
 }
 //Client mode
 void World::startUDPClient(int srcPort, sf::IpAddress destIp, int destPort){
-	mNetwork->startUDPClient(srcPort, destIp, destPort);
+	mNetwork.startUDPClient(srcPort, destIp, destPort);
 }
 void World::handleEvent(const sf::Event& event)
 {
-    mInputs->handleEvent(event);
+    mInputs.handleEvent(event);
 }
 
 void World::update(sf::Time dt)
@@ -88,15 +79,15 @@ void World::update(sf::Time dt)
     if(playerDead)
     {
         createPlayer();
-        mScores->addToScore(mPlayerID, -1000);
+        mScores.addToScore(mPlayerID, -1000);
     }
     if(coPlayerDead)
     {
         createCoPlayer();
-        mScores->addToScore(mCoPlayerID, -1000);
+        mScores.addToScore(mCoPlayerID, -1000);
     }
 
-    if (mLogics->getLogic(Logic::fireOn) && mLogics->getLogic(Logic::canFire))
+    if (mLogics.getLogic(Logic::fireOn) && mLogics.getLogic(Logic::canFire))
     {
         sf::Vector2f pos = mPhysics->getPosition(mPlayerID);
         int scale = mPhysics->getScale();
@@ -104,22 +95,22 @@ void World::update(sf::Time dt)
         if(mLogics->getLogic(Logic::isFacingLeft))
         {
             int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
-            mWeapons->insertOwner(bullet, mPlayerID);
+            mWeapons.insertOwner(bullet, mPlayerID);
         }
         else
         {
             paddingRight = true;
             int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
             paddingRight = false;
-            mWeapons->insertOwner(bullet, mPlayerID);
-            mGraphics->mirror(bullet, -1);
-            mPhysics->mirrorVelocity(bullet);
+            mWeapons.insertOwner(bullet, mPlayerID);
+            mGraphics.mirror(bullet, -1);
+            mPhysics.mirrorVelocity(bullet);
         }
 
-        mLogics->setLogic(Logic::canFire, false);
+        mLogics.setLogic(Logic::canFire, false);
         timerOn(mPlayerWeaponID);
 
-        mSounds->play(weaponType);
+        mSounds.play(weaponType);
     }
 
     if (mLogics->getLogic(Logic::coFireOn) && mLogics->getLogic(Logic::coCanFire))
@@ -153,7 +144,7 @@ void World::update(sf::Time dt)
 
 void World::draw()
 {
-    mGraphics->draw();
+    mGraphics.draw();
 }
 
 Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, float y)
@@ -170,7 +161,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     }
     insertMask(entity, mask); //We add the entity's mask in the map
     int scale = mPhysics->getScale();
-    std::cout << "creation " << mask << " " << entity << std::endl;
+    
 
     //We open the JSON file
     FileStream file;
@@ -205,7 +196,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     {
         Json::Value body = components["body"];
 
-        b2Body* newBody = mPhysics->createBody(entity,
+        b2Body* newBody = mPhysics.createBody(entity,
                                               x,
                                               y,
                                               body["width"].asFloat(),
@@ -219,7 +210,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
         newBody->SetGravityScale(body["gravityScale"].asFloat());
         newBody->SetLinearVelocity(b2Vec2({body["vx"].asFloat(), body["vy"].asFloat()}));
 
-        mPhysics->insertBody(entity, newBody);
+        mPhysics.insertBody(entity, newBody);
     }
     if ((mask & Systems::Component::SENSOR) == Systems::Component::SENSOR)
     {
@@ -228,7 +219,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
         if(!sensor["isPlayerSensor"].asBool())
             owner = mCoPlayerID;
 
-        mPhysics->addSensor(entity,
+        mPhysics.addSensor(entity,
                           owner,
                           sensor["x"].asFloat(),
                           sensor["y"].asFloat(),
@@ -239,47 +230,47 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
     {
         Json::Value timer = components["timer"];
-        mTimers->insertTimer(entity, timer["time"].asFloat());
+        mTimers.insertTimer(entity, timer["time"].asFloat());
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {
-        mPhysics->insertPosition(entity, b2Vec2({scale*x, scale*y}));
+        mPhysics.insertPosition(entity, b2Vec2({scale*x, scale*y}));
     }
     if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
     {
         Json::Value sprite = components["sprite"];
-        mGraphics->insertSprite(entity, sprite["texture"].asString(), sprite["rotation"].asFloat(), sprite["width"].asFloat(), sprite["height"].asFloat());
+        mGraphics.insertSprite(entity, sprite["texture"].asString(), sprite["rotation"].asFloat(), sprite["width"].asFloat(), sprite["height"].asFloat());
     }
     if ((mask & Systems::Component::ITEMTYPE) == Systems::Component::ITEMTYPE)
     {
-        ItemType type = mItems->fromString(components["type"].asString());
-        mItems->insertType(entity, type);
+        ItemType type = mItems.fromString(components["type"].asString());
+        mItems.insertType(entity, type);
         if (type == ItemType::weapon)
-            mWeapons->insertWeaponType(entity, components["weaponType"].asString());
+            mWeapons.insertWeaponType(entity, components["weaponType"].asString());
     }
     if ((mask & Systems::Component::WEAPONTYPE) == Systems::Component::WEAPONTYPE)
     {
-        mWeapons->insertWeaponType(entity, components["weaponType"].asString());
+        mWeapons.insertWeaponType(entity, components["weaponType"].asString());
     }
     if ((mask & Systems::Component::DAMAGE) == Systems::Component::DAMAGE)
     {
         int damage = components["damage"].asInt();
-        mWeapons->insertDamage(entity, damage);
+        mWeapons.insertDamage(entity, damage);
     }
     if ((mask & Systems::Component::HEALTH) == Systems::Component::HEALTH)
     {
         int life = components["health"].asInt();
-        mHealth->insertHealth(entity, life);
+        mHealth.insertHealth(entity, life);
 
         Entity healthBarID = createEntity(Systems::Mask::HEALTHBAR, "Entities/healthbar.txt", 0, 0);
-        mGraphics->insertDependency(entity, healthBarID);
-        mHealth->insertHealthBar(entity, healthBarID);
+        mGraphics.insertDependency(entity, healthBarID);
+        mHealth.insertHealthBar(entity, healthBarID);
 
         insertDependency(entity, healthBarID);
     }
     if ((mask & Systems::Component::SCORE) == Systems::Component::SCORE)
     {
-        mScores->insertScore(entity, 0);
+        mScores.insertScore(entity, 0);
     }
 
     return entity;
@@ -294,38 +285,38 @@ void World::destroyEntity(Entity entity)
     if ((mask & Systems::Component::BODY) == Systems::Component::BODY)
     {
 
-        mPhysics->deleteBody(entity);
+        mPhysics.deleteBody(entity);
     }
     if ((mask & Systems::Component::POSITION) == Systems::Component::POSITION)
     {
-        mPhysics->deletePosition(entity);
+        mPhysics.deletePosition(entity);
     }
     if ((mask & Systems::Component::SPRITE) == Systems::Component::SPRITE)
     {
-        mGraphics->deleteSprite(entity);
+        mGraphics.deleteSprite(entity);
     }
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
     {
-        mTimers->deleteTimer(entity);
+        mTimers.deleteTimer(entity);
     }
     if ((mask & Systems::Component::ITEMTYPE) == Systems::Component::ITEMTYPE)
     {
-        if (mItems->getType(entity) == ItemType::weapon)
-            mWeapons->deleteWeaponType(entity);
+        if (mItems.getType(entity) == ItemType::weapon)
+            mWeapons.deleteWeaponType(entity);
 
-        mItems->deleteType(entity);
+        mItems.deleteType(entity);
     }
     if ((mask & Systems::Component::DAMAGE) == Systems::Component::DAMAGE)
     {
-        mWeapons->deleteDamage(entity);
+        mWeapons.deleteDamage(entity);
     }
     if ((mask & Systems::Component::HEALTH) == Systems::Component::HEALTH)
     {
-        mHealth->deleteHealth(entity);
+        mHealth.deleteHealth(entity);
     }
     if ((mask & Systems::Component::OWNER) == Systems::Component::OWNER)
     {
-        mWeapons->deleteOwner(entity);
+        mWeapons.deleteOwner(entity);
     }
 
     mMasks[entity] = Systems::Mask::NONE;
@@ -365,7 +356,7 @@ void World::sigTimerCall(Entity entity)
         sigDestroyEntity(entity);
     else if(entity == mPlayerWeaponID)
     {
-        mLogics->setLogic(Logic::canFire, true);
+        mLogics.setLogic(Logic::canFire, true);
     }
     else if(entity == mCoPlayerWeaponID)
     {
@@ -380,7 +371,7 @@ void World::sigTimerCall(Entity entity)
 void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
 {
     sigDestroyEntity(entityItem);
-    ItemType type = mItems->getType(entityItem);
+    ItemType type = mItems.getType(entityItem);
 
     if (type == ItemType::weapon)
     {
@@ -393,7 +384,7 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
         weapon = createEntity(Systems::Mask::WEAPON, "Entities/" + weaponType + ".txt", 0, 0);
         mGraphics->insertDependency(entityPlayer, weapon);
         insertDependency(entityPlayer, weapon);
-        mWeapons->insertWeaponType(entityPlayer, weaponType);
+        mWeapons.insertWeaponType(entityPlayer, weaponType);
 
         if (entityPlayer == mCoPlayerID)
             mCoPlayerWeaponID = weapon;
@@ -407,8 +398,8 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
     }
     else if (type == ItemType::swapstuff)
     {
-        std::string coweapon = mWeapons->getWeaponType(mCoPlayerWeaponID);
-        std::string weapon = mWeapons->getWeaponType(mPlayerWeaponID);
+        std::string coweapon = mWeapons.getWeaponType(mCoPlayerWeaponID);
+        std::string weapon = mWeapons.getWeaponType(mPlayerWeaponID);
 
         sigDestroyEntity(mPlayerWeaponID);
         deleteDependency(mPlayerID, mPlayerWeaponID);
@@ -431,9 +422,9 @@ void World::sigCollisionItem(Entity entityPlayer, Entity entityItem)
             mGraphics->mirror(mPlayerWeaponID, -1);
     }
     else if (type == ItemType::heal)
-        mHealth->addToHealth(entityPlayer, +50);
+        mHealth.addToHealth(entityPlayer, +50);
     else if (type == ItemType::increaseMaxLife)
-        mHealth->insertHealth(entityPlayer, mHealth->getMaxHealth(entityPlayer) + 50 );
+        mHealth.insertHealth(entityPlayer, mHealth.getMaxHealth(entityPlayer) + 50 );
 }
 
 void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
@@ -452,20 +443,20 @@ void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
             if (owner == mCoPlayerID)
                 weapon = mCoPlayerWeaponID;
 
-            int damage = mWeapons->getDamage(weapon);
-            mHealth->addToHealth(entityVictim, damage);
+            int damage = mWeapons.getDamage(weapon);
+            mHealth.addToHealth(entityVictim, damage);
         }
 
         if ((entityVictim == mPlayerID) || (entityVictim == mCoPlayerID))
         {
-            mSounds->play("Hit");
+            mSounds.play("Hit");
         }
     }
 }
 
 void World::timerOn(Entity entity)
 {
-    mTimers->timerOn(entity);
+    mTimers.timerOn(entity);
 }
 
 void World::insertDependency(Entity entityFather, Entity entitySon)

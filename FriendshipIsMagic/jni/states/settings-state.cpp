@@ -35,7 +35,7 @@ SettingsState::SettingsState(StateStack& mystack, Context& context)
 	mText.setFont(*mFont);
 	mText.setCharacterSize(50);
 	using std::placeholders::_1;
-	mCmd.setCommand(PrintStringCommand::id,std::bind(&SettingsState::printString, this, _1));
+	//mCmd.setCommand(PrintStringCommand::id,std::bind(&SettingsState::printString, this, _1));
 
 	mText.setPosition(250.,300.);
 	mText.setColor(sf::Color::Black);

@@ -7,14 +7,21 @@
 
 #ifndef NETWORK_SYSTEM_H_
 #define NETWORK_SYSTEM_H_
+#include <SFML/System/Time.hpp>
+
 #include "system.h"
+
 #include "../network/udp-agent.h"
 #include "../command/command.h"
 #include "inputsystem.h"
+#define DEFAULT_SYNC_PERIOD 500
+
+class PhysicSystem;
+class HealthSystem;
 
 class NetworkSystem : public System, public UDPListener{
 public:
-	NetworkSystem(World* world, State::Context& context, InputSystem* input);
+	NetworkSystem(World* world, State::Context& context, InputSystem* input, PhysicSystem* aPhysics, HealthSystem* aHealth);
 	virtual ~NetworkSystem();
 	void update(sf::Time dt);
 	void startUDPServer(int srcPort);
@@ -24,12 +31,19 @@ public:
 	bool isRunning() const { return running;}
 	void updateCoPlayerInput(sf::Packet pkt);
 	bool getInputState(Input input);
+	void Sync(sf::Packet pkt);
 private:
 	InputSystem* mInput;
+	PhysicSystem* mPhysics;
+	HealthSystem* mHealth;
 	std::unique_ptr<UDPAgent> mUDP;
 	std::map<Input, bool> mInputs;
 	PacketCommand mCmd;
 	sf::Clock mClock;
+	sf::Time periode ;
+
+	sf::Clock clk;
+
 
 
 	bool running = false;
