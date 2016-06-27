@@ -6,7 +6,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
 
 
-SET(CMAKE_MODULE_PATH ${CMAKE_ROOT}/cmake/)
+SET(CMAKE_MODULE_PATH ${CMAKE_ROOT}/cmake/Modules)
 
 SET(FIM_COMPILE_ANDROID FALSE CACHE BOOL "Compile the project for android and generate a .apk")
 
@@ -66,8 +66,8 @@ PROJECT(FriendshipIsMagic)
 include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake)
 
 
-FILE(GLOB SOURCES "jni/*.cpp")
-FILE(GLOB ANDROID_SRC "jni/android/*.cpp")
+FILE(GLOB SOURCES jni/*/*.cpp )
+FILE(GLOB ANDROID_SRC jni/android/*.cpp)
 
 LIST(REMOVE_ITEM SOURCES ${ANDROID_SRC})
 
@@ -81,6 +81,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 FIND_PACKAGE(SFML COMPONENTS graphics network audio window system REQUIRED)
 FIND_PACKAGE(Box2D)
+find_package (Threads)
 
 
     ADD_DEFINITIONS(
@@ -99,7 +100,9 @@ FIND_PACKAGE(Box2D)
         ${SFML_GRAPHICS_LIBRARY}
         ${SFML_WINDOW_LIBRARY}
         ${SFML_NETWORK_LIBRARY}
+        ${SFML_AUDIO_LIBRARY}
         ${SFML_SYSTEM_LIBRARY}
         ${BOX2D_LIBRARY}
+        ${CMAKE_THREAD_LIBS_INIT}
     )
 
