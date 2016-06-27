@@ -3,7 +3,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := friendshipismagic
 
-LOCAL_SRC_FILES := main.cpp \
+LOCAL_SRC_FILES := core/main.cpp \
 	../deps/box2d/include/Box2D/Collision/b2BroadPhase.cpp \
 	../deps/box2d/include/Box2D/Collision/b2CollideCircle.cpp \
 	../deps/box2d/include/Box2D/Collision/b2CollideEdge.cpp \
@@ -50,21 +50,29 @@ LOCAL_SRC_FILES := main.cpp \
 	../deps/box2d/include/Box2D/Dynamics/Joints/b2WeldJoint.cpp \
 	../deps/box2d/include/Box2D/Dynamics/Joints/b2WheelJoint.cpp \
 	../deps/box2d/include/Box2D/Rope/b2Rope.cpp \
-	application.cpp \
-	statestack.cpp \
-	titlestate.cpp \
-	state.cpp \
-	gamestate.cpp \
-	world.cpp \
-	physicsystem.cpp \
-	graphicsystem.cpp \
-	bloc.cpp \
-	player.cpp \
-	jsoncpp.cpp\
-	inputsystem.cpp \
-	timersystem.cpp \
-	collisionsystem.cpp \
-	filestream.cpp \
+	core/application.cpp \
+	core/world.cpp \
+	states/statestack.cpp \
+	states/titlestate.cpp \
+	states/state.cpp \
+	states/gamestate.cpp \
+	states/settings-state.cpp \
+	systems/physicsystem.cpp \
+	systems/graphicsystem.cpp \
+	systems/inputsystem.cpp \
+	systems/timersystem.cpp \
+	systems/collisionsystem.cpp \
+	systems/healthsystem.cpp \
+	systems/soundsystem.cpp \
+	systems/logicsystem.cpp \
+	systems/itemsystem.cpp \
+	systems/network-system.cpp \
+	systems/scoresystem.cpp \
+	systems/weaponsystem.cpp \
+	network/udp-agent.cpp \
+	network/udp-exception.cpp \
+	ressources/jsoncpp.cpp\
+	ressources/filestream.cpp \
 	android/filestreamimpl.cpp
 
 
