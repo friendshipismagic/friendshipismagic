@@ -27,6 +27,9 @@ void InputSystem::handleEvent(const sf::Event& event)
             handlePlayerInput(event.key.code, false);
             break;
         case sf::Event::TouchBegan:
+            if (mTouchTime[event.touch.finger].getElapsedTime().asMilliseconds() < TIME_JUMP) {
+                mInputs[Input::jump] = true;
+            } else mInputs[Input::jump] = false;
             mTouchTime[event.touch.finger] = sf::Clock();
             mTouchPos[event.touch.finger] = {event.touch.x, event.touch.y};
             break;
@@ -60,11 +63,12 @@ void InputSystem::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 
 void InputSystem::update(sf::Time dt)
 {
+    auto wsize = mContext.window->getSize();
 
-    /*for(int i=0; i<3; ++i) {
+    for(int i=0; i<3; ++i) {
         if (!sf::Touch::isDown(i)) continue;
         auto touchPos = sf::Touch::getPosition(i, *mContext.window);
-        if (touchPos.x < wsize.x/2) {
+        if (touchPos.x < wsize.x/2 && mTouchTime[i].getElapsedTime().asMilliseconds() > TIME_JUMP) {
             mInputs[Input::fire] = true;
             mTouchInputs[i] = Input::fire;
         } else {
@@ -85,7 +89,7 @@ void InputSystem::update(sf::Time dt)
             }
 
         }
-    }*/
+    }
 }
 
 bool InputSystem::getInputState(Input input)

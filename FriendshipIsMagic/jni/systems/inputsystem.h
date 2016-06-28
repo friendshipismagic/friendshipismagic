@@ -9,6 +9,7 @@ enum Input { idle, right, left, jump, fire };
 class InputSystem: public System
 {
     public:
+        static constexpr int TIME_JUMP = 200;
 
         InputSystem(World* world, State::Context& context);
         virtual void update(sf::Time dt);
