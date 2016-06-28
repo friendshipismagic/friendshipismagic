@@ -18,10 +18,14 @@ WaitingState::WaitingState(StateStack& mystack, Context& context)
 void WaitingState::init()
 {
     mBackgroundSprite.setTexture(*getContext().textures->get("menu/main/background"));
-    if(mContext.UDPMode = UDPAgent::Mode::Server)
+    if(mContext.UDPMode == UDPAgent::Mode::Server){
         mText.setString("Waiting for a client");
-    else
+    }
+    else if(mContext.UDPMode == UDPAgent::Mode::Client){
         mText.setString("Waiting for an host");
+    }
+    else
+    	mText.setString("Neither server or client. ERROR");
 	updateRatio();
 }
 
@@ -70,9 +74,8 @@ bool WaitingState::handleEvent(const sf::Event& event)
 
 			auto coords = getContext().window->mapPixelToCoords(coords_screen, mView);
 
-            requestStackPop();
-            requestStackPush(States::Game);
-
+           // requestStackPop();
+           // requestStackPush(States::Game);
 			break;
 		}
 
@@ -90,6 +93,10 @@ bool WaitingState::handleEvent(const sf::Event& event)
 
 bool WaitingState::update(sf::Time dt)
 {
+	if(mContext.foundPlayer){
+		requestStackPop();
+		requestStackPush(States::Game);
+	}
     return true;
 }
 

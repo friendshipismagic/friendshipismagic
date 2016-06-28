@@ -19,6 +19,7 @@ void GameState::init()
 		std::cout << "gameState: started as Client." << std::endl;
 		//mWorld.askForInit();
 		mWorld.sendReady();
+		//mWorld.lookForServer();
 	}
 	else if(mContext.UDPMode == UDPAgent::Mode::Server){
 		mWorld.startUDPServer(UDPAgent::DEFAULT_PORT);

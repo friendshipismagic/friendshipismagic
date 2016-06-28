@@ -70,6 +70,7 @@ class World
         bool initEntitiesFromServer();
         */
         void sendReady();
+        void lookForServer();
 
     private:
 
@@ -92,6 +93,7 @@ class World
         ScoreSystem mScores;
         SoundSystem mSounds;
         AISystem mAi;
+
 
         Entity mPlayerID = 0;
         Entity mPlayerWeaponID = 1;

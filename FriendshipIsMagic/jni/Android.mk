@@ -75,7 +75,7 @@ LOCAL_SRC_FILES := core/main.cpp \
 	systems/weaponsystem.cpp \
 	network/udp-agent.cpp \
 	network/udp-exception.cpp \
-	network/net-player-discover.cpp \
+	systems/net-player-discover.cpp \
 	ai/matrix/matrix.cpp \
 	ai/dijkstrainterface/asetinterface.cpp \
 	ai/dijkstrainterface/graphinterface.cpp \

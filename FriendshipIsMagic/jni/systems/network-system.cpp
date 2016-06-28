@@ -11,7 +11,7 @@
 #include "healthsystem.h"
 
 #include "../core/world.h"
-
+#include "net-player-discover.h"
 
 
 //Network system
@@ -26,6 +26,7 @@ NetworkSystem::NetworkSystem(World* world, State::Context& context, InputSystem*
 , mLogic(aLogic)
 , mWeapon(aWeapon)
 , mUDP(nullptr)
+, mDiscover(nullptr)
 {
 	mInputs.insert(std::make_pair(Input::jump, false));
 	mInputs.insert(std::make_pair(Input::right, false));
@@ -78,7 +79,9 @@ void NetworkSystem::ackInitReceived(sf::Packet pkt){
 */
 //===================[ END INIT SYNC METHODS ]====================//
 
+void NetworkSystem::lookforServer(){
 
+}
 void NetworkSystem::sendReady(){
 	mUDP->send(ReadyCommand::make());
 }
@@ -217,6 +220,7 @@ void NetworkSystem::startUDPServer(int srcPort){
 		std::cout << "Can't bind socket to port " << srcPort << std::endl;
 		exit(-1);
 	}
+	//mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, mUDP->getSrcPort()));
 }
 //Client mode
 void NetworkSystem::startUDPClient(int srcPort, sf::IpAddress destIp, int destPort){

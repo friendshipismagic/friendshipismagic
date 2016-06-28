@@ -89,17 +89,18 @@ bool TitleState::handleEvent(const sf::Event& event)
 			}
 
 			//Server
-        	if (event.mouseButton.button == sf::Mouse::Left){
-        		mContext.UDPMode = UDPAgent::Mode::Server;
-        	}
-        	else if(event.mouseButton.button == sf::Mouse::Right){
-        		mContext.UDPMode = UDPAgent::Mode::Client;
-        	}
-        	else{
-        		mContext.UDPMode = UDPAgent::Mode::None;
-        	}
+			if (event.mouseButton.button == sf::Mouse::Left)
+			{
+				mContext.UDPMode = UDPAgent::Mode::Server;
+
+			}
+			else if(event.mouseButton.button == sf::Mouse::Right)
+			{
+				mContext.UDPMode = UDPAgent::Mode::Client;
+
+			}
         	requestStackPop();
-			requestStackPush(States::Connect);
+			requestStackPush(States::Game);
 			break;
 		}
 
