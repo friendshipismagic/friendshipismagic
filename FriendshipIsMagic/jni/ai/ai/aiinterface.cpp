@@ -31,8 +31,17 @@ void AiInterface::setPath(int mobID, float playerX, float playerY, float mobX, f
     int mX = int(mobX)/100;
 	int mY = int(mobY)/100;
 
+
+	
+	if (mX < 0 || mY < 0 || mX >= g.getLenghtX() || mY >= g.getLenghtT()/g.getLenghtX()
+		|| iX < 0 || iY < 0 || iX >= g.getLenghtX() || iX >= g.getLenghtT()/g.getLenghtX()
+	) {
+		return;
+	}
+	
 	int player = g.coordinatesToMatrix(iX, iY);
     int mob = g.coordinatesToMatrix(mX, mY);
+    
 
 	Dijkstra dijkstra(&g);
 	std::vector<int> previous = dijkstra.dijkstra(player, mob);
