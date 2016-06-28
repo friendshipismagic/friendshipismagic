@@ -54,7 +54,6 @@ bool GameState::handleEvent(const sf::Event& event)
 bool GameState::update(sf::Time dt)
 {
     mWorld.update(dt);
-
     return true;
 }
 

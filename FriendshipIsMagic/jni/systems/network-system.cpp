@@ -9,9 +9,8 @@
 #include "network-system.h"
 #include "physicsystem.h"
 #include "healthsystem.h"
-
 #include "../core/world.h"
-#include "net-player-discover.h"
+
 
 
 //Network system
@@ -149,6 +148,7 @@ void NetworkSystem::update(sf::Time dt){
 		std::cout << "UDP error"<< std::endl;
 		return;
 	}
+	//std::cout << "hello from network system update" << std::endl;
 	if(mInitialized){
 	/*
 		sf::Time time = clk.getElapsedTime();
@@ -192,13 +192,16 @@ void NetworkSystem::update(sf::Time dt){
 				));
 			}
 		} //== fin if cpt
+
 	}//fin if initialized
-	else{
-
-		//	startUDPServer();
-		//	sendReady();
-
-
+	else {
+		mDiscover->update();
+		//std::cout << "Discover updated" << std::endl;
+		if(mContext.UDPMode == UDPAgent::Client && mDiscover->getDestPort() !=0){
+			startUDPClient(UDPAgent::DEFAULT_PORT+1,mDiscover->getDestIp(), mDiscover->getDestPort() );
+			std::cout << "Client started and connected to "<< mDiscover->getDestIp().toString() << " and port "<< mDiscover->getDestPort() << std::endl;
+			sendReady();
+		}
 	}
 	//Receive
 	while(emptyBuf() == false){

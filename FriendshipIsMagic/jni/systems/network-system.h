@@ -16,11 +16,11 @@
 
 #include "../network/udp-agent.h"
 #include "../command/command.h"
+#include "net-player-discover.h"
 
 #define DEFAULT_SYNC_PERIOD 2000
 #define DEFAULT_INPUT_SYNC_FRAME_COUNT 0
 
-class NetPlayerDiscover;
 class PhysicSystem;
 class HealthSystem;
 

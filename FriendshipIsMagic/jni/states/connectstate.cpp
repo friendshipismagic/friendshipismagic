@@ -63,15 +63,15 @@ bool ConnectState::handleEvent(const sf::Event& event)
         	if (event.mouseButton.button == sf::Mouse::Left)
             {
         		mContext.UDPMode = UDPAgent::Mode::Server;
-        		requestStackPop();
-                requestStackPush(States::Waiting);
         	}
         	else if(event.mouseButton.button == sf::Mouse::Right)
         	{
         		mContext.UDPMode = UDPAgent::Mode::Client;
-        		requestStackPop();
-                requestStackPush(States::Waiting);
+
         	}
+        	requestStackPop();
+        	requestStackPush(States::Game);
+			requestStackPush(States::Waiting);
 			break;
 		}
 

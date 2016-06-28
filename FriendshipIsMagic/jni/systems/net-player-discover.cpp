@@ -43,11 +43,13 @@ void NetPlayerDiscover::update(){
 			std::cout << "UDP error"<< std::endl;
 			return;
 		}
+	//std::cout << "hello from discover" << std::endl;
 	time = clk.getElapsedTime();
 	if( mContext.UDPMode == UDPAgent::Mode::Server &&
 		time > sf::milliseconds(UDPAgent::DEFAULT_DISCOVER_PERIODE))
 	{
 		discover->send(BroadcastServerCommand::make(mPLayerSrcPort));
+		//std::cout <<"Broadcast sent" << std::endl;
 	}
 	//Receive
 	while(emptyBuf() == false){
