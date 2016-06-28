@@ -225,3 +225,47 @@ void PhysicSystem::mirrorVelocity(Entity entity)
         body->SetLinearVelocity(b2Vec2({-vel.x, vel.y}));
     }
 }
+
+
+void PhysicSystem::updateMob(AiInterface::Action action, Entity mob)
+{
+    bool mRight = (action == AiInterface::Action::right);
+    bool mLeft = (action == AiInterface::Action::left);
+    bool mJump = (action == AiInterface::Action::up);
+    bool mStill = (action == AiInterface::Action::still);
+    bool mDown = (action == AiInterface::Action::down);
+
+    b2Body* mobody = mBodies[mob];
+
+    if (mRight)
+    {
+        mobody->SetAwake(true);
+        b2Vec2 vel(mobody->GetLinearVelocity());
+        vel.x = 2.5f;
+        mobody->SetLinearVelocity(vel);
+    }
+    if (mLeft)
+    {
+        mobody->SetAwake(true);
+        b2Vec2 vel(mobody->GetLinearVelocity());
+        vel.x = -2.5f;
+        mobody->SetLinearVelocity(vel);
+    }
+    if (mStill)
+    {
+        b2Vec2 vel(mobody->GetLinearVelocity());
+        vel.x = 0.;
+        mobody->SetLinearVelocity(vel);
+    }
+    if (mJump && mCanJump[mob])
+    {
+        mobody->SetAwake(true);
+        mobody->ApplyLinearImpulse( b2Vec2(0, -mobody->GetMass()*6), mobody->GetWorldCenter(), true );
+        mCanJump[mob] = false;
+    }
+}
+
+void PhysicSystem::canJump(Entity mob)
+{
+    mCanJump[mob] = true;
+}

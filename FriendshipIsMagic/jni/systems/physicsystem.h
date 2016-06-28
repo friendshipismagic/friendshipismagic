@@ -5,8 +5,11 @@
 #include "../states/state.h"
 #include "../core/player.h"
 #include "systemprovider.h"
-
+#include "collisionsystem.h"
+#include "logicsystem.h"
 #include "../core/entity.h"
+#include "../ai/ai/aiinterface.h"
+#include "timersystem.h"
 
 class CollisionSystem;
 class LogicSystem;
@@ -34,12 +37,17 @@ class PhysicSystem: public System
 
         int getScale() { return mScale; };
 
+        void updateMob(AiInterface::Action, Entity mob);
+
         void mirror(Entity entity);
         void mirrorVelocity(Entity entity);
         void syncPos(Entity entity);
 
         std::map<Entity, sf::Vector2f>& getPositions(){return mPositions;};
+
         void setPosition(Entity entity, sf::Vector2f pos);
+
+        void canJump(Entity entity);
     private:
 
         LogicSystem* logics;
@@ -64,5 +72,6 @@ class PhysicSystem: public System
         bool coIsFacingRight;
 		bool coIsFacingLeft;
 
-
+        //Mobs
+        std::map<Entity, bool> mCanJump;
 };

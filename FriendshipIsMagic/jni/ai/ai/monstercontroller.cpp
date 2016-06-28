@@ -25,19 +25,20 @@ MonsterController::~MonsterController() {
 	// TODO Auto-generated destructor stub
 }
 
-void MonsterController::setTarget(VertexInterface* target) {
+void MonsterController::setTarget(int target) {
     mTarget = target;
 }
 
 
-void MonsterController::storePath(PreviousInterface& previous){
+void MonsterController::storePath(std::vector<int> previous, int mob){
     mPath.clear();
-    
-    auto next = previous.getValue(mTarget);
 
-    while(next != nullptr) {
-        mPath.push_back({next->getX(), next->getY()});
-        next = previous.getValue(next);
+    int next = previous[mob];
+
+    while(next != mTarget)
+    {
+        mPath.push_back(next);
+        next = previous[next];
     }
 
 }
@@ -51,25 +52,30 @@ AiInterface::Action MonsterController::translateOrder(){
 	int deltaX = currentPosition.first - nextPosition.first;
 	int deltaY = currentPosition.second - nextPosition.second;
 
-	if(deltaX == 0 && deltaY == 0){
+	if(deltaX == 0 && deltaY == 0)
+    {
 		return AiInterface::still;
 	}
 
-	if(deltaX == 1 && deltaY == 0){
+	if(deltaX == 1 && deltaY == 0)
+    {
 		return AiInterface::left;
 	}
 
-	if(deltaX == -1 && deltaY == 0){
+	if(deltaX == -1 && deltaY == 0)
+    {
 		return AiInterface::right;
 	}
 
-	if(deltaX == 0 && deltaY == 1){
-			return AiInterface::up;
-		}
+	if(deltaX == 0 && deltaY == 1)
+    {
+        return AiInterface::up;
+    }
 
-	if(deltaX == 0 && deltaY == -1){
-			return AiInterface::down;
-		}
+	if(deltaX == 0 && deltaY == -1)
+    {
+        return AiInterface::down;
+    }
 
 	return AiInterface::still;
 }

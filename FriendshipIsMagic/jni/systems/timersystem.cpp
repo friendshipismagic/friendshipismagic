@@ -9,11 +9,10 @@ TimerSystem::TimerSystem(World* world, State::Context& context)
 
 void TimerSystem::update(sf::Time dt)
 {
+    //std::cout << mTimes.size() << std::endl;
     for (auto timer : mCurrentTimers)
     {
         mCurrentTimers[timer.first] += dt;
-
-        //std::cout << mTimes[timer.first].asSeconds() << std::endl;
 
         if (mCurrentTimers[timer.first].asSeconds() > mTimes[timer.first].asSeconds())
         {
@@ -23,8 +22,8 @@ void TimerSystem::update(sf::Time dt)
 
     for (Entity j : mTimersToCall)
     {
-        mGameWorld->sigTimerCall(j);
         mCurrentTimers.erase(j);
+        mGameWorld->sigTimerCall(j);
     }
 
     mTimersToCall.clear();

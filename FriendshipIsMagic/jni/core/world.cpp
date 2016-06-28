@@ -18,7 +18,7 @@ World::World(State::Context& context)
 , mItems(this, context)
 , mScores(this, context)
 , mSounds(this, context)
-, mAi(this, context)
+, mAi(this, context, &mPhysics)
 {
 
     mSystems.push_back(&mInputs);
@@ -66,11 +66,11 @@ void World::initEntities(){
 	createEntity(Systems::Mask::ITEM, "Entities/healitem.txt", 3, 5.5);
 	createEntity(Systems::Mask::ITEM, "Entities/increasemaxlifeitem.txt", 4, 5.5);
 	createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt", 3, 6.5);
-	createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 9, 5.2);
-	createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.2);
-	createEntity(Systems::Mask::MONSTER, "Entities/monster.txt", 10, 4);
+	//createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 9, 5.2);
+	createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.5);
 
-    mAi.setMatrix("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEWWWWWWWWWWWWWWWW",16);
+    mAi.setMatrix("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEWEEEEEEEEEEEEWWWWWWWWWWWWWWWW",16);
+    mAi.insertMonster(mob);
 }
 //Server mode
 void World::startUDPServer(int srcPort){
@@ -400,6 +400,11 @@ void World::sigTimerCall(Entity entity)
     else if(mask == Systems::Mask::ITEM)
     {
         sigDestroyEntity(entity);
+    }
+    else if(mask == Systems::Mask::MONSTER)
+    {
+        mPhysics.canJump(entity);
+        timerOn(entity);
     }
 }
 
