@@ -46,6 +46,8 @@ using AckInitCommand = CommandMessage<9>;
 
 using ReadyCommand = CommandMessage<10>;
 using AckReadyCommand = CommandMessage<11>;
+using BroadcastServerCommand = CommandMessage<12, sf::Uint32>;
+using BroadcastFeedbackCommand = CommandMessage<13, sf::Uint32>;
 
 
 #endif /* COMMAND_COMMAND_LIST_H_ */

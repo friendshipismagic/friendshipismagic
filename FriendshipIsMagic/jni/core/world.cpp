@@ -88,7 +88,11 @@ void World::handleEvent(const sf::Event& event)
 
 void World::update(sf::Time dt)
 {
+	if(mContext.UDPMode == UDPAgent::Mode::Client)
+			std::cout << "in world update before first if" << std::endl;
 	if(mNetwork.isInitialized()){
+		if(mContext.UDPMode == UDPAgent::Mode::Client)
+		std::cout << "in world update in first if" << std::endl;
 		for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
 		{
 			(*itr)->update(dt);

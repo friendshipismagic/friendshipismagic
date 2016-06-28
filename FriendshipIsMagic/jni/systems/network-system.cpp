@@ -105,7 +105,7 @@ void NetworkSystem::syncFromClient(sf::Packet pkt){
 	mLogics[Logic::isFacingRight] = !boolean;
 
 }
-*/
+
 
 
 void NetworkSystem::syncFromServer(sf::Packet pkt){
@@ -192,6 +192,9 @@ void NetworkSystem::update(sf::Time dt){
 			}
 		} //== fin if cpt
 	}//fin if initialized
+	else{
+
+	}
 	//Receive
 	while(emptyBuf() == false){
 		auto pkt = popFrontBuf();

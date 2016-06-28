@@ -14,7 +14,7 @@
 /*
  * Create as server
  */
-UDPAgent::UDPAgent(int srcPort) :
+UDPAgent::UDPAgent(unsigned short srcPort) :
 the_thread(&UDPAgent::AgentRoutine, this)
 {
 	mode = Mode::Server;
@@ -27,7 +27,7 @@ the_thread(&UDPAgent::AgentRoutine, this)
 /*
  * Create class as client
  */
-UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):
+UDPAgent::UDPAgent(unsigned short srcPort, sf::IpAddress ipAddr, unsigned short destPort):
 	the_thread(&UDPAgent::AgentRoutine, this) {
 	mode = Mode::Client;
 	mDestIPAddr = ipAddr;
@@ -76,7 +76,7 @@ bool UDPAgent::send(sf::Packet pkt){
 void UDPAgent::AgentRoutine(){
 	string str;
 	sf::Socket::Status st = sf::Socket::Status::Disconnected;
-	unsigned short int tmpPort;
+	unsigned short tmpPort;
 	sf::IpAddress tmpIP;
 	while (running) {
 
@@ -113,16 +113,6 @@ void UDPAgent::AgentRoutine(){
 	}
 }
 
-
-//***** Set the thread period (in ms)
-void UDPAgent::setPeriod(int newPeriod) {
-	period = newPeriod;
-}
-
-//***** Give the thread period (in ms)
-int UDPAgent::getPeriod() {
-	return period;
-}
 
 UDPAgent::Mode UDPAgent::getMode(){
 	return mode;

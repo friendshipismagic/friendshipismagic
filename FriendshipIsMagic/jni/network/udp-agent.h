@@ -28,21 +28,22 @@ public:
 	//========== DEBUG
 	const bool debug = false;
 
-	static const int DEFAULT_PERIODE=250;
-	static const int DEFAULT_PORT = 54000;
+	static const unsigned short DEFAULT_PORT = 54000;
+	static const unsigned short DEFAULT_DISCOVER_PORT = 55000;
+	static const unsigned short DEFAULT_DISCOVER_PERIODE = 1000;
 
-	UDPAgent(int port);
-	UDPAgent(int port, sf::IpAddress ipAddr, int destPort);
+	UDPAgent(unsigned short port);
+	UDPAgent(unsigned short port, sf::IpAddress ipAddr, unsigned short destPort);
 	virtual ~UDPAgent();
 
 	//***** Function to call after creating UDPAgent object
 	void	start();
 
 	//***** Set the thread period (in ms)
-	void	setPeriod(int newPeriod);
+	void	setPeriod(unsigned short newPeriod);
 
 	//***** Give the thread period (in ms)
-	int 	getPeriod();
+	unsigned short 	getPeriod();
 	bool  	send(sf::Packet pkt);
 
 	sf::IpAddress getDestIpAddr() const {
@@ -67,7 +68,6 @@ private:
 	sf::UdpSocket listener;
 	UDPAgent::Mode mode;
 	bool running;
-	int period = DEFAULT_PERIODE;
 	sf::Thread the_thread;
 	sf::IpAddress mDestIPAddr;
 
