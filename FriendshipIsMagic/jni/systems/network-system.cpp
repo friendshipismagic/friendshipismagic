@@ -79,9 +79,7 @@ void NetworkSystem::ackInitReceived(sf::Packet pkt){
 */
 //===================[ END INIT SYNC METHODS ]====================//
 
-void NetworkSystem::lookforServer(){
 
-}
 void NetworkSystem::sendReady(){
 	mUDP->send(ReadyCommand::make());
 }
@@ -197,6 +195,10 @@ void NetworkSystem::update(sf::Time dt){
 	}//fin if initialized
 	else{
 
+		//	startUDPServer();
+		//	sendReady();
+
+
 	}
 	//Receive
 	while(emptyBuf() == false){
@@ -220,7 +222,10 @@ void NetworkSystem::startUDPServer(int srcPort){
 		std::cout << "Can't bind socket to port " << srcPort << std::endl;
 		exit(-1);
 	}
-	//mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, mUDP->getSrcPort()));
+	mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, mUDP->getSrcPort()));
+}
+void NetworkSystem::lookforServer(){
+	mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, mUDP->getSrcPort()));
 }
 //Client mode
 void NetworkSystem::startUDPClient(int srcPort, sf::IpAddress destIp, int destPort){
