@@ -2,6 +2,7 @@
 #include "../states/titlestate.h"
 #include "../states/settings-state.h"
 #include "../states/gamestate.h"
+#include "../states/splash-state.h"
 
 Application::Application(State::Context& context)
 : mStateStack(context)
@@ -20,6 +21,7 @@ Application::Application(State::Context& context)
 
 void Application::registerStates(State::Context& context)
 {
+	mStateStack.registerState(States::Splash, new SplashState(mStateStack, context));
     mStateStack.registerState(States::Title, new TitleState(mStateStack, context));
     mStateStack.registerState(States::Game, new GameState(mStateStack, context));
     mStateStack.registerState(States::Settings, new SettingsState(mStateStack, context));

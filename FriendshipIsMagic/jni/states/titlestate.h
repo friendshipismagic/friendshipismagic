@@ -15,6 +15,8 @@ class TitleState: public State
 
         sf::Sprite mBackgroundSprite;
         sf::Sprite mSettingsSprite;
+		sf::Sprite mOnePlayerSprite;
+		sf::Sprite mTwoPlayersSprite;
 
         void updateRatio();
 

@@ -1,18 +1,10 @@
 #include "titlestate.h"
 #include <iostream>
+#include <cmath>
 
 TitleState::TitleState(StateStack& mystack, Context& context)
 : State(mystack, context)
-, mFont()
-, mTextEffectTime()
-, mText()
-, mShowText(true)
 {
-    mFont = context.fonts->get("font");
-    mText.setFont(*mFont);
-
-    mText.setPosition(250.,300.);
-    mText.setString("press any button");
 }
 
 void TitleState::init()
@@ -20,28 +12,83 @@ void TitleState::init()
     mTextEffectTime = sf::Time::Zero;
     mSettingsSprite.setTexture(*getContext().textures->get("icons/settings"));
     mBackgroundSprite.setTexture(*getContext().textures->get("menu/main/background"));
-
-    updateRatio();
+	mOnePlayerSprite.setTexture(*getContext().textures->get("OnePlayer"));
+	mTwoPlayersSprite.setTexture(*getContext().textures->get("TwoPlayers"));
+	updateRatio();
+	
 }
 
 void TitleState::updateRatio() {
   
-    sf::Vector2<unsigned int> screenSize = getContext().window->getSize();
+	const float WORLD_HEIGHT = 1080;
+	
+    auto screenSize = getContext().window->getSize();
+	auto ratio = screenSize.x / static_cast<float>(screenSize.y);
+	mView.setSize(WORLD_HEIGHT, WORLD_HEIGHT); // no deformations
     //sf::Vector2f screenSize = mView.getSize(); 
-
-    sf::FloatRect bgRect = mBackgroundSprite.getLocalBounds();
-    mBackgroundSprite.setScale(screenSize.x/bgRect.width, screenSize.y/bgRect.height); 
-
-    std::cout << "update ratio" << std::endl;
+	
+	
+	auto size = mView.getSize();
+	
+	auto bgRect  = mBackgroundSprite.getLocalBounds();
+	auto bgScale = std::max(size.x/bgRect.width, size.y/bgRect.height);
+	auto bgSize  = sf::Vector2f(bgRect.width*bgScale, bgRect.height*bgScale);
+	auto bgShift = sf::Vector2f((size.x-bgSize.x)/2, (size.y-bgSize.y)/2);
+	mBackgroundSprite.setScale(bgScale,bgScale);
+	mBackgroundSprite.setPosition(bgShift);
+	
+	
+	
+	mOnePlayerSprite.setScale(2,2);
+	auto OP1rect = mOnePlayerSprite.getGlobalBounds();
+	mOnePlayerSprite.setPosition(size.x/3-OP1rect.width/2,size.y/2-OP1rect.height/2);
+	
+	
+	mTwoPlayersSprite.setScale(2,2);
+	auto TP2rect = mTwoPlayersSprite.getGlobalBounds();
+	mTwoPlayersSprite.setPosition(2*size.x/3-TP2rect.width/2,size.y/2-TP2rect.height/2);
+	
+	
+	auto settingsRect = mSettingsSprite.getGlobalBounds();
+	mSettingsSprite.setPosition(size.x/2. - settingsRect.width/2.,0);
+	
 }
 
 bool TitleState::handleEvent(const sf::Event& event)
 {
+	
+	//auto coords = getContext().window->mapPixelToCoords({x,y}, mView);
+	//mBackgroundSprite.getGlobalBounds().contains(coords);
+	//event.touch.y
 
+	
     switch(event.type) {
-        case sf::Event::TouchBegan:
-        case sf::Event::MouseButtonPressed:
-        	//Server
+        case sf::Event::TouchBegan:  //event.touch // 
+        case sf::Event::MouseButtonPressed: {
+        	
+			//if SettingsButton is pressed go to
+			sf::Vector2i coords_screen;
+			if (event.type == sf::Event::TouchBegan) {
+				std::cout << "touch" << std::endl;
+				coords_screen.x = event.touch.x;
+				coords_screen.y = event.touch.y;
+			} else {
+				coords_screen.x = event.mouseButton.x;
+				coords_screen.y = event.mouseButton.y;
+				std::cout << "mouse" << std::endl;
+			}
+			
+			auto coords = getContext().window->mapPixelToCoords(coords_screen, mView);
+			
+			bool isSettingsButtonPressed = mSettingsSprite.getGlobalBounds().contains(coords);
+			
+			if(isSettingsButtonPressed){
+				requestStackPop();
+				requestStackPush(States::Settings);
+				return true;
+			}
+			
+			//Server
         	if (event.mouseButton.button == sf::Mouse::Left){
         		mContext.UDPMode = UDPAgent::Mode::Server;
         	}
@@ -50,11 +97,15 @@ bool TitleState::handleEvent(const sf::Event& event)
         	}
         	requestStackPop();
 			requestStackPush(States::Game);
-            break;
+			break;
+		}
 
         case sf::Event::Closed:
             requestStackPop();
             break;
+			
+		case sf::Event::Resized:
+			updateRatio();
         default:
         	break;
     }
@@ -62,12 +113,6 @@ bool TitleState::handleEvent(const sf::Event& event)
 }
 bool TitleState::update(sf::Time dt)
 {
-    mTextEffectTime += dt;
-    if (mTextEffectTime >= sf::seconds(0.7f))
-    {
-        mShowText = !mShowText;
-        mTextEffectTime = sf::Time::Zero;
-    }
     return true;
 }
 
@@ -75,4 +120,6 @@ void TitleState::draw()
 {
     mContext.window->draw(mBackgroundSprite);
     mContext.window->draw(mSettingsSprite);
+	mContext.window->draw(mOnePlayerSprite);
+	mContext.window->draw(mTwoPlayersSprite);
 }

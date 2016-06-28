@@ -13,6 +13,7 @@ namespace States
 {
     enum ID
     {
+		Splash,
         Title,
         Menu,
         Pause,
