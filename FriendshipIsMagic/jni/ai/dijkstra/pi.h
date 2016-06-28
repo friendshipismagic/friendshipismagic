@@ -11,14 +11,13 @@
 #include "../dijkstrainterface/piinterface.h"
 class VertexInterface;
 
-#include <tr1/unordered_map>
+#include <map>
 
-using namespace std::tr1;
 
 class Pi : public PiInterface {
 
 private :
-	unordered_map<VertexInterface*, int> pi;
+	std::map<VertexInterface*, int> pi;
 
 public:
 	Pi();

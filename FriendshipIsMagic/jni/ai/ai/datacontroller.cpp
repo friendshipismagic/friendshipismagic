@@ -9,7 +9,6 @@
 
 #include <vector>
 #include "monster.h"
-#include "playerandstuff.h"
 
 using namespace std;
 

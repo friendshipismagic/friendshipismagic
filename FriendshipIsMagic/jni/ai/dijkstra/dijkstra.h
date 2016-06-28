@@ -9,6 +9,8 @@
 #define DIJKSTRA_DIJKSTRA_H_
 
 #include <memory>
+#include <vector>
+#include "../matrix/matrix.h"
 
 class ASetInterface;
 class GraphInterface;
@@ -16,15 +18,20 @@ class PiInterface;
 class PreviousInterface;
 class VertexInterface;
 
-class Dijkstra {
+class Dijkstra
+{
 public:
-	Dijkstra();
+
+	Dijkstra(Matrix* matrix);
 	virtual ~Dijkstra();
-	static std::unique_ptr<PreviousInterface> dijkstra(GraphInterface& g, VertexInterface& r);
+	std::vector<int> dijkstra(int player, int mob);
 
 private:
-	static std::unique_ptr<PreviousInterface>& dijkstra(GraphInterface& g,VertexInterface& r, ASetInterface& a, PiInterface& pi, std::unique_ptr<PreviousInterface>& previous);
 
+    std::vector<bool> a;
+    std::vector<int> pi;
+    std::vector<int> previous;
+    Matrix* mMatrix;
 };
 
 #endif /* DIJKSTRA_DIJKSTRA_H_ */

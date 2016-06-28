@@ -35,8 +35,6 @@ void PhysicSystem::update(sf::Time dt)
 	bool mCoLeft = logics->getLogic(Logic::coMoveLeft);
 	bool mCoJump = logics->getLogic(Logic::coIsJumping);
 
-    bool isFacingLeft = logics->getLogic(Logic::isFacingLeft);
-
     mJumpTimer += dt;
 
     if (mRight)

@@ -18,7 +18,10 @@ public:
 	GraphInterface();
 	virtual ~GraphInterface();
 	virtual std::vector<VertexInterface*> getAllVertices()=0;
-	virtual int getWeight(VertexInterface* src, VertexInterface* dst)=0;
+	virtual int getWeight(int src, int dst)=0;
+	virtual int getLenghtX() = 0;
+	virtual vector<int> getSuccessors(int index) = 0;
+	virtual VertexInterface* getVertex(int index) = 0;
 };
 
 #endif /* DIJKSTRAINTERFACE_GRAPHINTERFACE_H_ */

@@ -26,7 +26,10 @@ Previous::~Previous() {
 
 void Previous::setValue(VertexInterface* vertex, VertexInterface* value){
 	//setting the result for a vertex
-	previous.insert(make_pair(vertex, value));
+	if (previous.find(vertex) != previous.end())
+        previous[vertex] = value;
+    else
+        previous.insert(make_pair(vertex, value));
 	//std::cout << previous.size() << std::endl;
 }
 

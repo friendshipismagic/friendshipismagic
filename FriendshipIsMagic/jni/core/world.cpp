@@ -18,6 +18,7 @@ World::World(State::Context& context)
 , mItems(this, context)
 , mScores(this, context)
 , mSounds(this, context)
+, mAi(this, context)
 {
 
     mSystems.push_back(&mInputs);
@@ -31,6 +32,7 @@ World::World(State::Context& context)
     mSystems.push_back(&mItems);
     mSystems.push_back(&mScores);
     mSystems.push_back(&mSounds);
+    mSystems.push_back(&mAi);
 
     mGraphics.setPositionProvider(mPhysics.getPositionProvider());
 
@@ -66,6 +68,9 @@ void World::initEntities(){
 	createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt", 3, 6.5);
 	createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 9, 5.2);
 	createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.2);
+	createEntity(Systems::Mask::MONSTER, "Entities/monster.txt", 10, 4);
+
+    mAi.setMatrix("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEWWWWWWWWWWWWWWWW",16);
 }
 //Server mode
 void World::startUDPServer(int srcPort){

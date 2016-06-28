@@ -18,86 +18,77 @@
 #include "aset.h"
 #include "pi.h"
 #include "previous.h"
+#include <iostream>
 
 using namespace std;
 
-Dijkstra::Dijkstra() {
-	// TODO Auto-generated constructor stub
+Dijkstra::Dijkstra(Matrix* matrix)
+: mMatrix(matrix)
+{
+    for(unsigned int i = 0; i < mMatrix->getAllVertices().size(); i++)
+    {
+        a.push_back(false);
+        pi.push_back(-1);
+        previous.push_back(i);
+    }
+}
+
+Dijkstra::~Dijkstra()
+{
 
 }
 
-Dijkstra::~Dijkstra() {
-	// TODO Auto-generated destructor stub
-}
+std::vector<int> Dijkstra::dijkstra(int player, int mob)
+{
+	a[player] = true;
+	pi[player] = 0;
 
+	int pivot = player;
 
-std::unique_ptr<PreviousInterface> Dijkstra::dijkstra(GraphInterface& g, VertexInterface& r){
-	ASet aSet;
-	Pi pi;
-    std::unique_ptr<PreviousInterface> previous(new Previous());
-
-	return std::move(dijkstra(g,r,aSet,pi,previous));
-}
-
-
-std::unique_ptr<PreviousInterface>& Dijkstra::dijkstra(GraphInterface& g,VertexInterface& r, ASetInterface& a, PiInterface& pi, std::unique_ptr<PreviousInterface>& previous){
-
-	a.add(&r);
-	VertexInterface* pivot = &r;
-	pi.setValue(&r, 0);
-
-	//List of the boxes available
-	vector<VertexInterface*> L = g.getAllVertices();
-
-	//Initialization of pi(x,infty)
-	for(VertexInterface* vertex : L)
+	while(pivot != mob)
 	{
-		if(vertex != &r)
-		{
-			pi.setValue(vertex, std::numeric_limits<int>::max());
-		}
-	}
+	    //std::cout << "dijkstra running " << std::endl;
 
-	for(std::size_t j =0; j<L.size(); j++)
-	{
-		VertexInterface& x = *pivot;
-		vector<VertexInterface*> successorOfPi = x.getSuccessors(pivot, &g);
+		vector<int> successorOfPi = mMatrix->getSuccessors(pivot);
 
-		//Update function pi
-		for(VertexInterface* v : successorOfPi)
+		for(int i : successorOfPi)
 		{
-			if(!(a.contains(v)))
+			if(!a[i])
 			{
-				if(pi.getValue(pivot) + g.getWeight(&r,pivot) < pi.getValue(v))
+			    if(pi[i] != -1)
+                {
+                    int distance =  pi[pivot]+ mMatrix->getWeight(i,pivot);
+                    if(distance < pi[i])
+                    {
+                        previous[i] = pivot;
+                    }
+                }
+			}
+		}
+
+		//Searching for the min of pi function
+		int piMin = -1;
+
+		for(unsigned int j = 0; j < mMatrix->getLenghtT(); j++)
+		{
+			if(!a[j])
+			{
+				int l = pi[j];
+				if((l < piMin) || (piMin == -1))
 				{
-					pi.setValue(v, pi.getValue(pivot) + g.getWeight(&r,pivot));
-					previous->setValue(v,pivot);
+					piMin = l;
+					pivot = j;
 				}
 			}
 		}
 
-		//Searching for the min of pi function (and the y associated)
-		int piMin = std::numeric_limits<int>::max();
-
-		for(VertexInterface* vertex2 : L)
+		if(pivot == mob)
 		{
-			if(!(a.contains(vertex2)))
-			{
-				int l = pi.getValue(vertex2);
-				if(l<piMin)
-				{
-					piMin = 1;
-					pivot = vertex2;
-				}
-			}
-		}
-
-		if(pivot == nullptr)
-		{
+            //std::cout << "dijkstra ending " << std::endl;
 			return previous;
 		}
-		pi.setValue(pivot,piMin);
-		a.add(pivot);
+		pi[pivot] = piMin;
+		a[pivot] = true;
 	}
 
 	return previous;

@@ -60,7 +60,7 @@ void InputSystem::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 void InputSystem::update(sf::Time dt)
 {
 
-    for(int i=0; i<3; ++i) {
+    /*for(int i=0; i<3; ++i) {
         if (!sf::Touch::isDown(i)) continue;
         auto touchPos = sf::Touch::getPosition(i, *mContext.window);
         if (touchPos.x < wsize.x/2) {
@@ -70,7 +70,7 @@ void InputSystem::update(sf::Time dt)
             mInputs[Input::fire] = false;
             //mTouchInputs[i] = Input::idle;
         }
-    
+
         if (touchPos.x > wsize.x/2) {
             if (touchPos.x < mTouchPos[i].x) {
                 mInputs[Input::left] = true;
@@ -82,9 +82,9 @@ void InputSystem::update(sf::Time dt)
                 mInputs[Input::right] = true;
                 mTouchInputs[i] = Input::right;
             }
-            
+
         }
-    }
+    }*/
 }
 
 bool InputSystem::getInputState(Input input)

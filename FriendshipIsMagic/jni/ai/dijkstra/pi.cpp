@@ -22,8 +22,12 @@ Pi::~Pi() {
 	// TODO Auto-generated destructor stub
 }
 
-void Pi::setValue(VertexInterface* vertex, int value){
-	pi.insert( make_pair(vertex, value) );
+void Pi::setValue(VertexInterface* vertex, int value)
+{
+    if (pi.find(vertex) != pi.end())
+        pi[vertex] = value;
+    else
+        pi.insert( make_pair(vertex, value) );
 }
 
 int Pi::getValue(VertexInterface* vertex){

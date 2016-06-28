@@ -8,7 +8,7 @@
 
 #include <Box2D/Box2D.h>
 #include <set>
-#include "entity.h"
+#include "../systems/graphicsystem.h"
 #include "../systems/system.h"
 
 #include "../systems/inputsystem.h"
@@ -21,8 +21,10 @@
 #include "../systems/scoresystem.h"
 #include "../systems/soundsystem.h"
 #include "../systems/network-system.h"
-#include "../systems/graphicsystem.h"
-
+#include "../systems/aisystem.h"
+#include <Box2D/Box2D.h>
+#include <set>
+#include "entity.h"
 
 class World
 {
@@ -89,6 +91,7 @@ class World
         ItemSystem mItems;
         ScoreSystem mScores;
         SoundSystem mSounds;
+        AISystem mAi;
 
         Entity mPlayerID = 0;
         Entity mPlayerWeaponID = 1;

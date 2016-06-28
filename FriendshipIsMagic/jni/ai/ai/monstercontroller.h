@@ -9,7 +9,6 @@
 #define MONSTERMANAGER_H_
 
 #include <vector>
-#include "playerandstuff.h"
 #include "aiinterface.h"
 
 using namespace std;
