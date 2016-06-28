@@ -8,7 +8,7 @@ echo "\nCOMPILING SOURCES"
 ndk-build
 
 echo "\nCOMPILING RESOURCES"
-(cd ../AssetSources && python3 ../Tools/convert_png.py . ../FriendshipIsMagic/assets/)
+(cd ../AssetSources && python3 ../Tools/convert_png.py . ../FriendshipIsMagic/assets/Graphics/)
 
 echo "\nCREATING APK"
 ant debug

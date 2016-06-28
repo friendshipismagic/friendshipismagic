@@ -1,7 +1,7 @@
 {
 "resources":
 [
-	{"name":"Skeleton","filename":"Graphics/skeleton.png"},
+	{"name":"Skeleton","filename":"Graphics/characters/bluemonster.png"},
 	{"name":"Background","filename":"Graphics/background.png"},
 	{"name":"Floor2","filename":"Graphics/bloc.png"},
 	{"name":"Floor","filename":"Graphics/bloc.png"},
