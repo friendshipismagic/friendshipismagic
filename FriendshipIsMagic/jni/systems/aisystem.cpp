@@ -40,5 +40,11 @@ void AISystem::setMatrix(std::string tile, int n)
 
 void AISystem::insertMonster(Entity entity)
 {
-    mMonsters.push_back(entity);
+    mMonsters.insert(entity);
+}
+
+void AISystem::deleteMonster(Entity entity)
+{
+   if (mMonsters.find(entity) != mMonsters.end())
+       mMonsters.erase(entity);
 }

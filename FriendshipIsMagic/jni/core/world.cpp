@@ -312,6 +312,11 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     {
         mScores.insertScore(entity, 0);
     }
+    if((mask & Systems::Component::AI) == Systems::Component::AI)
+    {
+        mAi.insertMonster(entity);
+    }
+
 
     return entity;
 }
@@ -358,7 +363,10 @@ void World::destroyEntity(Entity entity)
     {
         mWeapons.deleteOwner(entity);
     }
-
+    if ((mask & Systems::Component::AI) == Systems::Component::AI)
+    {
+        mAi.deleteMonster(entity);
+    }
     mMasks[entity] = Systems::Mask::NONE;
 
     if (mSons.find(entity) != mSons.end())

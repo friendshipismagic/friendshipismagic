@@ -21,7 +21,8 @@ namespace Systems
         OWNER = 1 << 9,
         SCORE = 1 << 10,
         PADDING = 1 << 11,
-		NETWORKID = 1 << 12
+		NETWORKID = 1 << 12,
+        AI = 1 << 13
     };
 
     enum Mask
@@ -35,7 +36,7 @@ namespace Systems
         BLOC = BODY | SPRITE | POSITION, // 7
         WEAPON = SPRITE | TIMER | WEAPONTYPE | POSITION | DAMAGE | PADDING, // 2165
         ITEM = SPRITE | TIMER | POSITION | ITEMTYPE | BODY, // 279
-        MONSTER =  BODY | SPRITE | HEALTH | POSITION | TIMER
+        MONSTER =  BODY | SPRITE | HEALTH | POSITION | TIMER | AI
     };
 };
 

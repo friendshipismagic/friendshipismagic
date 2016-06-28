@@ -4,6 +4,7 @@
 #include "../ai/ai/aiinterface.h"
 #include "../ai/matrix/matrix.h"
 #include "physicsystem.h"
+#include <set>
 
 class AISystem: public System
 {
@@ -16,6 +17,7 @@ class AISystem: public System
 
          void setMatrix(std::string tile, int n);
          void insertMonster(Entity entity);
+         void deleteMonster(Entity entity);
 
     private:
 
@@ -23,6 +25,6 @@ class AISystem: public System
         AiInterface::Action action;
         Matrix mMatrix;
         PhysicSystem* mPhysics;
-        std::vector<Entity> mMonsters;
+        std::set<Entity> mMonsters;
 
 };
