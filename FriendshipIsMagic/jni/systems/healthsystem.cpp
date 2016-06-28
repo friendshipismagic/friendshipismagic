@@ -72,7 +72,8 @@ void HealthSystem::deleteHealth(Entity entity)
 
 void HealthSystem::addToHealth(Entity entity, int amount)
 {
-    mCurrentHealth[entity] += amount;
+    sf::Uint16 newHealth = (mCurrentHealth[entity] > -amount) ? (mCurrentHealth[entity] + amount) : 0;
+    mCurrentHealth[entity] = newHealth;
     health_t maxHealth = mMaxHealth[entity];
     if (mCurrentHealth[entity] > maxHealth)
         mCurrentHealth[entity] = maxHealth;
