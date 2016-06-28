@@ -8,6 +8,8 @@
 #include "collisionsystem.h"
 #include "logicsystem.h"
 #include "../core/entity.h"
+#include "../ai/ai/aiinterface.h"
+#include "timersystem.h"
 
 
 class World;
@@ -34,10 +36,14 @@ class PhysicSystem: public System
 
         int getScale() { return mScale; };
 
+        void updateMob(AiInterface::Action, Entity mob);
+
         void mirror(Entity entity);
         void mirrorVelocity(Entity entity);
 
         std::map<Entity, sf::Vector2f>& getPositions(){return mPositions;};
+
+        void canJump(Entity entity);
 
     private:
 
@@ -63,5 +69,6 @@ class PhysicSystem: public System
         bool coIsFacingRight;
 		bool coIsFacingLeft;
 
-
+        //Mobs
+        std::map<Entity, bool> mCanJump;
 };

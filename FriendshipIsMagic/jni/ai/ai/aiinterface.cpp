@@ -31,14 +31,6 @@ void AiInterface::setPath(int mobID, float playerX, float playerY, float mobX, f
     int mX = int(mobX)/100;
 	int mY = int(mobY)/100;
 
-	/*VertexInterface* v = new VertexInterface();
-	v->setVertex('J', iX, iY );
-	VertexInterface& player = *v;
-
-	VertexInterface* vertex = new VertexInterface();
-	vertex->setVertex('M', mX, mY );
-	VertexInterface& mob = *vertex;*/
-
 	int player = g.coordinatesToMatrix(iX, iY);
     int mob = g.coordinatesToMatrix(mX, mY);
 
@@ -53,14 +45,12 @@ void AiInterface::setPath(int mobID, float playerX, float playerY, float mobX, f
         pos = g.MatrixToCoordinates(previous[index]);
         index  = previous[index];
     }*/
-	//VertexInterface* next = previous->getValue(mob);
-    //mMonsterController->setTarget(player);
-	//mMonsterController->nextPosition = {next->getX(),next->getY()};
+	int next = previous[mob];
+    mMonsterController->setTarget(player);
+	mMonsterController->setCurrentAndNext({mX, mY}, g.MatrixToCoordinates(next));
 
-	//mMonsterController->storePath(*previous);
-	//mMonsterController->currentPosition = {iX,iY};
+	mMonsterController->storePath(previous, mob);
 	//std::cout << previous.getSize() << std::endl;
-
 }
 
 AiInterface::Action AiInterface::giveOrder(int mobID, float playerX, float playerY, float mobX, float mobY, Matrix& g){

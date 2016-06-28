@@ -82,14 +82,17 @@ vector<int> Matrix::getSuccessors(int index)
 	vector<int> neighbours;
 
 	// Definition of the vectorInterface neighbour's coordinates.
-	vector<int> coords = {
-			index+lengthX,
-			index-lengthX,
-			index+1,
-			index-1
-	};
+	vector<int> coords;
+	coords.push_back(index+lengthX);
+	coords.push_back(index-lengthX);
+	int x = MatrixToCoordinates(index).first;
+	if(x > 0)
+        coords.push_back(index-1);
+    if (x < lengthX - 1)
+        coords.push_back(index+1);
 
-	for(int coord : coords) {
+	for(int coord : coords)
+    {
 		// Informations about the neighbour
 		if ((coord < 0) || (coord >= lengthT))
         {

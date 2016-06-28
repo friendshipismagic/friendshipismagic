@@ -1,18 +1,26 @@
 #include "aisystem.h"
 #include "../core/world.h"
 
-AISystem::AISystem(World* world, State::Context context)
+AISystem::AISystem(World* world, State::Context context, PhysicSystem* physics)
 : System(world, context)
 , mAI()
 , action(AiInterface::Action::still)
 , mMatrix(std::vector<char>({'E'}), 1)
+, mPhysics(physics)
 {
 
 }
 
 void AISystem::update(sf::Time dt)
 {
-    action = mAI.giveOrder(1, 0, 0, 800, 200, mMatrix);
+    Entity player = mGameWorld->getPlayerID();
+    sf::Vector2f pos = mPhysics->getPosition(player);
+    for(Entity mob : mMonsters)
+    {
+        sf::Vector2f mobPos = mPhysics->getPosition(mob);
+        action = mAI.giveOrder(1, pos.x, pos.y, mobPos.x, mobPos.y, mMatrix);
+        mPhysics->updateMob(action, mob);
+    }
 }
 
 AiInterface::Action AISystem::getAction()
@@ -28,4 +36,9 @@ void AISystem::setMatrix(std::string tile, int n)
         charTile.push_back(tile[i]);
     }
     mMatrix = Matrix(charTile, n);
+}
+
+void AISystem::insertMonster(Entity entity)
+{
+    mMonsters.push_back(entity);
 }
