@@ -30,8 +30,8 @@ git submodule update
 cd FriendshipIsMagic
 android update project --target "android-23" --path .
 ndk-build
-ant release
-ant installr
+ant debug
+ant installd
 ```
 
 ### Linux 
