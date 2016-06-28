@@ -22,8 +22,8 @@ public:
 	enum Action {left, right, up, down, still};
 	AiInterface();
 	virtual ~AiInterface();
-	void setPath(int mobID, float playerX, float playerY, Matrix& g);
-	Action giveOrder(int mobID,float playerX, float playerY, Matrix& g);
+	void setPath(int mobID, float playerX, float playerY, float mobX, float mobY, Matrix& g);
+	Action giveOrder(int mobID,float playerX, float playerY, float mobX, float mobY, Matrix& g);
 
 private:
     std::unique_ptr<MonsterController> mMonsterController;

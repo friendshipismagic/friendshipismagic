@@ -19,17 +19,19 @@ private:
 	unsigned int x;
 	unsigned int y;
 	char type;
-	bool mIsReachable;
+	unsigned int index = 0;
+	bool mIsReachable = false;
 
 public:
 	VertexInterface();
 	void setVertex(char type, unsigned int x, unsigned int y);
 	virtual ~VertexInterface()=default;
-	virtual vector<VertexInterface*> getSuccessors(VertexInterface* A, GraphInterface* g);
+	//virtual vector<VertexInterface*> getSuccessors(VertexInterface* A, GraphInterface* g);
 	virtual unsigned int getX();
 	virtual unsigned int getY();
 	char getType();
-	static unsigned int coordinatesToMatrix(unsigned int x, unsigned int y, GraphInterface* interface);
+	unsigned int getMatrixCoordinates();
+	void setIndex(int n);
 
 };
 

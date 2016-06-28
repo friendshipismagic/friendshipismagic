@@ -12,14 +12,12 @@
 
 class VertexInterface;
 
-#include <tr1/unordered_set>
-
-using namespace std::tr1;
+#include <set>
 
 class ASet : public ASetInterface{
 
 private :
-	unordered_set<VertexInterface*> A;
+	std::set<VertexInterface*> A;
 
 public:
 	ASet();

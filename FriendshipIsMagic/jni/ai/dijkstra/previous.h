@@ -10,16 +10,15 @@
 
 #include "../dijkstrainterface/previousinterface.h"
 #include <vector>
-#include <tr1/unordered_map>
+#include <map>
 
-using namespace std::tr1;
 class VertexInterface;
 
 class Previous : public PreviousInterface {
 
 
 private:
-	unordered_map<VertexInterface*, VertexInterface*> previous;
+	std::map<VertexInterface*, VertexInterface*> previous;
 
 public:
 	Previous();
