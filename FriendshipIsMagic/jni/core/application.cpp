@@ -3,6 +3,8 @@
 #include "../states/settings-state.h"
 #include "../states/gamestate.h"
 #include "../states/splash-state.h"
+#include "../states/connectstate.h"
+#include "../states/waitingstate.h"
 
 Application::Application(State::Context& context)
 : mStateStack(context)
@@ -25,6 +27,8 @@ void Application::registerStates(State::Context& context)
     mStateStack.registerState(States::Title, new TitleState(mStateStack, context));
     mStateStack.registerState(States::Game, new GameState(mStateStack, context));
     mStateStack.registerState(States::Settings, new SettingsState(mStateStack, context));
+    mStateStack.registerState(States::Connect, new ConnectState(mStateStack, context));
+    mStateStack.registerState(States::Waiting, new WaitingState(mStateStack, context));
 }
 
 void Application::processInput()
@@ -32,7 +36,7 @@ void Application::processInput()
     sf::Event event;
     while (mWindow->pollEvent(event))
     {
-        if(event.type == sf::Event::LostFocus) 
+        if(event.type == sf::Event::LostFocus)
             mPause = true;
         else if (event.type == sf::Event::GainedFocus)
             mPause = false;

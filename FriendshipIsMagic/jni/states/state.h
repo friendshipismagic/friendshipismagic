@@ -18,7 +18,9 @@ namespace States
         Menu,
         Pause,
         Game,
-		Settings
+		Settings,
+		Connect,
+		Waiting
     };
 }
 
