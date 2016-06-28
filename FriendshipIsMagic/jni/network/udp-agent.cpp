@@ -15,7 +15,7 @@
  * Create as server
  */
 UDPAgent::UDPAgent(int srcPort) :
-the_thread(UDPAgent::AgentRoutine, this)
+the_thread(&UDPAgent::AgentRoutine, this)
 {
 	mode = Mode::Server;
 	mDestPort = 0;
@@ -28,7 +28,7 @@ the_thread(UDPAgent::AgentRoutine, this)
  * Create class as client
  */
 UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):
-	the_thread(UDPAgent::AgentRoutine, this) {
+	the_thread(&UDPAgent::AgentRoutine, this) {
 	mode = Mode::Client;
 	mDestIPAddr = ipAddr;
 	running = false;

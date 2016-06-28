@@ -53,6 +53,7 @@ LOCAL_SRC_FILES := main.cpp \
 	core/application.cpp \
 	core/world.cpp \
 	states/statestack.cpp \
+	states/splash-state.cpp \
 	states/titlestate.cpp \
 	states/state.cpp \
 	states/gamestate.cpp \
