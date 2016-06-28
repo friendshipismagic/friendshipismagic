@@ -87,6 +87,7 @@ void NetworkSystem::readyReceived(sf::Packet pkt){
 	mInitialized = true;
 }
 void NetworkSystem::ackReadyReceived(sf::Packet pkt){
+	std::cout <<"Client ready!"<<std::endl;
 	mInitialized = true;
 }
 
@@ -148,7 +149,7 @@ void NetworkSystem::update(sf::Time dt){
 		std::cout << "UDP error"<< std::endl;
 		return;
 	}
-	if(mInitialized){
+	//if(mInitialized){
 	/*
 		sf::Time time = clk.getElapsedTime();
 		//TO DO finir sync
@@ -191,10 +192,10 @@ void NetworkSystem::update(sf::Time dt){
 				));
 			}
 		} //== fin if cpt
-	}//fin if initialized
-	else{
+	//}//fin if initialized
+	//else{
 
-	}
+	//}
 	//Receive
 	while(emptyBuf() == false){
 		auto pkt = popFrontBuf();
