@@ -72,7 +72,7 @@ void ResourceHolder<Resource>::loadFromFile(std::string fileName)
         Json::Value o = resources[i];
         Resource* t(new Resource());
         if (!t->loadFromFile(o["filename"].asString()))
-            throw std::runtime_error("TextureHolder::load - Failed to load " + fileName);
+            throw std::runtime_error("TextureHolder::load - Failed to load " + o["filename"].asString());
         mResourceMap[o["name"].asString()] = t;
 
         std::cout << "Resource load: " + o["filename"].asString() << std::endl;

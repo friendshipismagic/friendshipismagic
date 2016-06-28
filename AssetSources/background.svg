@@ -7,56 +7,17 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="364.24356mm"
-   height="272.54092mm"
-   viewBox="0 0 1290.6268 965.69618"
+   width="364.2435mm"
+   height="272.54089mm"
+   viewBox="0 0 1290.6266 965.69609"
    id="svg9616"
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="background.svg">
   <defs
-     id="defs9618">
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient9396">
-      <stop
-         style="stop-color:#240000;stop-opacity:1;"
-         offset="0"
-         id="stop9398" />
-      <stop
-         style="stop-color:#240000;stop-opacity:0;"
-         offset="1"
-         id="stop9400" />
-    </linearGradient>
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="-8372.2037 : -510.88741 : 1"
-       inkscape:vp_y="-175.99025 : 357.49851 : 0"
-       inkscape:vp_z="-5443.9922 : -490.30252 : 1"
-       inkscape:persp3d-origin="-6895.925 : -525.32192 : 1"
-       id="perspective4386" />
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="-10029.592 : -525.71658 : 1"
-       inkscape:vp_y="-218.6758 : 163.27969 : 0"
-       inkscape:vp_z="-6391.157 : -516.31486 : 1"
-       inkscape:persp3d-origin="-8195.2486 : -532.30926 : 1"
-       id="perspective4475" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient9396"
-       id="radialGradient9402"
-       cx="-1040"
-       cy="1372.3623"
-       fx="-1040"
-       fy="1372.3623"
-       r="6800.5"
-       gradientTransform="matrix(1,0,0,0.84707007,-4451.1902,-1834.3074)"
-       gradientUnits="userSpaceOnUse" />
-  </defs>
+     id="defs9618" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -64,18 +25,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.077781746"
-     inkscape:cx="-3481.3823"
-     inkscape:cy="-75.402835"
+     inkscape:zoom="0.45254834"
+     inkscape:cx="2446.4417"
+     inkscape:cy="389.55607"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-grids="true"
      showguides="false"
-     inkscape:window-width="1680"
-     inkscape:window-height="1050"
+     inkscape:window-width="1916"
+     inkscape:window-height="1041"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="18"
      inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -84,8 +45,8 @@
     <inkscape:grid
        type="xygrid"
        id="grid11016"
-       originx="4451.1901"
-       originy="-2130.8488" />
+       originx="4451.1902"
+       originy="-2130.8487" />
   </sodipodi:namedview>
   <metadata
      id="metadata9621">
@@ -7022,13 +6983,6 @@
          id="rect6242-4-5-5-4-7-2-3-7-5-5-7-6-52-0"
          style="display:inline;opacity:1;fill:#585754;fill-opacity:1;stroke:#202020;stroke-width:106.90249634;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.79215686" />
     </g>
-    <rect
-       style="opacity:1;fill:none;fill-opacity:1;stroke:url(#radialGradient9402);stroke-opacity:1"
-       id="rect7950"
-       width="13600"
-       height="11520"
-       x="-7840"
-       y="-4387.6377" />
     <rect
        style="opacity:1;fill:none;fill-opacity:1;stroke:#240000;stroke-width:29.40000153;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect9404"

@@ -54,7 +54,7 @@ bool GameState::update(sf::Time dt)
 {
     mWorld.update(dt);
     mView.setCenter(mWorld.getPlayerPosition());
-
+	mView.setSize(590,590);
     return true;
 }
 

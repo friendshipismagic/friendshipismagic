@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 
 	auto root = doc.RootElement();
 
-    if(root == nullptr || std::strcmp(root->Name(), "svg") != 0) {
+    if(root == nullptr || std::strcmp(root->Name(), "svg") != 0) {
 	   std::cout << "Only support SVG files" << std::endl;
        return -1;
     }
