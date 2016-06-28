@@ -375,9 +375,9 @@ void World::destroyEntity(Entity entity)
     }
 }
 
-Systems::Mask World::getMask(Entity entity)
+Systems::Mask World::getMask(Entity entity) const
 {
-    return mMasks[entity];
+    return mMasks.at(entity);
 }
 
 void World::sigDestroyEntity(Entity entity)
@@ -569,4 +569,8 @@ void World::insertMask(Entity entity, Systems::Mask mask)
         mMasks[entity] = mask;
     else
         mMasks.insert(std::make_pair(entity, mask));
+}
+
+const sf::Vector2f& World::getPlayerPosition() const {
+    return mPhysics.getPosition(getPlayerID());
 }

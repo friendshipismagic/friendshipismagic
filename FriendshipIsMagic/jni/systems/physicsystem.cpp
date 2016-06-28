@@ -118,10 +118,10 @@ void PhysicSystem::syncPos(Entity entity){
 
 }
 
-const sf::Vector2f& PhysicSystem::getPosition(Entity entity)
+const sf::Vector2f& PhysicSystem::getPosition(Entity entity) const
 {
     if (mPositions.find(entity) != mPositions.end())
-        return mPositions[entity];
+        return mPositions.at(entity);
 
     return errorPos;
 }

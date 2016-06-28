@@ -10,6 +10,7 @@ class GameState: public State
          sf::Font* mFont;
          sf::Text mText;
          World mWorld;
+         sf::View mView;
 
          void updateRatio();
 

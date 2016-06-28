@@ -44,17 +44,17 @@ class World
         void sigCollisionBullet(Entity entityBullet, Entity entityVictim);
         void timerOn(Entity entity);
 
-        Systems::Mask getMask(Entity entity);
+        Systems::Mask getMask(Entity entity) const;
 
-        Entity getPlayerID() { return mPlayerID; };
-        Entity getPlayerWeaponID() { return mPlayerWeaponID; };
+        Entity getPlayerID() const { return mPlayerID; };
+        Entity getPlayerWeaponID() const { return mPlayerWeaponID; };
         void setPlayerWeaponID(Entity entity) { mPlayerWeaponID = entity; };
-        Entity getPlayerSensorID() { return sensorOne; };
+        Entity getPlayerSensorID() const { return sensorOne; };
 
-        Entity getCoPlayerID() { return mCoPlayerID; };
-        Entity getCoPlayerWeaponID() { return mCoPlayerWeaponID; };
+        Entity getCoPlayerID() const { return mCoPlayerID; };
+        Entity getCoPlayerWeaponID() const { return mCoPlayerWeaponID; };
         void setCoPlayerWeaponID(Entity entity) { mCoPlayerWeaponID = entity; };
-        Entity getCoPlayerSensorID() { return sensorTwo; };
+        Entity getCoPlayerSensorID() const { return sensorTwo; };
 
         void insertDependency(Entity entityFather, Entity entitySon);
         void deleteDependency(Entity entityFather, Entity entitySon);
@@ -70,6 +70,8 @@ class World
         bool initEntitiesFromServer();
         */
         void sendReady();
+
+        const sf::Vector2f& getPlayerPosition() const;
 
     private:
 

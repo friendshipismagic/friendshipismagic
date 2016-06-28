@@ -53,11 +53,13 @@ bool GameState::handleEvent(const sf::Event& event)
 bool GameState::update(sf::Time dt)
 {
     mWorld.update(dt);
+    mView.setCenter(mWorld.getPlayerPosition());
 
     return true;
 }
 
 void GameState::draw()
 {
+    getContext().window->setView(mView);
     mWorld.draw();
 }

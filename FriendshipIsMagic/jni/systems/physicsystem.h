@@ -22,7 +22,7 @@ class PhysicSystem: public System
         PhysicSystem(World* world, State::Context& context, LogicSystem* logics);
         //virtual ~PhysicSystem();
         virtual void update(sf::Time dt);
-        const sf::Vector2f& getPosition(Entity entity);
+        const sf::Vector2f& getPosition(Entity entity) const;
         PositionProvider* getPositionProvider() { return mPositionProvider; };
 
         void insertPosition(Entity entity, b2Vec2 pos);
