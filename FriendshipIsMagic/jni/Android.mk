@@ -58,6 +58,7 @@ LOCAL_SRC_FILES := core/main.cpp \
 	states/state.cpp \
 	states/gamestate.cpp \
 	states/settings-state.cpp \
+	systems/aisystem.cpp \
 	systems/physicsystem.cpp \
 	systems/graphicsystem.cpp \
 	systems/inputsystem.cpp \
@@ -72,6 +73,22 @@ LOCAL_SRC_FILES := core/main.cpp \
 	systems/weaponsystem.cpp \
 	network/udp-agent.cpp \
 	network/udp-exception.cpp \
+	ai/matrix/matrix.cpp \
+	ai/dijkstrainterface/asetinterface.cpp \
+	ai/dijkstrainterface/graphinterface.cpp \
+	ai/dijkstrainterface/piinterface.cpp \
+	ai/dijkstrainterface/previousinterface.cpp \
+	ai/dijkstrainterface/vertexinterface.cpp \
+	ai/ai/aiinterface.cpp \
+	ai/ai/datacontroller.cpp \
+	ai/ai/monstercontroller.cpp \
+	ai/ai/monster.cpp \
+	ai/ai/player2controller.cpp \
+	ai/ai/stuff.cpp \
+	ai/dijkstra/dijkstra.cpp \
+	ai/dijkstra/previous.cpp \
+	ai/dijkstra/pi.cpp \
+	ai/dijkstra/aset.cpp \
 	ressources/jsoncpp.cpp\
 	ressources/filestream.cpp \
 	android/filestreamimpl.cpp
