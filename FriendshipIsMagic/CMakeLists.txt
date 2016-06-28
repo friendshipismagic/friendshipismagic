@@ -83,9 +83,13 @@ FIND_PACKAGE(SFML COMPONENTS graphics network audio window system REQUIRED)
 FIND_PACKAGE(Box2D)
 find_package (Threads)
 
+INCLUDE_DIRECTORIES(
+	${SFML_INCLUDE_DIR}
+	${BOX2D_INCLUDE_DIRS}
+)
 
     ADD_DEFINITIONS(
-        -std=c++14
+        -std=gnu++11
         -fpermissive
         )
 

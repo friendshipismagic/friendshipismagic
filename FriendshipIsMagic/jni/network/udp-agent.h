@@ -9,14 +9,14 @@
 #define UDPAgent_H_
 #include <iostream>
 #include <SFML/Network.hpp>
-#include <thread>         // std::this_thread::sleep_for
+#include <SFML/System/Thread.hpp>         // std::this_thread::sleep_for
 #include <chrono>         // std::chrono::seconds
 #include <SFML/Network/Packet.hpp>
 #include <memory>
 #include "event-speaker.h"
 #include "udp-exception.h"
 
-
+#include <memory>
 
 class UDPAgent : public UDPSpeaker {
 public:
@@ -68,7 +68,7 @@ private:
 	UDPAgent::Mode mode;
 	bool running;
 	int period = DEFAULT_PERIODE;
-	std::thread the_thread;
+	sf::Thread the_thread;
 	sf::IpAddress mDestIPAddr;
 
 	unsigned short int mSrcPort;

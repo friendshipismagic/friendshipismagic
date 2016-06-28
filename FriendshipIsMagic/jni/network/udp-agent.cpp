@@ -6,6 +6,7 @@
  */
 
 #include "udp-agent.h"
+#include <functional>
 //-----------------------------------------------------
 // UDPAgent Constructors/Destructor/Launcher
 //-----------------------------------------------------
@@ -13,7 +14,9 @@
 /*
  * Create as server
  */
-UDPAgent::UDPAgent(int srcPort):the_thread() {
+UDPAgent::UDPAgent(int srcPort) :
+the_thread(UDPAgent::AgentRoutine, this)
+{
 	mode = Mode::Server;
 	mDestPort = 0;
 	running = false;
@@ -24,7 +27,8 @@ UDPAgent::UDPAgent(int srcPort):the_thread() {
 /*
  * Create class as client
  */
-UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):the_thread() {
+UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):
+	the_thread(UDPAgent::AgentRoutine, this) {
 	mode = Mode::Client;
 	mDestIPAddr = ipAddr;
 	running = false;
@@ -36,7 +40,9 @@ UDPAgent::UDPAgent(int srcPort, sf::IpAddress ipAddr, int destPort):the_thread()
 UDPAgent::~UDPAgent() {
 	listener.unbind();
 	running = false;
-	if (the_thread.joinable()) the_thread.join();
+
+	the_thread.wait();
+	//if (the_thread.joinable()) the_thread.join();
 }
 
 //***** Function to call after creating ServerThread object
@@ -46,8 +52,8 @@ void UDPAgent::start() {
 
 	// This will start the thread by running the serverRoutine function
 	running  = true;
-	the_thread = std::thread(&UDPAgent::AgentRoutine, this);
 
+	the_thread.launch();
 }
 
 //-----------------------------------------------------
