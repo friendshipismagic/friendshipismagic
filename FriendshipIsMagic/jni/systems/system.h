@@ -20,7 +20,8 @@ namespace Systems
         ITEMTYPE = 1 << 8,
         OWNER = 1 << 9,
         SCORE = 1 << 10,
-        PADDING = 1 << 11
+        PADDING = 1 << 11,
+		NETWORKID = 1 << 12
     };
 
     enum Mask

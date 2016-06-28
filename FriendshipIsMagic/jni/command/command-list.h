@@ -26,8 +26,8 @@ using ShareInputCommand = CommandMessage<4, bool, bool, bool, bool>;
 //============================================
 using SyncFromServerCommand = CommandMessage<5,
 		sf::Vector2f, 			// P1Pos
-		Entity, 				// P1Gun
-		Entity,					// P2Gun
+		std::string, 			// P1Gun
+		std::string,			// P2Gun
 		sf::Uint16, 			// P1Health
 		sf::Uint16, 			// P2Health
 		sf::Uint16, 			// P1MaxH
@@ -38,8 +38,14 @@ using SyncFromServerCommand = CommandMessage<5,
 
 //============================================	P2pos, 			P2Fire	P2isLeft
 using SyncFromClientCommand = CommandMessage<6, sf::Vector2f, 	bool, 	bool >;
+/*
+using AskForInitCommand = CommandMessage<7>;
+using InitFeedbackCommand = CommandMessage<8>;
+using AckInitCommand = CommandMessage<9>;
+*/
 
-//using SayPlayerInfoCommand = CommandMessage<4,Player>;
+using ReadyCommand = CommandMessage<10>;
+using AckReadyCommand = CommandMessage<11>;
 
 
 #endif /* COMMAND_COMMAND_LIST_H_ */

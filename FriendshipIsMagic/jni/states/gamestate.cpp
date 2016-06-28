@@ -17,13 +17,19 @@ void GameState::init()
 	if(mContext.UDPMode == UDPAgent::Mode::Client){
 		mWorld.startUDPClient(UDPAgent::DEFAULT_PORT+1, "localhost", UDPAgent::DEFAULT_PORT );
 		std::cout << "gameState: started as Client." << std::endl;
-	}else if(mContext.UDPMode == UDPAgent::Mode::Server){
+		//mWorld.askForInit();
+		mWorld.sendReady();
+	}
+	else if(mContext.UDPMode == UDPAgent::Mode::Server){
 		mWorld.startUDPServer(UDPAgent::DEFAULT_PORT);
 		std::cout << "gameState: started as Server." << std::endl;
+
 	}
 	else{
-		std::cout << "gameState: no mode found for UDPAgent" << std::endl;
+		std::cout << "gameState: no mode found for UDPAgent, launching solo mode." << std::endl;
 	}
+	mWorld.initEntities();
+
 }
 
 bool GameState::handleEvent(const sf::Event& event)

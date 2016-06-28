@@ -12,6 +12,7 @@
 #include "system.h"
 #include "inputsystem.h"
 #include "logicsystem.h"
+#include "weaponsystem.h"
 
 #include "../network/udp-agent.h"
 #include "../command/command.h"
@@ -25,7 +26,16 @@ class HealthSystem;
 
 class NetworkSystem : public System, public UDPListener{
 public:
-	NetworkSystem(World* world, State::Context& context, InputSystem* input, PhysicSystem* aPhysics, HealthSystem* aHealth, LogicSystem* aLogic);
+	using NetworkID = Entity;
+	NetworkSystem(
+			World* world,
+			State::Context& context,
+			InputSystem* input,
+			PhysicSystem* aPhysics,
+			HealthSystem* aHealth,
+			LogicSystem* aLogic,
+			WeaponSystem* aWeapon
+	);
 	virtual ~NetworkSystem();
 	void update(sf::Time dt);
 	void startUDPServer(int srcPort);
@@ -38,18 +48,37 @@ public:
 	bool getLogicState(Logic logic);
 	//void Sync(sf::Packet pkt);
 
-	void SyncFromClient(sf::Packet pkt);
-	void SyncFromServer(sf::Packet pkt);
+	void syncFromClient(sf::Packet pkt);
+	void syncFromServer(sf::Packet pkt);
+
+	/*
+	void askForInit();
+	void askForInitReceived(sf::Packet pkt);
+	void initFeedbackReceived(sf::Packet pkt);
+	void ackInitReceived(sf::Packet pkt);
+	*/
+
+	void sendReady();
+	void readyReceived(sf::Packet pkt);
+	void ackReadyReceived(sf::Packet pkt);
+
+	void insertNetworkID(Entity entity);
+	NetworkID getEntityNetworkID(Entity entity);
+	Entity getNetorkIDEntity( NetworkID netID);
+	bool isInitialized() const {return mInitialized;}
 
 private:
 	InputSystem* mInput;
 	PhysicSystem* mPhysics;
 	HealthSystem* mHealth;
 	LogicSystem* mLogic;
+	WeaponSystem* mWeapon;
 	std::unique_ptr<UDPAgent> mUDP;
 	std::map<Input, bool> mInputs;
 	std::map<Logic, bool> mLogics;
 	PacketCommand mCmd;
+	bool mInitialized = false;
+	std::map<NetworkID, Entity> NetEntities;
 	//sf::Clock mClock;
 	//sf::Time periode;
 

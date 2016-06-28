@@ -48,6 +48,9 @@ bool TitleState::handleEvent(const sf::Event& event)
         	else if(event.mouseButton.button == sf::Mouse::Right){
         		mContext.UDPMode = UDPAgent::Mode::Client;
         	}
+        	else{
+        		mContext.UDPMode = UDPAgent::Mode::None;
+        	}
         	requestStackPop();
 			requestStackPush(States::Game);
             break;

@@ -77,7 +77,7 @@ void LogicSystem::update(sf::Time dt)
 
 	}
 	else if(mContext.UDPMode == UDPAgent::Mode::Client){
-		std::cout << " FireOn P1 : " << mNetwork->getLogicState(Logic::fireOn) << " FacingLeft : "<< mNetwork->getLogicState(Logic::isFacingLeft) << std::endl;
+		//std::cout << " FireOn P1 : " << mNetwork->getLogicState(Logic::fireOn) << " FacingLeft : "<< mNetwork->getLogicState(Logic::isFacingLeft) << std::endl;
 		bool oldIsFacingLeft = mLogics[Logic::isFacingLeft] ;
 		mLogics[Logic::fireOn] = mNetwork->getLogicState(Logic::fireOn);
 		mLogics[Logic::isFacingLeft] = mNetwork->getLogicState(Logic::isFacingLeft);
@@ -121,6 +121,10 @@ void LogicSystem::update(sf::Time dt)
 			mLogics[Logic::coChangeDirection] = false;
 		if (!mLogics[Logic::coMoveLeft] && !mLogics[Logic::coMoveRight])
 			mLogics[Logic::coChangeDirection] = false;
+	}
+	//Solo mode
+	else{
+		//TO DO implement inputs from AI P2
 	}
 
 

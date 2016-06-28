@@ -61,8 +61,13 @@ class World
         void createCoPlayer();
         void startUDPServer(int srcPort);
         void startUDPClient(int srcPort, sf::IpAddress destIp, int destPort);
-
+        void initEntities();
         void insertMask(Entity entity, Systems::Mask mask);
+        /*
+        void askForInit();
+        bool initEntitiesFromServer();
+        */
+        void sendReady();
 
     private:
 
