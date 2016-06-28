@@ -26,7 +26,7 @@ Puis, après clone du dépot, faire depuis la racine du dépôt, avec un portabl
 ```
 git submodule init
 git submodule update
-(cd AssetSources && python3 ../Tools/convert_png.py . ../FriendshipIsMagic/assets/)
+(cd AssetSources && python3 ../Tools/convert_png.py . ../FriendshipIsMagic/assets/Graphics)
 cd FriendshipIsMagic
 android update project --target "android-23" --path .
 ndk-build
