@@ -35,8 +35,8 @@ class Matrix : public GraphInterface
         vector<char> mChar;
         vector<VertexInterface*> mVertices;
 
-        unsigned int lengthX;
-        unsigned int lengthT;
+        int lengthX;
+        int lengthT;
 };
 
 #endif /* MATRIX_MATRIX_H_ */

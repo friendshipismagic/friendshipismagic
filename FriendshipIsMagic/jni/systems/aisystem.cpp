@@ -12,7 +12,7 @@ AISystem::AISystem(World* world, State::Context context)
 
 void AISystem::update(sf::Time dt)
 {
-    action = mAI.giveOrder(1, 300, 300, 100, 100, mMatrix);
+    action = mAI.giveOrder(1, 0, 0, 800, 200, mMatrix);
 }
 
 AiInterface::Action AISystem::getAction()
