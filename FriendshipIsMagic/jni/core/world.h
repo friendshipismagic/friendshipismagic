@@ -2,11 +2,17 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
-#include "../systems/system.h"
+
 #include "../systems/systemprovider.h"
 #include "../states/state.h"
+
+#include <Box2D/Box2D.h>
+#include <set>
 #include "../systems/graphicsystem.h"
+#include "../systems/system.h"
+
 #include "../systems/inputsystem.h"
+#include "../systems/physicsystem.h"
 #include "../systems/timersystem.h"
 #include "../systems/logicsystem.h"
 #include "../systems/weaponsystem.h"
@@ -57,8 +63,13 @@ class World
         void createCoPlayer();
         void startUDPServer(int srcPort);
         void startUDPClient(int srcPort, sf::IpAddress destIp, int destPort);
-
+        void initEntities();
         void insertMask(Entity entity, Systems::Mask mask);
+        /*
+        void askForInit();
+        bool initEntitiesFromServer();
+        */
+        void sendReady();
 
     private:
 

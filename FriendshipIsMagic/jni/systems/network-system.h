@@ -10,18 +10,32 @@
 #include <SFML/System/Time.hpp>
 
 #include "system.h"
+#include "inputsystem.h"
+#include "logicsystem.h"
+#include "weaponsystem.h"
 
 #include "../network/udp-agent.h"
 #include "../command/command.h"
-#include "inputsystem.h"
-#define DEFAULT_SYNC_PERIOD 500
+
+#define DEFAULT_SYNC_PERIOD 2000
+#define DEFAULT_INPUT_SYNC_FRAME_COUNT 0
 
 class PhysicSystem;
 class HealthSystem;
 
+
 class NetworkSystem : public System, public UDPListener{
 public:
-	NetworkSystem(World* world, State::Context& context, InputSystem* input, PhysicSystem* aPhysics, HealthSystem* aHealth);
+	using NetworkID = Entity;
+	NetworkSystem(
+			World* world,
+			State::Context& context,
+			InputSystem* input,
+			PhysicSystem* aPhysics,
+			HealthSystem* aHealth,
+			LogicSystem* aLogic,
+			WeaponSystem* aWeapon
+	);
 	virtual ~NetworkSystem();
 	void update(sf::Time dt);
 	void startUDPServer(int srcPort);
@@ -29,18 +43,44 @@ public:
 	void notify(sf::Packet pkt);
 
 	bool isRunning() const { return running;}
-	void updateCoPlayerInput(sf::Packet pkt);
+	//void updateCoPlayerInput(sf::Packet pkt);
 	bool getInputState(Input input);
-	void Sync(sf::Packet pkt);
+	bool getLogicState(Logic logic);
+	//void Sync(sf::Packet pkt);
+
+	void syncFromClient(sf::Packet pkt);
+	void syncFromServer(sf::Packet pkt);
+
+	/*
+	void askForInit();
+	void askForInitReceived(sf::Packet pkt);
+	void initFeedbackReceived(sf::Packet pkt);
+	void ackInitReceived(sf::Packet pkt);
+	*/
+
+	void sendReady();
+	void readyReceived(sf::Packet pkt);
+	void ackReadyReceived(sf::Packet pkt);
+
+	void insertNetworkID(Entity entity);
+	NetworkID getEntityNetworkID(Entity entity);
+	Entity getNetorkIDEntity( NetworkID netID);
+	bool isInitialized() const {return mInitialized;}
+
 private:
 	InputSystem* mInput;
 	PhysicSystem* mPhysics;
 	HealthSystem* mHealth;
+	LogicSystem* mLogic;
+	WeaponSystem* mWeapon;
 	std::unique_ptr<UDPAgent> mUDP;
 	std::map<Input, bool> mInputs;
+	std::map<Logic, bool> mLogics;
 	PacketCommand mCmd;
-	sf::Clock mClock;
-	sf::Time periode ;
+	bool mInitialized = false;
+	std::map<NetworkID, Entity> NetEntities;
+	//sf::Clock mClock;
+	//sf::Time periode;
 
 	sf::Clock clk;
 

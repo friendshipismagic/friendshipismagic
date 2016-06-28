@@ -56,7 +56,7 @@ void TitleState::updateRatio() {
 
 bool TitleState::handleEvent(const sf::Event& event)
 {
-
+	
 	//auto coords = getContext().window->mapPixelToCoords({x,y}, mView);
 	//mBackgroundSprite.getGlobalBounds().contains(coords);
 	//event.touch.y
@@ -94,6 +94,9 @@ bool TitleState::handleEvent(const sf::Event& event)
         	}
         	else if(event.mouseButton.button == sf::Mouse::Right){
         		mContext.UDPMode = UDPAgent::Mode::Client;
+        	}
+        	else{
+        		mContext.UDPMode = UDPAgent::Mode::None;
         	}
         	requestStackPop();
 			requestStackPush(States::Connect);

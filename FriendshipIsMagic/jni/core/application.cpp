@@ -51,7 +51,9 @@ void Application::update(sf::Time dt)
 
 void Application::draw()
 {
+	#ifdef ANDROID_BUILD
     if (mPause) return;
+	#endif
     mWindow->clear();
     mStateStack.draw();
     mWindow->display();

@@ -1,14 +1,14 @@
 #include "world.h"
-#include "../systems/physicsystem.h"
 #include <string.h>
 #include "../ressources/filestream.hpp"
 #include "player.h"
+
 
 World::World(State::Context& context)
 : mContext(context)
 , mSystems()
 , mInputs(this, context)
-, mNetwork(this, context, &mInputs, &mPhysics, &mHealth)
+, mNetwork(this, context, &mInputs, &mPhysics, &mHealth, &mLogics, &mWeapons)
 , mLogics(this, context,  &mInputs, &mNetwork)
 , mPhysics(this,context, &mLogics)
 , mGraphics(this, context, &mPhysics, &mLogics)
@@ -36,20 +36,39 @@ World::World(State::Context& context)
 
     mGraphics.setPositionProvider(mPhysics.getPositionProvider());
 
-    createPlayer();
-    createCoPlayer();
+}
+/*
+//=====================[ INIT SYNC METHODS ]======================//
+void World::askForInit(){
+	if(mContext.UDPMode == UDPAgent::Mode::Client)
+	mNetwork.askForInit();
+}
 
-    createEntity(Systems::Mask::ITEM, "Entities/uziitem.txt", 6, 4);
-    createEntity(Systems::Mask::ITEM, "Entities/swapitem.txt", 7, 5);
-    createEntity(Systems::Mask::ITEM, "Entities/raygunitem.txt", 8, 5);
-    createEntity(Systems::Mask::ITEM, "Entities/shotgunitem.txt", 1, 5);
-    createEntity(Systems::Mask::ITEM, "Entities/healitem.txt", 3, 5.5);
-    createEntity(Systems::Mask::ITEM, "Entities/increasemaxlifeitem.txt", 4, 5.5);
-    createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt", 3, 6.5);
-    //createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 9, 5.2);
-    createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.5);
+bool World::initEntitiesFromServer(){
+	return false;
+}
+*/
+//===================[ END INIT SYNC METHODS ]====================//
 
-    int mob = createEntity(Systems::Mask::MONSTER, "Entities/monster.txt", 10, 4);
+
+void World::sendReady(){
+	mNetwork.sendReady();
+}
+
+void World::initEntities(){
+	createPlayer();
+	createCoPlayer();
+
+	createEntity(Systems::Mask::ITEM, "Entities/uziitem.txt", 6, 4);
+	createEntity(Systems::Mask::ITEM, "Entities/swapitem.txt", 7, 5);
+	createEntity(Systems::Mask::ITEM, "Entities/raygunitem.txt", 8, 5);
+	createEntity(Systems::Mask::ITEM, "Entities/shotgunitem.txt", 1, 5);
+	createEntity(Systems::Mask::ITEM, "Entities/healitem.txt", 3, 5.5);
+	createEntity(Systems::Mask::ITEM, "Entities/increasemaxlifeitem.txt", 4, 5.5);
+	createEntity(Systems::Mask::BLOC, "Entities/bloc1.txt", 3, 6.5);
+	//createEntity(Systems::Mask::BLOC, "Entities/bloc2.txt", 9, 5.2);
+	createEntity(Systems::Mask::BLOC, "Entities/bloc3.txt", 6, 5.5);
+	int mob = createEntity(Systems::Mask::MONSTER, "Entities/monster.txt", 10, 4);
 
     mAi.setMatrix("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEWEEEEEEEEEEEEWWWWWWWWWWWWWWWW",16);
     mAi.insertMonster(mob);
@@ -69,83 +88,91 @@ void World::handleEvent(const sf::Event& event)
 
 void World::update(sf::Time dt)
 {
-    for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
-    {
-        (*itr)->update(dt);
-    }
+	if(mContext.UDPMode == UDPAgent::Mode::Client)
+			//std::cout << "in world update before first if" << std::endl;
+	if(mNetwork.isInitialized()){
+		if(mContext.UDPMode == UDPAgent::Mode::Client)
+		//std::cout << "in world update in first if" << std::endl;
+		for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
+		{
+			(*itr)->update(dt);
+		}
 
-    for(Entity entity : mEntitiesToDestroy)
-    {
-        destroyEntity(entity);
-    }
+		for(Entity entity : mEntitiesToDestroy)
+		{
+			destroyEntity(entity);
+		}
 
-    mEntitiesToDestroy.clear();
+		mEntitiesToDestroy.clear();
 
-    bool playerDead = mMasks[mPlayerID] == Systems::Mask::NONE;
-    bool coPlayerDead = mMasks[mCoPlayerID] == Systems::Mask::NONE;
-    if(playerDead)
-    {
-        createPlayer();
-        mScores.addToScore(mPlayerID, -1000);
-    }
-    if(coPlayerDead)
-    {
-        createCoPlayer();
-        mScores.addToScore(mCoPlayerID, -1000);
-    }
+		bool playerDead = mMasks[mPlayerID] == Systems::Mask::NONE;
+		bool coPlayerDead = mMasks[mCoPlayerID] == Systems::Mask::NONE;
+		if(playerDead)
+		{
+			createPlayer();
+			mScores.addToScore(mPlayerID, -1000);
+		}
+		if(coPlayerDead)
+		{
+			createCoPlayer();
+			mScores.addToScore(mCoPlayerID, -1000);
+		}
 
-    if (mLogics.getLogic(Logic::fireOn) && mLogics.getLogic(Logic::canFire))
-    {
-        sf::Vector2f pos = mPhysics.getPosition(mPlayerID);
-        int scale = mPhysics.getScale();
-        std::string weaponType = mWeapons.getWeaponType(mPlayerWeaponID);
-        if(mLogics.getLogic(Logic::isFacingLeft))
-        {
-            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
-            mWeapons.insertOwner(bullet, mPlayerID);
-        }
-        else
-        {
-            paddingRight = true;
-            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
-            paddingRight = false;
-            mWeapons.insertOwner(bullet, mPlayerID);
-            mGraphics.mirror(bullet, -1);
-            mPhysics.mirrorVelocity(bullet);
-        }
+		if (mLogics.getLogic(Logic::fireOn) && mLogics.getLogic(Logic::canFire))
+		{
+			sf::Vector2f pos = mPhysics.getPosition(mPlayerID);
+			int scale = mPhysics.getScale();
+			std::string weaponType = mWeapons.getWeaponType(mPlayerWeaponID);
+			if(mLogics.getLogic(Logic::isFacingLeft))
+			{
+				int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+				mWeapons.insertOwner(bullet, mPlayerID);
+			}
+			else
+			{
+				paddingRight = true;
+				int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+				paddingRight = false;
+				mWeapons.insertOwner(bullet, mPlayerID);
+				mGraphics.mirror(bullet, -1);
+				mPhysics.mirrorVelocity(bullet);
+			}
 
-        mLogics.setLogic(Logic::canFire, false);
-        timerOn(mPlayerWeaponID);
+			mLogics.setLogic(Logic::canFire, false);
+			timerOn(mPlayerWeaponID);
 
-        mSounds.play(weaponType);
-    }
+			mSounds.play(weaponType);
+		}
 
-    if (mLogics.getLogic(Logic::coFireOn) && mLogics.getLogic(Logic::coCanFire))
-    {
-        sf::Vector2f pos = mPhysics.getPosition(mCoPlayerID);
-        int scale = mPhysics.getScale();
-        std::string weaponType = mWeapons.getWeaponType(mCoPlayerWeaponID);
+		if (mLogics.getLogic(Logic::coFireOn) && mLogics.getLogic(Logic::coCanFire))
+		{
+			sf::Vector2f pos = mPhysics.getPosition(mCoPlayerID);
+			int scale = mPhysics.getScale();
+			std::string weaponType = mWeapons.getWeaponType(mCoPlayerWeaponID);
 
-        if(mLogics.getLogic(Logic::coIsFacingLeft))
-        {
-            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
-            mWeapons.insertOwner(bullet, mCoPlayerID);
-        }
-        else
-        {
-            paddingRight = true;
-            int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
-            paddingRight = false;
-            mWeapons.insertOwner(bullet, mCoPlayerID);
-            mGraphics.mirror(bullet, -1);
-            mPhysics.mirrorVelocity(bullet);
-        }
+			if(mLogics.getLogic(Logic::coIsFacingLeft))
+			{
+				int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+				mWeapons.insertOwner(bullet, mCoPlayerID);
+			}
+			else
+			{
+				paddingRight = true;
+				int bullet = createEntity(Systems::BULLET, "Entities/bullet" + weaponType + ".txt", pos.x/scale, pos.y/scale);
+				paddingRight = false;
+				mWeapons.insertOwner(bullet, mCoPlayerID);
+				mGraphics.mirror(bullet, -1);
+				mPhysics.mirrorVelocity(bullet);
+			}
 
-        mLogics.setLogic(Logic::coCanFire, false);
-        timerOn(mCoPlayerWeaponID);
+			mLogics.setLogic(Logic::coCanFire, false);
+			timerOn(mCoPlayerWeaponID);
 
-        mSounds.play(weaponType);
-    }
+			mSounds.play(weaponType);
+		}
+	}
+	else
+		mNetwork.update( dt);
 
 }
 
@@ -235,6 +262,11 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
                           sensor["height"].asFloat()
                           );
     }
+    if ((mask & Systems::Component::NETWORKID) == Systems::Component::NETWORKID)
+	{
+    	if(mContext.UDPMode != UDPAgent::None)
+    		mNetwork.insertNetworkID(entity);
+	}
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)
     {
         Json::Value timer = components["timer"];

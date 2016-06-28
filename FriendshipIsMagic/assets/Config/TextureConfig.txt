@@ -11,12 +11,9 @@
 	{"name":"menu/main/background","filename":"Graphics/test fond title.png"},
 	{"name":"menu/settings/background","filename":"Graphics/settings-background.jpg"},
 	{"name":"BlueBlock","filename":"Graphics/blueblock.png"},
-
 	{"name":"Player","filename":"Graphics/characters/redplayer.png"},
 	{"name":"CoPlayer","filename":"Graphics/characters/blueplayer.png"},
 	{"name":"LifeBar","filename":"Graphics/characters/life-bar.png"},
-
-
 	{"name":"WaterGun","filename":"Graphics/guns/water-gun.png"},
 	{"name":"RedBlock","filename":"Graphics/guns/redblock.png"},
 	{"name":"Raygun","filename":"Graphics/guns/raygun.png"},
@@ -24,13 +21,10 @@
 	{"name":"Ray","filename":"Graphics/guns/ray.png"},
 	{"name":"Gun","filename":"Graphics/guns/gun.png"},
 	{"name":"Uzi","filename":"Graphics/guns/uzi.png"},
-
-
 	{"name":"Heal","filename":"Graphics/items/heal-item.png"},
 	{"name":"Swap","filename":"Graphics/items/swap-item.png"},
 	{"name":"MonsterItem","filename":"Graphics/items/monster-item.png"},
 	{"name":"IncreaseLife","filename":"Graphics/items/increase-max-life.png"},
-
 	{"name": "OnePlayer", "filename" : "Graphics/menu/1player.png"},
 	{"name": "TwoPlayers", "filename" : "Graphics/menu/2players.png"},
 	{"name": "icons/settings","filename":"Graphics/settings-icon.png"}

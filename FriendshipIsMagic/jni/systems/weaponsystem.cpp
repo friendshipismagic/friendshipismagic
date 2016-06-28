@@ -20,6 +20,14 @@ std::string WeaponSystem::getWeaponType(Entity entity)
     return mWeaponTypes[entity];
 }
 
+Entity WeaponSystem::getWeaponID(std::string weaponType){
+	for(auto it : mWeaponTypes){
+		if(weaponType.compare(it.second))
+			return it.first;
+	}
+	return 0;
+}
+
 void WeaponSystem::insertWeaponType(Entity entity, std::string weaponType)
 {
     if (mWeaponTypes.find(entity) == mWeaponTypes.end())

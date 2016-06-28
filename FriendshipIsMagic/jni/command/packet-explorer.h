@@ -29,17 +29,8 @@ inline sf::Packet& operator >>(sf::Packet& packet,  Player& player)
 	return packet >> player.mFirstName >> player.mLastName >> player.mPosX >> player.mPosY;// >> player.mInventory;
 }
 */
-inline sf::Packet& operator >>(sf::Packet& packet, Entity& entity)
-{
-	sf::Uint32 tmp;
-	packet >> tmp;
-	entity = (long) tmp;
-	return packet;
-}
-inline sf::Packet& operator <<(sf::Packet& packet, const Entity& entity)
-{
-	return packet << (sf::Uint32) entity;
-}
+
+
 inline sf::Packet& operator >>(sf::Packet& packet,   sf::Vector2f& position)
 {
 	float x , y;
@@ -63,6 +54,7 @@ inline sf::Packet& operator >>(sf::Packet& packet,  std::map<Entity, T>& positio
 		packet >> key >> value;
 		position[key]=value;
 	}
+
 	return packet;
 }
 template<typename T>

@@ -1,3 +1,3 @@
 #pragma once
 
-using Entity = long;
+using Entity = sf::Uint64;

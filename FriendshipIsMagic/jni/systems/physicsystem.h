@@ -11,7 +11,8 @@
 #include "../ai/ai/aiinterface.h"
 #include "timersystem.h"
 
-
+class CollisionSystem;
+class LogicSystem;
 class World;
 
 class PhysicSystem: public System
@@ -40,8 +41,11 @@ class PhysicSystem: public System
 
         void mirror(Entity entity);
         void mirrorVelocity(Entity entity);
+        void syncPos(Entity entity);
 
         std::map<Entity, sf::Vector2f>& getPositions(){return mPositions;};
+
+        void setPosition(Entity entity, sf::Vector2f pos);
 
         void canJump(Entity entity);
 

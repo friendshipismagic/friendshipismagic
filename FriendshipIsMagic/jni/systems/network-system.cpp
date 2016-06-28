@@ -5,58 +5,141 @@
  *      Author: edwardvergara
  */
 
+#include <SFML/System.hpp>
 #include "network-system.h"
 #include "physicsystem.h"
 #include "healthsystem.h"
-#include <SFML/System.hpp>
+
+#include "../core/world.h"
+
 
 
 //Network system
 
 
 
-NetworkSystem::NetworkSystem(World* world, State::Context& context, InputSystem* input, PhysicSystem* aPhysics, HealthSystem* aHealth)
+NetworkSystem::NetworkSystem(World* world, State::Context& context, InputSystem* input, PhysicSystem* aPhysics, HealthSystem* aHealth, LogicSystem* aLogic, WeaponSystem* aWeapon)
 :System(world, context)
 , mInput(input)
 , mPhysics(aPhysics)
 , mHealth(aHealth)
+, mLogic(aLogic)
+, mWeapon(aWeapon)
 , mUDP(nullptr)
 {
-
 	mInputs.insert(std::make_pair(Input::jump, false));
 	mInputs.insert(std::make_pair(Input::right, false));
 	mInputs.insert(std::make_pair(Input::left, false));
 	mInputs.insert(std::make_pair(Input::fire, false));
-	//TO DO finir sync
-	periode = sf::milliseconds(DEFAULT_SYNC_PERIOD);
-	using std::placeholders::_1;
-	mCmd.setCommand(ShareInputCommand::id,std::bind(&NetworkSystem::updateCoPlayerInput, this, _1));
-	mCmd.setCommand(SyncCommand::id,std::bind(&NetworkSystem::Sync, this, _1));
 
+	mLogics.insert(std::make_pair(Logic::isFacingLeft, false));
+	mLogics.insert(std::make_pair(Logic::fireOn, false));
+	//TO DO finir sync
+	//periode = sf::milliseconds(DEFAULT_SYNC_PERIOD);
+	using std::placeholders::_1;
+	mCmd.setCommand(SyncFromClientCommand::id, std::bind(&NetworkSystem::syncFromClient, this, _1));
+	mCmd.setCommand(SyncFromServerCommand::id, std::bind(&NetworkSystem::syncFromServer, this, _1));
+	//mCmd.setCommand(AskForInitCommand::id, std::bind(&NetworkSystem::askForInitReceived, this, _1));
+	//mCmd.setCommand(AckInitCommand::id, std::bind(&NetworkSystem::ackInitReceived, this, _1));
+	mCmd.setCommand(ReadyCommand::id, std::bind(&NetworkSystem::readyReceived, this, _1));
+	mCmd.setCommand(AckReadyCommand::id, std::bind(&NetworkSystem::ackReadyReceived, this, _1));
 }
 
 
 NetworkSystem::~NetworkSystem() {
 	// TODO Auto-generated destructor stub
 }
-
-void NetworkSystem::updateCoPlayerInput(sf::Packet pkt){
-	bool right, left, fire, jump;
-	pkt >> right >>left >> fire >> jump;
-
-	mInputs[Input::right] = right;
-	mInputs[Input::left] = left;
-	mInputs[Input::fire] = fire;
-	mInputs[Input::jump] = jump;
-
-
-	//if(mContext.UDPMode == UDPAgent::Mode::Server && jump)
-		//std::cout << "received " << std::hex << ordre << std::dec << std::endl;
-	//	std::cout << "Received client inputs: " << std::to_string(right) << std::to_string(left) << std::to_string(fire) << std::to_string(jump) << std::endl;
+/*
+//=====================[ INIT SYNC METHODS ]======================//
+//executed by the client when world want to init
+void NetworkSystem::askForInit(){
+	mUDP->send(AskForInitCommand::make());
 }
 
-void NetworkSystem::Sync(sf::Packet pkt){
-	pkt >> mPhysics->getPositions();
+//executed by server when askForInit received
+void NetworkSystem::askForInitReceived(sf::Packet pkt){
+		mUDP->send(InitFeedbackCommand::make(
+
+		));
+}
+
+// executed by the client to init world then send ackInit
+void NetworkSystem::initFeedbackReceived(sf::Packet pkt){
+	if(mGameWorld->initEntitiesFromServer()){
+		mUDP->send(AckInitCommand::make());
+		mInitialized = true;
+	}
+}
+
+//executed by the server when it received the ack
+void NetworkSystem::ackInitReceived(sf::Packet pkt){
+	mInitialized = true;
+}
+*/
+//===================[ END INIT SYNC METHODS ]====================//
+
+
+void NetworkSystem::sendReady(){
+	mUDP->send(ReadyCommand::make());
+}
+void NetworkSystem::readyReceived(sf::Packet pkt){
+	mUDP->send(AckReadyCommand::make());
+	mInitialized = true;
+}
+void NetworkSystem::ackReadyReceived(sf::Packet pkt){
+	mInitialized = true;
+}
+
+void NetworkSystem::syncFromClient(sf::Packet pkt){
+	sf::Vector2f v;
+	pkt >>v;
+	mPhysics->setPosition(mGameWorld->getCoPlayerID(),v);
+	mPhysics->syncPos(mGameWorld->getCoPlayerID());
+
+	bool boolean;
+	pkt >> boolean;
+	mLogics[Logic::fireOn] = boolean;
+
+	pkt >> boolean;
+	mLogics[Logic::isFacingLeft] = boolean;
+	mLogics[Logic::isFacingRight] = !boolean;
+
+}
+
+
+
+void NetworkSystem::syncFromServer(sf::Packet pkt){
+	//P1pos
+	sf::Vector2f v;
+	std::string gunP1, gunP2;
+	HealthSystem::health_t HP1 = 0, HP2 = 0, MHP1 = 0, MHP2 = 0;
+	bool fireOn, isFacingLeft;
+
+	pkt >> v >> gunP1 >> gunP2 >> HP1 >> HP2 >> MHP1 >> MHP2 >> fireOn >> isFacingLeft;
+	//std::cout << v.x << v.y << "\t gun P1: "<<gunP1 << " gun P2 : "<< gunP2 << " HP P1 : " << HP1 << " HP P2 : "<< HP2 << " " << MHP1 << MHP2 << " FireOn P1 : " << fireOn << " FacingLeft : "<< isFacingLeft << std::endl;
+	mPhysics->setPosition(mGameWorld->getPlayerID(),v);
+	mPhysics->syncPos(mGameWorld->getPlayerID());
+
+	//P1 and P2 guns
+	//mGameWorld->setPlayerWeaponID(mWeapon->getWeaponID(gunP1));
+	//mGameWorld->setCoPlayerWeaponID(mWeapon->getWeaponID(gunP2));
+	mWeapon->insertWeaponType(mGameWorld->getPlayerID(),gunP1);
+	mWeapon->insertWeaponType(mGameWorld->getCoPlayerID(),gunP2);
+
+	//Heal and max Heal
+
+	mHealth->setCurrentHealth(mGameWorld->getPlayerID(), HP1);
+	mHealth->setCurrentHealth(mGameWorld->getCoPlayerID(), HP2);
+	mHealth->setMaxHealth(mGameWorld->getPlayerID(), MHP1);
+	mHealth->setMaxHealth(mGameWorld->getCoPlayerID(), MHP2);
+
+	// fireOn
+	mLogics[Logic::fireOn] = fireOn;
+
+	// Orientation
+	mLogics[Logic::isFacingLeft] = isFacingLeft;
+	mLogics[Logic::isFacingRight] = !isFacingLeft;
+
 }
 
 void NetworkSystem::update(sf::Time dt){
@@ -65,34 +148,57 @@ void NetworkSystem::update(sf::Time dt){
 		std::cout << "UDP error"<< std::endl;
 		return;
 	}
-	sf::Packet pkt ;
-	sf::Time time = clk.getElapsedTime();
-	//TO DO finir sync
-	if(time > periode){
-		if(mContext.UDPMode == UDPAgent::Mode::Server){
-			//std::cout<< "sync tick" <<std::endl;
-			pkt = SyncCommand::make(mPhysics->getPositions(), mHealth->getCurrentHealth(), mHealth->getMaxHealth());
+	if(mInitialized){
+	/*
+		sf::Time time = clk.getElapsedTime();
+		//TO DO finir sync
+		if(time > periode){
+			if(mContext.UDPMode == UDPAgent::Mode::Server){
+				//std::cout<< "sync tick" <<std::endl;
+				mUDP->send(SyncCommand::make(
+						mPhysics->getPositions(),
+						mHealth->getCurrentHealth(),
+						mHealth->getMaxHealth())
+				);
+			}
+			clk.restart();
 		}
-		clk.restart();
+		*/
+		static int cpt=0;
+		if(cpt++ >= DEFAULT_INPUT_SYNC_FRAME_COUNT){
+			cpt=0;
+			if(mContext.UDPMode == UDPAgent::Mode::Server){
+				//std::cout << mPhysics->getPosition(mGameWorld->getPlayerID()).x << mPhysics->getPosition(mGameWorld->getPlayerID()).y << "\t gun P1: "<< mGameWorld->getPlayerWeaponID() << " gun P2 : "<< mGameWorld->getCoPlayerWeaponID() << " HP P1 : " << mHealth->getCurrentHealth(mGameWorld->getPlayerID()) << " HP P2 : "<< mHealth->getCurrentHealth(mGameWorld->getCoPlayerID()) << " " << mHealth->getMaxHealth(mGameWorld->getPlayerID()) << mHealth->getMaxHealth(mGameWorld->getCoPlayerID()) << " FireOn P1 : " << mLogic->getLogic(Logic::fireOn) << " FacingLeft : "<< mLogic->getLogic(Logic::isFacingLeft) << std::endl;
+				mUDP->send(SyncFromServerCommand::make(
+						mPhysics->getPosition(mGameWorld->getPlayerID()),
+						mWeapon->getWeaponType(mGameWorld->getPlayerWeaponID()),
+						mWeapon->getWeaponType(mGameWorld->getCoPlayerWeaponID()),
+						mHealth->getCurrentHealth(mGameWorld->getPlayerID()),
+						mHealth->getCurrentHealth(mGameWorld->getCoPlayerID()),
+						mHealth->getMaxHealth(mGameWorld->getPlayerID()),
+						mHealth->getMaxHealth(mGameWorld->getCoPlayerID()),
+						mLogic->getLogic(Logic::fireOn),
+						mLogic->getLogic(Logic::isFacingLeft)
+				));
+			}
+			else if(mContext.UDPMode == UDPAgent::Mode::Client){
+				//std::cout<< "sync tick" <<std::endl;
+
+				mUDP->send(SyncFromClientCommand::make(
+						mPhysics->getPosition(mGameWorld->getCoPlayerID()),
+						mLogic->getLogic(Logic::coFireOn),
+						mLogic->getLogic(Logic::coIsFacingLeft)
+				));
+			}
+		} //== fin if cpt
+	}//fin if initialized
+	else{
+
 	}
-
-	pkt = ShareInputCommand::make(
-			mInput->getInputState(Input::right),
-			mInput->getInputState(Input::left),
-			mInput->getInputState(Input::fire),
-			mInput->getInputState(Input::jump));
-
-	mUDP->send(pkt);
-
 	//Receive
-	//sf::Clock master;
 	while(emptyBuf() == false){
-		//std::cout << "master has waited " << master.getElapsedTime().asSeconds();
-		//sf::Clock slave;
 		auto pkt = popFrontBuf();
-		//std::cout << " and slave " << slave.getElapsedTime().asSeconds() << std::endl;
 		mCmd.interpret(pkt);
-		//master = sf::Clock();
 	}
 
 }
@@ -126,7 +232,16 @@ void NetworkSystem::startUDPClient(int srcPort, sf::IpAddress destIp, int destPo
 	}
 }
 
+void NetworkSystem::insertNetworkID(Entity entity){
 
+
+}
+NetworkSystem::NetworkID NetworkSystem::getEntityNetworkID(Entity entity){
+
+}
+Entity NetworkSystem::getNetorkIDEntity( NetworkSystem::NetworkID netID){
+
+}
 void NetworkSystem::notify(sf::Packet pkt){
 	pushBuf(pkt);
 }
@@ -134,4 +249,8 @@ void NetworkSystem::notify(sf::Packet pkt){
 bool NetworkSystem::getInputState(Input input)
 {
     return mInputs[input];
+}
+bool NetworkSystem::getLogicState(Logic logic)
+{
+    return mLogics[logic];
 }

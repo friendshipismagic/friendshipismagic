@@ -1,12 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <set>
 #include "system.h"
 #include "../states/state.h"
 #include "systemprovider.h"
-#include "physicsystem.h"
 #include "../core/entity.h"
-#include <set>
-#include "logicsystem.h"
+//#include "../core/world.h"
+
+class World;
+class LogicSystem;
+class PhysicSystem;
 
 class GraphicSystem : public System
 {

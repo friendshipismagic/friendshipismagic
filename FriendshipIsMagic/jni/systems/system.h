@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/System.hpp>
 #include "../states/state.h"
+//#include "../core/world.h"
 
 class World;
 
@@ -19,7 +20,8 @@ namespace Systems
         ITEMTYPE = 1 << 8,
         OWNER = 1 << 9,
         SCORE = 1 << 10,
-        PADDING = 1 << 11
+        PADDING = 1 << 11,
+		NETWORKID = 1 << 12
     };
 
     enum Mask
@@ -37,16 +39,16 @@ namespace Systems
     };
 };
 
+
 class System
 {
     public:
 
         System(World* world, State::Context& context)
         : mContext(context)
-        , mGameWorld(world)
-        {
+        , mGameWorld(world){}
 
-        }
+        //virtual ~System() = 0;
         void virtual update(sf::Time dt) = 0;
 
     protected:
@@ -55,3 +57,5 @@ class System
         World* mGameWorld;
 
 };
+
+

@@ -26,7 +26,7 @@ class WeaponSystem: public System
         Entity getOwner(Entity entity);
         void insertOwner(Entity entity, Entity owner);
         void deleteOwner(Entity entity);
-
+        Entity getWeaponID(std::string weaponType);
     private:
 
         std::map<Entity, std::string> mWeaponTypes;
