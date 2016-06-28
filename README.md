@@ -27,6 +27,7 @@ Puis, après clone du dépot, faire depuis la racine du dépôt, avec un portabl
 git submodule init
 git submodule update
 cd FriendshipIsMagic
+android update project --target "android-23" --path .
 ndk-build
 ant release
 ant installr
