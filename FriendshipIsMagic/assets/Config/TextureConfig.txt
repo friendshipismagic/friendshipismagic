@@ -12,7 +12,7 @@
 	{"name":"CoPlayer","filename":"Graphics/characters/blueplayer.png"},
 	{"name":"LifeBar","filename":"Graphics/characters/life-bar.png"},
 	{"name":"WaterGun","filename":"Graphics/guns/water-gun.png"},
-	{"name":"RedBlock","filename":"Graphics/guns/redblock.png"},
+	{"name":"RedBlock","filename":"Graphics/bloc.png"},
 	{"name":"Raygun","filename":"Graphics/guns/raygun.png"},
 	{"name":"Shotgun","filename":"Graphics/guns/shotgun.png"},
 	{"name":"Ray","filename":"Graphics/guns/ray.png"},
