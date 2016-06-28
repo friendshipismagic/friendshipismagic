@@ -58,6 +58,8 @@ LOCAL_SRC_FILES := core/main.cpp \
 	states/state.cpp \
 	states/gamestate.cpp \
 	states/settings-state.cpp \
+	states/connectstate.cpp \
+	states/waitingstate.cpp \
 	systems/aisystem.cpp \
 	systems/physicsystem.cpp \
 	systems/graphicsystem.cpp \
@@ -73,6 +75,7 @@ LOCAL_SRC_FILES := core/main.cpp \
 	systems/weaponsystem.cpp \
 	network/udp-agent.cpp \
 	network/udp-exception.cpp \
+	network/net-player-discover.cpp \
 	ai/matrix/matrix.cpp \
 	ai/dijkstrainterface/asetinterface.cpp \
 	ai/dijkstrainterface/graphinterface.cpp \
@@ -95,7 +98,7 @@ LOCAL_SRC_FILES := core/main.cpp \
 
 
 LOCAL_C_INCLUDES := . \
-	$(LOCAL_PATH)/../deps/box2d/include/ #WORKAROUND 
+	$(LOCAL_PATH)/../deps/box2d/include/ #WORKAROUND
 
 LOCAL_SHARED_LIBRARIES := sfml-system
 LOCAL_SHARED_LIBRARIES += sfml-window
@@ -114,5 +117,3 @@ include $(BUILD_SHARED_LIBRARY)
 $(call import-add-path,./deps)
 #$(call import-module,gdx-box2d)
 $(call import-module,sfml)
-
-
