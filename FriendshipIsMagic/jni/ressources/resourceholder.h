@@ -10,6 +10,7 @@
 #include <math.h>
 #include "json.h"
 #include <assert.h>
+#include <exception>
 
 #ifdef ANDROID_BUILD
     #include <SFML/System/NativeActivity.hpp>
