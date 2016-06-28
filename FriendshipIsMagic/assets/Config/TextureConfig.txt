@@ -25,6 +25,8 @@
 	{"name":"Swap","filename":"Graphics/swapitem.png"},
 	{"name":"MonsterItem","filename":"Graphics/monsteritem.png"},
 	{"name":"IncreaseLife","filename":"Graphics/increasemaxlife.png"},
-	{"name":"Ray","filename":"Graphics/ray.png"}
+	{"name":"Ray","filename":"Graphics/ray.png"},
+	{"name": "OnePlayer", "filename" : "Graphics/1player.png"},
+	{"name": "TwoPlayers", "filename" : "Graphics/2players.png"}
 ]
 }

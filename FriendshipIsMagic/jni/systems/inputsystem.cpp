@@ -1,5 +1,6 @@
 #include "inputsystem.h"
 #include "../core/world.h"
+#include <SFML/Window.hpp>
 
 InputSystem::InputSystem(World* world, State::Context& context)
 : System(world, context)
