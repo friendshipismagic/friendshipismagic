@@ -12,6 +12,7 @@
 #include "../dijkstrainterface/graphinterface.h"
 #include "../dijkstrainterface/vertexinterface.h"
 #include <assert.h>
+#include <iostream>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ Matrix::Matrix(vector<char> mCharG, unsigned int x) {
 	lengthT = mChar.size();
 	lengthX = x;
 
-	for(unsigned int i = 0; i < lengthT; i++)
+	for(int i = 0; i < lengthT; i++)
     {
 			VertexInterface* vertex = new VertexInterface();
 			auto coords = MatrixToCoordinates(i);
@@ -80,34 +81,30 @@ vector<int> Matrix::getSuccessors(int index)
 {
 	vector<int> neighbours;
 
-    std::pair<int, int> pos = MatrixToCoordinates(index);
-    int x = pos.first;
-    int y = pos.second;
-
 	// Definition of the vectorInterface neighbour's coordinates.
-	vector<pair<int,int> > coords = {
-			make_pair (x-1, y),
-			make_pair (x+1, y),
-			make_pair (x, y-1),
-			make_pair (x, y+1)
+	vector<int> coords = {
+			index+lengthX,
+			index-lengthX,
+			index+1,
+			index-1
 	};
 
-	for(auto coord : coords) {
-        // To be sure to stay in the map
-        if ((coord.first < 0) || (coord.first >= lengthX) || (coord.second < 0) || (coord.second >= lengthX))
-			continue;
+	for(int coord : coords) {
 		// Informations about the neighbour
-		int nindex = coordinatesToMatrix(coord.first,coord.second);
-		if ((nindex < 0) || (nindex >= lengthT))
-			continue;
-		VertexInterface* neighbour = mVertices[nindex];
+		if ((coord < 0) || (coord >= lengthT))
+        {
+            //std::cout << coord << std::endl;
+            continue;
+        }
+		VertexInterface* neighbour = mVertices[coord];
 		if (neighbour == nullptr)
             continue;
 		char neighbourType = neighbour->getType();
 
 		if(neighbourType != 'W')
 		{
-			neighbours.push_back(nindex);
+		    //std::cout << "wall" << std::endl;
+			neighbours.push_back(coord);
 		}
 	}
 	return neighbours;

@@ -55,13 +55,19 @@ std::vector<int> Dijkstra::dijkstra(int player, int mob)
 		{
 			if(!a[i])
 			{
+			    int distance =  pi[pivot] + mMatrix->getWeight(i,pivot);
 			    if(pi[i] != -1)
                 {
-                    int distance =  pi[pivot]+ mMatrix->getWeight(i,pivot);
                     if(distance < pi[i])
                     {
                         previous[i] = pivot;
+                        pi[i] = distance;
                     }
+                }
+                else
+                {
+                    previous[i] = pivot;
+                    pi[i] = distance;
                 }
 			}
 		}
@@ -69,12 +75,12 @@ std::vector<int> Dijkstra::dijkstra(int player, int mob)
 		//Searching for the min of pi function
 		int piMin = -1;
 
-		for(unsigned int j = 0; j < mMatrix->getLenghtT(); j++)
+		for(int j = 0; j < mMatrix->getLenghtT(); j++)
 		{
 			if(!a[j])
 			{
 				int l = pi[j];
-				if((l < piMin) || (piMin == -1))
+				if( ((l < piMin) || (piMin == -1)) && (l != -1))
 				{
 					piMin = l;
 					pivot = j;

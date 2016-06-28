@@ -43,7 +43,16 @@ void AiInterface::setPath(int mobID, float playerX, float playerY, float mobX, f
     int mob = g.coordinatesToMatrix(mX, mY);
 
 	Dijkstra dijkstra(&g);
-	auto previous = dijkstra.dijkstra(player, mob);
+	std::vector<int> previous = dijkstra.dijkstra(player, mob);
+
+	/*int index = previous[mob];
+	std::pair<int,int> pos = g.MatrixToCoordinates(previous[mob]);
+	while(index != player)
+    {
+        std::cout << pos.first << " " << pos.second << std::endl;
+        pos = g.MatrixToCoordinates(previous[index]);
+        index  = previous[index];
+    }*/
 	//VertexInterface* next = previous->getValue(mob);
     //mMonsterController->setTarget(player);
 	//mMonsterController->nextPosition = {next->getX(),next->getY()};
