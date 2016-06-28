@@ -1,16 +1,13 @@
 {
 "resources":
 [
-	{"name":"Skull","filename":"Graphics/skull.png"},
 	{"name":"Skeleton","filename":"Graphics/skeleton.png"},
 	{"name":"Background","filename":"Graphics/background.png"},
-	{"name":"Floor2","filename":"Graphics/floor2.png"},
-	{"name":"Floor","filename":"Graphics/floor.png"},
-	{"name":"BulletL","filename":"Graphics/bulletl.png"},
-	{"name":"BulletR","filename":"Graphics/bulletr.png"},
+	{"name":"Floor2","filename":"Graphics/bloc.png"},
+	{"name":"Floor","filename":"Graphics/bloc.png"},
+	{"name":"BulletL","filename":"Graphics/guns/bullet.png"},
 	{"name":"menu/main/background","filename":"Graphics/test fond title.png"},
 	{"name":"menu/settings/background","filename":"Graphics/settings-background.jpg"},
-	{"name":"BlueBlock","filename":"Graphics/blueblock.png"},
 	{"name":"Player","filename":"Graphics/characters/redplayer.png"},
 	{"name":"CoPlayer","filename":"Graphics/characters/blueplayer.png"},
 	{"name":"LifeBar","filename":"Graphics/characters/life-bar.png"},
@@ -27,6 +24,6 @@
 	{"name":"IncreaseLife","filename":"Graphics/items/increase-max-life.png"},
 	{"name": "OnePlayer", "filename" : "Graphics/menu/1player.png"},
 	{"name": "TwoPlayers", "filename" : "Graphics/menu/2players.png"},
-	{"name": "icons/settings","filename":"Graphics/settings-icon.png"}
+	{"name": "icons/settings","filename":"Graphics/menu/settings-icon.png"}
 ]
 }

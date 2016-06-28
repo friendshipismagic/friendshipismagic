@@ -562,4 +562,3 @@ void World::insertMask(Entity entity, Systems::Mask mask)
     else
         mMasks.insert(std::make_pair(entity, mask));
 }
-
