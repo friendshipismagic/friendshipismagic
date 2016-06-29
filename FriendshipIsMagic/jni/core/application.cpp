@@ -36,8 +36,15 @@ void Application::processInput()
     sf::Event event;
     while (mWindow->pollEvent(event))
     {
-        if(event.type == sf::Event::LostFocus)
+        if(event.type == sf::Event::LostFocus || 
+                event.type == sf::Event::MouseLeft) {
+#ifdef ANDROID_BUILD
+            mStateStack.clearStates();
             mPause = true;
+            mWindow->close();
+            break;
+#endif
+        }
         else if (event.type == sf::Event::GainedFocus)
             mPause = false;
         mStateStack.handleEvent(event);
@@ -52,7 +59,9 @@ void Application::update(sf::Time dt)
 void Application::draw()
 {
 	#ifdef ANDROID_BUILD
-    if (mPause) return;
+    if (mPause) {
+        return;
+    }
 	#endif
     mWindow->clear();
     mStateStack.draw();
@@ -63,14 +72,14 @@ int Application::run()
 {
     sf::Clock clock;
     sf::Time dt = clock.restart();
-    while(!mStateStack.isEmpty())
+    while(!mStateStack.isEmpty() && mWindow->isOpen())
     {
         dt = clock.restart();
         processInput();
         update(dt);
         draw();
     }
-    mWindow->close();
-
+    if(mWindow->isOpen()) mWindow->close();
+    exit(0); // ANDROID TRICK
     return 0;
 }
