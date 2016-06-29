@@ -73,6 +73,7 @@ class World
         void lookForServer();
 
         const sf::Vector2f& getPlayerPosition() const;
+        const sf::Vector2f& getCoPlayerPosition() const;
 
     private:
 

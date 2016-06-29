@@ -566,3 +566,7 @@ void World::insertMask(Entity entity, Systems::Mask mask)
 const sf::Vector2f& World::getPlayerPosition() const {
     return mPhysics.getPosition(getPlayerID());
 }
+
+const sf::Vector2f& World::getCoPlayerPosition() const {
+    return mPhysics.getPosition(getCoPlayerID());
+}
