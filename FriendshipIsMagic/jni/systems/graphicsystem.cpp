@@ -18,9 +18,9 @@ GraphicSystem::GraphicSystem(World* world, State::Context& context, PhysicSystem
     background->setTexture(*t);
     background->setPosition(-100, 0);
     addToScene(background, 0);
-    mScore.setString(0);
-    mCoScore.setString(0);
-    mTime.setString(0);
+    mScore.setString("J1 : " + 0);
+    mCoScore.setString("J2 : " + 0);
+    mTime.setString("Time: " + 60);
     mScore.setPosition(0, 0);
     mCoScore.setPosition(10, 0);
     mTime.setPosition(20, 0);
@@ -49,7 +49,7 @@ void GraphicSystem::update(sf::Time dt)
     }
 
     mTimer -= dt;
-    mTime.setString(mTimer.asSecond());
+    mTime.setString("Time: " + mTimer.asSeconds());
 }
 
 void GraphicSystem::draw()
@@ -209,6 +209,6 @@ void GraphicSystem::eraseFromScene(sf::Sprite* node)
 
 void GraphicSystem::setScores(int score, int coscore)
 {
-	mScore.setString(score);
-	mCoScore.setString(coscore);
+	mScore.setString("J1 : " + score);
+	mCoScore.setString("J2 : " + coscore);
 }
