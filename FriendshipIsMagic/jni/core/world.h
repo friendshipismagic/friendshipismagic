@@ -70,6 +70,7 @@ class World
         bool initEntitiesFromServer();
         */
         void sendReady();
+        void lookForServer();
 
         const sf::Vector2f& getPlayerPosition() const;
 
@@ -94,6 +95,7 @@ class World
         ScoreSystem mScores;
         SoundSystem mSounds;
         AISystem mAi;
+
 
         Entity mPlayerID = 0;
         Entity mPlayerWeaponID = 1;

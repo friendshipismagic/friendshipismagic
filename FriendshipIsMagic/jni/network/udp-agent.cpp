@@ -20,7 +20,7 @@ the_thread(&UDPAgent::AgentRoutine, this)
 	mode = Mode::Server;
 	mDestPort = 0;
 	running = false;
-	listener.setBlocking(false);
+	//listener.setBlocking(false);
 	mSrcPort = srcPort;
 }
 
@@ -47,8 +47,11 @@ UDPAgent::~UDPAgent() {
 
 //***** Function to call after creating ServerThread object
 void UDPAgent::start() {
-	if (listener.bind(mSrcPort) != sf::Socket::Done)
-		throw UDPException();
+	auto status = listener.bind(mSrcPort);
+	if (status != sf::Socket::Done) {
+
+		throw UDPException(status);
+	}
 
 	// This will start the thread by running the serverRoutine function
 	running  = true;
@@ -88,6 +91,7 @@ void UDPAgent::AgentRoutine(){
 		st = listener.receive(pkt, tmpIP, tmpPort);
 		switch(st){
 			case sf::Socket::Done:
+				//agentPrintLn("destIp : "+mDestIPAddr.toString()+ " port : "+ std::to_string(mDestPort));
 				if(mode == Mode::Server){
 					mDestIPAddr= tmpIP;
 					mDestPort= tmpPort;

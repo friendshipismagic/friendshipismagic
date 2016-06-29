@@ -7,10 +7,6 @@ WaitingState::WaitingState(StateStack& mystack, Context& context)
 {
     mText.setFont(*context.fonts->get("font"));
 
-    if(mContext.UDPMode = UDPAgent::Mode::Client)
-        mText.setString("Waiting for a client");
-    else
-        mText.setString("Waiting for an host");
 
     mText.setPosition(200, 200);
 }
@@ -18,10 +14,12 @@ WaitingState::WaitingState(StateStack& mystack, Context& context)
 void WaitingState::init()
 {
     mBackgroundSprite.setTexture(*getContext().textures->get("menu/main/background"));
-    if(mContext.UDPMode = UDPAgent::Mode::Server)
-        mText.setString("Waiting for a client");
-    else
-        mText.setString("Waiting for an host");
+    if(mContext.UDPMode == UDPAgent::Mode::Client){
+            mText.setString("Client mode\nWaiting for a host");
+        }
+        else if(mContext.UDPMode == UDPAgent::Mode::Server){
+            mText.setString("Server mode\nWaiting for a client");
+        }
 	updateRatio();
 }
 
@@ -57,7 +55,7 @@ bool WaitingState::handleEvent(const sf::Event& event)
 			sf::Vector2i coords_screen;
 			if (event.type == sf::Event::TouchBegan)
                 {
-				std::cout << "touch" << std::endl;
+				//std::cout << "touch" << std::endl;
 				coords_screen.x = event.touch.x;
 				coords_screen.y = event.touch.y;
 			}
@@ -65,18 +63,18 @@ bool WaitingState::handleEvent(const sf::Event& event)
 			{
 				coords_screen.x = event.mouseButton.x;
 				coords_screen.y = event.mouseButton.y;
-				std::cout << "mouse" << std::endl;
+				//std::cout << "mouse" << std::endl;
 			}
 
 			auto coords = getContext().window->mapPixelToCoords(coords_screen, mView);
 
-            requestStackPop();
-            requestStackPush(States::Game);
-
+           // requestStackPop();
+           // requestStackPush(States::Game);
 			break;
 		}
 
         case sf::Event::Closed:
+            requestStackPop();
             requestStackPop();
             break;
 
@@ -90,6 +88,12 @@ bool WaitingState::handleEvent(const sf::Event& event)
 
 bool WaitingState::update(sf::Time dt)
 {
+	//std::cout << "waiting state update with mode"<< mContext.UDPMode << std::endl;
+	if(mContext.foundPlayer){
+		//std::cout << "found!"<< std::endl;
+		requestStackPop();
+		requestStackPush(States::Game);
+	}
     return true;
 }
 

@@ -55,7 +55,9 @@ void World::sendReady(){
 	mNetwork.sendReady();
 }
 
+
 void World::initEntities(){
+	//std::cout << "init entities called!" << std::endl;
 	createPlayer();
 	createCoPlayer();
 
@@ -73,14 +75,7 @@ void World::initEntities(){
     mAi.setMatrix("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEWEEEEEEEEEEEEWWWWWWWWWWWWWWWW",16);
     mAi.insertMonster(mob);
 }
-//Server mode
-void World::startUDPServer(int srcPort){
-	mNetwork.startUDPServer(srcPort);
-}
-//Client mode
-void World::startUDPClient(int srcPort, sf::IpAddress destIp, int destPort){
-	mNetwork.startUDPClient(srcPort, destIp, destPort);
-}
+
 void World::handleEvent(const sf::Event& event)
 {
     mInputs.handleEvent(event);
@@ -88,11 +83,8 @@ void World::handleEvent(const sf::Event& event)
 
 void World::update(sf::Time dt)
 {
-	//if(mContext.UDPMode == UDPAgent::Mode::Client)
-			//std::cout << "in world update before first if" << std::endl;
-	//if(mNetwork.isInitialized()){
-		//if(mContext.UDPMode == UDPAgent::Mode::Client)
-		//std::cout << "in world update in first if" << std::endl;
+
+	if(mNetwork.isInitialized()){
 		for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
 		{
 			(*itr)->update(dt);
@@ -170,9 +162,9 @@ void World::update(sf::Time dt)
 
 			mSounds.play(weaponType);
 		}
-	//}
-	//else
-	//	mNetwork.update( dt);
+	}
+	else
+		mNetwork.update( dt);
 
 }
 

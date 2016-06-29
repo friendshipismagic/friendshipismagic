@@ -37,6 +37,7 @@ class State
                 fonts = &fon;
                 sounds = &s;
                 UDPMode = UDPAgent::Mode::None;
+                foundPlayer = false;
 
             }
 
@@ -45,6 +46,7 @@ class State
             FontHolder* fonts;
             SoundBufferHolder* sounds;
             UDPAgent::Mode UDPMode;
+            bool foundPlayer;
 
         };
 
