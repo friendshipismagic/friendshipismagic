@@ -11,6 +11,8 @@ class ConnectState: public State
         sf::Font* mFont;
 
         sf::Sprite mBackgroundSprite;
+		sf::Sprite mServerModeSprite;
+		sf::Sprite mClientModeSprite;
 
         void updateRatio();
 

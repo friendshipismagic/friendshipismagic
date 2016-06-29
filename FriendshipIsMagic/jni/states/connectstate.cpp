@@ -11,6 +11,8 @@ ConnectState::ConnectState(StateStack& mystack, Context& context)
 void ConnectState::init()
 {
     mBackgroundSprite.setTexture(*getContext().textures->get("menu/main/background"));
+    mServerModeSprite.setTexture(*getContext().textures->get("host"));
+    mClientModeSprite.setTexture(*getContext().textures->get("join"));
 	updateRatio();
 }
 
@@ -31,6 +33,14 @@ void ConnectState::updateRatio()
 	auto bgShift = sf::Vector2f((size.x-bgSize.x)/2, (size.y-bgSize.y)/2);
 	mBackgroundSprite.setScale(bgScale,bgScale);
 	mBackgroundSprite.setPosition(bgShift);
+
+	mServerModeSprite.setScale(2,2);
+	auto servRect = mServerModeSprite.getGlobalBounds();
+	mServerModeSprite.setPosition(size.x/3.-servRect.width/2.,size.y/2.-servRect.height/2.);
+
+	mClientModeSprite.setScale(2,2);
+	auto clienRect = mServerModeSprite.getGlobalBounds();
+	mServerModeSprite.setPosition(2*size.x/3.-clienRect.width/2.,size.y/2.-4.1*clienRect.height/2.);
 
 }
 
@@ -59,6 +69,28 @@ bool ConnectState::handleEvent(const sf::Event& event)
 
 			auto coords = getContext().window->mapPixelToCoords(coords_screen, mView);
 
+			bool isServerButtonPressed = mServerModeSprite.getGlobalBounds().contains(coords);
+			bool isClientButtonPressed = mClientModeSprite.getGlobalBounds().contains(coords);
+
+			if(isServerButtonPressed){
+				mContext.UDPMode = UDPAgent::Mode::Server;
+				std::cout << "Server selected from connectState" << std::endl;
+				requestStackPop();
+				requestStackPush(States::Game);
+				requestStackPush(States::Waiting);
+				return true;
+			}
+			if(isClientButtonPressed){
+				mContext.UDPMode = UDPAgent::Mode::Client;
+				std::cout << "Client selected from connectState" << std::endl;
+				requestStackPop();
+				requestStackPush(States::Game);
+				requestStackPush(States::Waiting);
+				return true;
+			}
+
+			//auto coords = getContext().window->mapPixelToCoords(coords_screen, mView);
+/*
 			//Server
         	if (event.mouseButton.button == sf::Mouse::Left)
             {
@@ -71,9 +103,8 @@ bool ConnectState::handleEvent(const sf::Event& event)
         		std::cout << "Client selected from connectState" << std::endl;
 
         	}
-        	requestStackPop();
-        	requestStackPush(States::Game);
-			requestStackPush(States::Waiting);
+*/
+
 			break;
 		}
 
@@ -97,4 +128,6 @@ bool ConnectState::update(sf::Time dt)
 void ConnectState::draw()
 {
     mContext.window->draw(mBackgroundSprite);
+	mContext.window->draw(mServerModeSprite);
+	mContext.window->draw(mClientModeSprite);
 }

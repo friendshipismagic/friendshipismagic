@@ -73,6 +73,7 @@ bool TitleState::handleEvent(const sf::Event& event)
 
 			auto coords = getContext().window->mapPixelToCoords(coords_screen, mView);
 
+
 			bool isSettingsButtonPressed = mSettingsSprite.getGlobalBounds().contains(coords);
 
 			if(isSettingsButtonPressed){

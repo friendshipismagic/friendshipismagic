@@ -24,6 +24,8 @@
 	{"name":"IncreaseLife","filename":"Graphics/items/increase-max-life.png"},
 	{"name": "OnePlayer", "filename" : "Graphics/menu/1player.png"},
 	{"name": "TwoPlayers", "filename" : "Graphics/menu/2players.png"},
-	{"name": "icons/settings","filename":"Graphics/menu/settings-icon.png"}
+	{"name": "icons/settings","filename":"Graphics/menu/settings-icon.png"},
+	{"name": "join","filename":"Graphics/join.png"},
+	{"name": "host","filename":"Graphics/host.png"}
 ]
 }
