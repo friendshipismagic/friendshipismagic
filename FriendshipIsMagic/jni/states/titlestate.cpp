@@ -37,17 +37,13 @@ void TitleState::updateRatio() {
 	mBackgroundSprite.setScale(bgScale,bgScale);
 	mBackgroundSprite.setPosition(bgShift);
 
-
-
 	mOnePlayerSprite.setScale(2,2);
 	auto OP1rect = mOnePlayerSprite.getGlobalBounds();
 	mOnePlayerSprite.setPosition(size.x/3.-OP1rect.width/2.,size.y/2.-OP1rect.height/2.);
 
-
 	mTwoPlayersSprite.setScale(2,2);
 	auto TP2rect = mTwoPlayersSprite.getGlobalBounds();
 	mTwoPlayersSprite.setPosition(2*size.x/3.-TP2rect.width/2.,size.y/2.-TP2rect.height/2.);
-
 
 	auto settingsRect = mSettingsSprite.getGlobalBounds();
 	mSettingsSprite.setPosition(size.x/2. - settingsRect.width/2.,0);
@@ -64,9 +60,8 @@ bool TitleState::handleEvent(const sf::Event& event)
 
     switch(event.type) {
         case sf::Event::TouchBegan:  //event.touch //
-        case sf::Event::MouseButtonPressed: {
+        case sf::Event::MouseButtonPressed:{
 
-			//if SettingsButton is pressed go to
 			sf::Vector2i coords_screen;
 			if (event.type == sf::Event::TouchBegan) {
 				coords_screen.x = event.touch.x;
@@ -85,21 +80,11 @@ bool TitleState::handleEvent(const sf::Event& event)
 				requestStackPush(States::Settings);
 				return true;
 			}
-
-			//Server
-        	if (event.mouseButton.button == sf::Mouse::Left){
-        		mContext.UDPMode = UDPAgent::Mode::Server;
-        	}
-        	else if(event.mouseButton.button == sf::Mouse::Right){
-        		mContext.UDPMode = UDPAgent::Mode::Client;
-        	}
-        	else{
-        		mContext.UDPMode = UDPAgent::Mode::None;
-        	}
         	requestStackPop();
 			requestStackPush(States::Game);
 			break;
-		}
+        }
+
 
         case sf::Event::Closed:
             requestStackPop();
@@ -107,6 +92,7 @@ bool TitleState::handleEvent(const sf::Event& event)
 
 		case sf::Event::Resized:
 			updateRatio();
+			break;
         default:
         	break;
     }

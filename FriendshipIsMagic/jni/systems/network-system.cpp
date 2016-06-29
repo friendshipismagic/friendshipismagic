@@ -9,7 +9,6 @@
 #include "network-system.h"
 #include "physicsystem.h"
 #include "healthsystem.h"
-
 #include "../core/world.h"
 
 
@@ -26,6 +25,7 @@ NetworkSystem::NetworkSystem(World* world, State::Context& context, InputSystem*
 , mLogic(aLogic)
 , mWeapon(aWeapon)
 , mUDP(nullptr)
+, mDiscover(nullptr)
 {
 	mInputs.insert(std::make_pair(Input::jump, false));
 	mInputs.insert(std::make_pair(Input::right, false));
@@ -85,10 +85,12 @@ void NetworkSystem::sendReady(){
 void NetworkSystem::readyReceived(sf::Packet pkt){
 	mUDP->send(AckReadyCommand::make());
 	mInitialized = true;
+	mContext.foundPlayer =true;
 }
 void NetworkSystem::ackReadyReceived(sf::Packet pkt){
 	std::cout <<"Client ready!"<<std::endl;
 	mInitialized = true;
+	mContext.foundPlayer =true;
 }
 
 void NetworkSystem::syncFromClient(sf::Packet pkt){
@@ -146,25 +148,21 @@ void NetworkSystem::syncFromServer(sf::Packet pkt){
 void NetworkSystem::update(sf::Time dt){
 
 	if(mUDP == nullptr){
-		std::cout << "UDP error"<< std::endl;
-		return;
-	}
-	//if(mInitialized){
-	/*
-		sf::Time time = clk.getElapsedTime();
-		//TO DO finir sync
-		if(time > periode){
-			if(mContext.UDPMode == UDPAgent::Mode::Server){
-				//std::cout<< "sync tick" <<std::endl;
-				mUDP->send(SyncCommand::make(
-						mPhysics->getPositions(),
-						mHealth->getCurrentHealth(),
-						mHealth->getMaxHealth())
-				);
+		if(mContext.UDPMode == UDPAgent::Mode::Client){
+			if(mDiscover == nullptr){
+				lookForServer();
+				//std::cout << "launching server search" << std::endl;
+				return;
 			}
-			clk.restart();
 		}
-		*/
+		else if(mContext.UDPMode == UDPAgent::Mode::Server){
+			startUDPServer(UDPAgent::DEFAULT_PORT);
+			std::cout << "gameState: started as Server." << std::endl;
+			return;
+		}
+	}
+	//std::cout << "hello from network system update" << std::endl;
+	if(mInitialized){
 		static int cpt=0;
 		if(cpt++ >= DEFAULT_INPUT_SYNC_FRAME_COUNT){
 			cpt=0;
@@ -192,10 +190,17 @@ void NetworkSystem::update(sf::Time dt){
 				));
 			}
 		} //== fin if cpt
-	//}//fin if initialized
-	//else{
 
-	//}
+	}//fin if initialized
+	else {
+		mDiscover->update();
+		//std::cout << "Discover updated" << std::endl;
+		if(mContext.UDPMode == UDPAgent::Client && mDiscover->getDestPort() !=0){
+			startUDPClient(UDPAgent::DEFAULT_PORT+1,mDiscover->getDestIp(), mDiscover->getDestPort() );
+			std::cout << "Client started and connected to "<< mDiscover->getDestIp().toString() << " and port "<< mDiscover->getDestPort() << std::endl;
+			sendReady();
+		}
+	}
 	//Receive
 	while(emptyBuf() == false){
 		auto pkt = popFrontBuf();
@@ -218,6 +223,10 @@ void NetworkSystem::startUDPServer(int srcPort){
 		std::cout << "Can't bind socket to port " << srcPort << std::endl;
 		exit(-1);
 	}
+	mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, mUDP->getSrcPort()));
+}
+void NetworkSystem::lookForServer(){
+	mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, 0));
 }
 //Client mode
 void NetworkSystem::startUDPClient(int srcPort, sf::IpAddress destIp, int destPort){

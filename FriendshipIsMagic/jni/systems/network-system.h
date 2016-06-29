@@ -16,6 +16,7 @@
 
 #include "../network/udp-agent.h"
 #include "../command/command.h"
+#include "net-player-discover.h"
 
 #define DEFAULT_SYNC_PERIOD 2000
 #define DEFAULT_INPUT_SYNC_FRAME_COUNT 0
@@ -66,6 +67,7 @@ public:
 	NetworkID getEntityNetworkID(Entity entity);
 	Entity getNetorkIDEntity( NetworkID netID);
 	bool isInitialized() const {return mInitialized;}
+	void lookForServer();
 
 private:
 	InputSystem* mInput;
@@ -74,6 +76,7 @@ private:
 	LogicSystem* mLogic;
 	WeaponSystem* mWeapon;
 	std::unique_ptr<UDPAgent> mUDP;
+	std::unique_ptr<NetPlayerDiscover> mDiscover;
 	std::map<Input, bool> mInputs;
 	std::map<Logic, bool> mLogics;
 	PacketCommand mCmd;
@@ -81,7 +84,6 @@ private:
 	std::map<NetworkID, Entity> NetEntities;
 	//sf::Clock mClock;
 	//sf::Time periode;
-
 	sf::Clock clk;
 
 

@@ -15,14 +15,14 @@ GameState::GameState(StateStack& mystack, State::Context& context)
 void GameState::init()
 {
 	if(mContext.UDPMode == UDPAgent::Mode::Client){
-		mWorld.startUDPClient(UDPAgent::DEFAULT_PORT+1, "localhost", UDPAgent::DEFAULT_PORT );
-		std::cout << "gameState: started as Client." << std::endl;
+		//mWorld.startUDPClient(UDPAgent::DEFAULT_PORT+1, "localhost", UDPAgent::DEFAULT_PORT );
+		//std::cout << "gameState: started as Client." << std::endl;
 		//mWorld.askForInit();
 		//mWorld.sendReady();
+		mWorld.lookForServer();
 	}
 	else if(mContext.UDPMode == UDPAgent::Mode::Server){
-		mWorld.startUDPServer(UDPAgent::DEFAULT_PORT);
-		std::cout << "gameState: started as Server." << std::endl;
+
 
 	}
 	else{
@@ -40,12 +40,15 @@ bool GameState::handleEvent(const sf::Event& event)
     {
         if (event.key.code == sf::Keyboard::Escape)
         {
+
             requestStackPop();
         }
     }
 
-    if(event.type == sf::Event::Closed)
-        requestStackPop();
+    if(event.type == sf::Event::Closed){
+
+    	requestStackPop();
+    }
 
     return true;
 }

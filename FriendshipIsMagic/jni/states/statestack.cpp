@@ -20,8 +20,6 @@ State* StateStack::createState(States::ID stateID)
 void StateStack::registerState(States::ID stateID, State* state)
 {
     mFactories[stateID] = state;
-    //ARHHHHHHH ALEXANDRE CEST PAS BIENNNN
-    //state->init();
 }
 
 void StateStack::handleEvent(const sf::Event& event)
@@ -60,7 +58,7 @@ void StateStack::applyPendingChanges()
         {
             case Push:
                 mStack.push_back(createState(change.stateID));
-                mStack.front()->init();
+                mStack.back()->init();
                 break;
             case Pop:
                 mStack.pop_back();
