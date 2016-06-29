@@ -108,6 +108,11 @@ bool ConnectState::handleEvent(const sf::Event& event)
 			break;
 		}
 
+        case sf::Event::KeyPressed:
+            requestStackPop();
+            requestStackPush(States::Title);
+            break;
+
         case sf::Event::Closed:
             requestStackPop();
             break;

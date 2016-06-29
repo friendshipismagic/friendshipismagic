@@ -41,6 +41,12 @@ void GameState::init()
 bool GameState::handleEvent(const sf::Event& event)
 {
     mWorld.handleEvent(event);
+    #ifdef ANDROID_BUILD
+    if (event.type == sf::Event::KeyPressed) {
+            requestStackPop();
+            requestStackPush(States::Title);
+    }
+    #endif 
 
     if(event.type == sf::Event::KeyReleased)
     {

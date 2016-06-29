@@ -100,6 +100,10 @@ bool TitleState::handleEvent(const sf::Event& event)
 			break;
         }
 
+        case sf::Event::KeyPressed:
+            if (event.key.code == sf::Keyboard::Escape)
+                requestStackPop();
+            break;
 
         case sf::Event::Closed:
             requestStackPop();
