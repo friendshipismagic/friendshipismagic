@@ -21,9 +21,10 @@
 class UDPAgent : public UDPSpeaker {
 public:
 	enum Mode{
-			Server,
-			Client,
-			None
+			Server=0,
+			Client=1,
+			Solo=2,
+			None = -1
 		};
 	//========== DEBUG
 	const bool debug = false;

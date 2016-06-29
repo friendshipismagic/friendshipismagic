@@ -5,7 +5,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include "../network/udp-agent.h"
-
+#include <iostream>
 
 class StateStack;
 
@@ -32,6 +32,7 @@ class State
         {
             Context(sf::RenderWindow& win, TextureHolder& textu, FontHolder& fon, SoundBufferHolder& s)
             {
+            	std::cout << "contexte initialisé" << std::endl;
                 window = &win;
                 textures = &textu;
                 fonts = &fon;
@@ -41,11 +42,24 @@ class State
 
             }
 
+            struct ModeDebug {
+            	UDPAgent::Mode UDPMode;
+            	ModeDebug& operator=(const UDPAgent::Mode& mode) {
+            		std::cout << "switch udp mode from " << UDPMode << " to " << mode << std::endl;
+            		this->UDPMode = mode;
+            		return *this;
+            	}
+
+            	operator UDPAgent::Mode () {
+            		return UDPMode;
+            	}
+            };
+
             sf::RenderWindow* window;
             TextureHolder* textures;
             FontHolder* fonts;
             SoundBufferHolder* sounds;
-            UDPAgent::Mode UDPMode;
+            ModeDebug UDPMode;
             bool foundPlayer;
 
         };

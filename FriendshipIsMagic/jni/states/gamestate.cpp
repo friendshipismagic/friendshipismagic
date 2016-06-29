@@ -14,20 +14,24 @@ GameState::GameState(StateStack& mystack, State::Context& context)
 
 void GameState::init()
 {
+	std::cout << (UDPAgent::Mode) mContext.UDPMode << std::endl;
 	if(mContext.UDPMode == UDPAgent::Mode::Client){
 		//mWorld.startUDPClient(UDPAgent::DEFAULT_PORT+1, "localhost", UDPAgent::DEFAULT_PORT );
-		//std::cout << "gameState: started as Client." << std::endl;
+		std::cout << "gameState: started as Client." << std::endl;
 		//mWorld.askForInit();
 		//mWorld.sendReady();
 		//mWorld.lookForServer();
 	}
 	else if(mContext.UDPMode == UDPAgent::Mode::Server){
-
+		std::cout << "gameState: started as Server." << std::endl;
 
 	}
-	else{
-		std::cout << "gameState: no mode found for UDPAgent, launching solo mode." << std::endl;
+	else if(mContext.UDPMode == UDPAgent::Solo){
+		std::cout << "gameState: started as solo mode." << std::endl;
 		mWorld.initEntities();
+	}
+	else{
+
 	}
 	//mWorld.initEntities();
 
@@ -61,8 +65,9 @@ bool GameState::update(sf::Time dt)
     	mView.setCenter(mWorld.getPlayerPosition());
     else if(getContext().UDPMode == UDPAgent::Client)
     	mView.setCenter(mWorld.getCoPlayerPosition());
-    else
+    else// if (getContext().UDPMode == UDPAgent::Solo)
     	mView.setCenter(mWorld.getPlayerPosition());
+
     mView.setSize(590,590);
     return true;
 }

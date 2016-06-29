@@ -21,6 +21,7 @@ World::World(State::Context& context)
 , mAi(this, context, &mPhysics)
 {
 
+	//std::cout << mContext.UDPMode << std::endl;
     mSystems.push_back(&mInputs);
     mSystems.push_back(&mNetwork);
     mSystems.push_back(&mLogics);
@@ -83,8 +84,9 @@ void World::handleEvent(const sf::Event& event)
 
 void World::update(sf::Time dt)
 {
+	//std::cout << mContext.UDPMode << std::endl;
+	if(mNetwork.isInitialized() || mContext.UDPMode == UDPAgent::Solo){
 
-	if(mNetwork.isInitialized() || mContext.UDPMode == UDPAgent::None){
 		for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
 		{
 			(*itr)->update(dt);
@@ -256,7 +258,7 @@ Entity World::createEntity(Systems::Mask mask, std::string fileName, float x, fl
     }
     if ((mask & Systems::Component::NETWORKID) == Systems::Component::NETWORKID)
 	{
-    	if(mContext.UDPMode != UDPAgent::None)
+    	if(mContext.UDPMode != UDPAgent::Solo)
     		mNetwork.insertNetworkID(entity);
 	}
     if ((mask & Systems::Component::TIMER) == Systems::Component::TIMER)

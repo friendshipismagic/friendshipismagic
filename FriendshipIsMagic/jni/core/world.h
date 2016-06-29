@@ -77,7 +77,7 @@ class World
 
     private:
 
-        State::Context mContext;
+        State::Context& mContext;
         std::map<Entity, Systems::Mask> mMasks;
         std::vector<System*> mSystems;
         std::map<Entity, std::set<Entity> > mSons;

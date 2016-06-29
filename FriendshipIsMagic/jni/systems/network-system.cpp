@@ -153,7 +153,7 @@ void NetworkSystem::syncFromServer(sf::Packet pkt){
 }
 
 void NetworkSystem::update(sf::Time dt){
-	if(mContext.UDPMode == UDPAgent::None)
+	if(mContext.UDPMode == UDPAgent::Solo)
 		return;
 
 	if(mUDP == nullptr){

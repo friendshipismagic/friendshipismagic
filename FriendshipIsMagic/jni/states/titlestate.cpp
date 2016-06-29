@@ -9,6 +9,7 @@ TitleState::TitleState(StateStack& mystack, Context& context)
 
 void TitleState::init()
 {
+	std::cout << &mContext << std::endl;
     mTextEffectTime = sf::Time::Zero;
     mSettingsSprite.setTexture(*getContext().textures->get("icons/settings"));
     mBackgroundSprite.setTexture(*getContext().textures->get("menu/main/background"));
@@ -77,6 +78,7 @@ bool TitleState::handleEvent(const sf::Event& event)
 			bool is1PButtonPressed = mOnePlayerSprite.getGlobalBounds().contains(coords);
 
 			if(is1PButtonPressed){
+				getContext().UDPMode = UDPAgent::Solo;
 				requestStackPop();
 				requestStackPush(States::Game);
 				return true;

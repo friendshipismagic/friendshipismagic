@@ -27,6 +27,8 @@ mContext(context)
 
 	}
 	else if(mContext.UDPMode == UDPAgent::Mode::Server){
+
+		//std::cout << "from discover "<<mContext.UDPMode << std::endl;
 		//std::cout << "server discover: listening port" << mSrcPort << std::endl;
 		discover.reset(new UDPAgent(sf::Socket::AnyPort,sf::IpAddress::Broadcast, mSrcPort));
 		//discover.reset(new UDPAgent(playerSrcPort+10,"localhost", srcPort));
