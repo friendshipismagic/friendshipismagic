@@ -20,7 +20,8 @@ namespace States
         Game,
 		Settings,
 		Connect,
-		Waiting
+		Waiting,
+		End
     };
 }
 

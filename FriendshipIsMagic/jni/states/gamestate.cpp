@@ -5,6 +5,7 @@ GameState::GameState(StateStack& mystack, State::Context& context)
 , mFont()
 , mText()
 , mWorld(context)
+, mGameTime(sf::Time::Zero)
 {
     mFont = mContext.fonts->get("font");
     mText.setFont(*mFont);
@@ -61,6 +62,7 @@ bool GameState::handleEvent(const sf::Event& event)
 bool GameState::update(sf::Time dt)
 {
     mWorld.update(dt);
+
     if(getContext().UDPMode == UDPAgent::Server)
     	mView.setCenter(mWorld.getPlayerPosition());
     else if(getContext().UDPMode == UDPAgent::Client)
@@ -69,6 +71,14 @@ bool GameState::update(sf::Time dt)
     	mView.setCenter(mWorld.getPlayerPosition());
 
     mView.setSize(590,590);
+
+	mGameTime += dt;
+	if(mGameTime.asSeconds() > 60)
+	{
+		requestStackPop();
+		requestStackPush(States::End);
+	}
+
     return true;
 }
 

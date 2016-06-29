@@ -60,6 +60,7 @@ LOCAL_SRC_FILES := core/main.cpp \
 	states/settings-state.cpp \
 	states/connectstate.cpp \
 	states/waitingstate.cpp \
+	states/endstate.cpp \
 	systems/aisystem.cpp \
 	systems/physicsystem.cpp \
 	systems/graphicsystem.cpp \

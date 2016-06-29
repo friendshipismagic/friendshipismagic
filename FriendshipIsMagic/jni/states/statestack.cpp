@@ -46,6 +46,7 @@ void StateStack::draw()
 {
     for (auto itr = mStack.rend() - 1; itr != mStack.rbegin() - 1; --itr)
     {
+        mContext.window->setView(mContext.window->getDefaultView());
         (*itr)->draw();
     }
 }

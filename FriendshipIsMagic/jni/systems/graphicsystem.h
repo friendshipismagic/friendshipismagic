@@ -34,6 +34,7 @@ class GraphicSystem : public System
 
         void addToScene(sf::Sprite* node, int layer);
         void eraseFromScene(sf::Sprite* node);
+        void setScores(int score, int coscore);
 
     private:
 
@@ -47,9 +48,14 @@ class GraphicSystem : public System
         std::map<Entity, Entity> mFathers;
 
         std::map<int, std::vector<sf::Sprite*> > mScene;
+        sf::Text mScore;
+        sf::Text mCoScore;
+        sf::Text mTime;
 
         PositionProvider* mPositionProvider;
         PhysicSystem* mPhysics;
         LogicSystem* mLogics;
+
+        sf::Time mTimer;
 
 };

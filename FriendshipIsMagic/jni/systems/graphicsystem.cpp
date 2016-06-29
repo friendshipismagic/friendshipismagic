@@ -11,16 +11,48 @@ GraphicSystem::GraphicSystem(World* world, State::Context& context, PhysicSystem
 , mWindow(context.window)
 , mPhysics(physics)
 , mLogics(logics)
+, mTimer(sf::seconds(60))
 {
     sf::Texture*  t = mContext.textures->get("Background");
     background = new sf::Sprite();
     background->setTexture(*t);
     background->setPosition(-100, 0);
     addToScene(background, 0);
+    
+    auto font = mContext.fonts->get("font");
+
+    mScore.setString("J1 : " + 0);
+    mScore.setFont(*font);
+
+    mCoScore.setString("J2 : " + 0);
+    mCoScore.setFont(*font);
+
+    std::string timestr = "Time: " + std::to_string(mTimer.asSeconds());
+    mTime.setString(timestr);
+    mTime.setFont(*font);
+
+    mScore.setPosition(0, 0);
+    mCoScore.setPosition(10, 0);
+    mTime.setPosition(20, 0);
 }
 
 void GraphicSystem::update(sf::Time dt)
 {
+    auto size = mContext.window->getDefaultView().getSize();
+
+    mScore.setPosition(50,50);
+
+    auto cs_rect = mCoScore.getGlobalBounds();
+    mCoScore.setOrigin(cs_rect.width, 0);
+    mCoScore.setPosition(size.x-50.f, 50);
+
+
+    auto time_rect = mTime.getGlobalBounds();
+    mTime.setOrigin(time_rect.width/2, 0);
+    mTime.setPosition(size.x/2, 60);
+
+
+
     for (unsigned int i = 0; i < mSprites.size(); i++)
     {
         sf::Vector2f pos = mPhysics->getPosition(i);
@@ -40,6 +72,9 @@ void GraphicSystem::update(sf::Time dt)
     {
         mirror(mGameWorld->getCoPlayerID(), -1);
     }
+
+    mTimer -= dt;
+    mTime.setString("Time: " + std::to_string((int)mTimer.asSeconds()));
 }
 
 void GraphicSystem::draw()
@@ -53,6 +88,15 @@ void GraphicSystem::draw()
             mWindow->draw(*sprite);
         }
     }
+
+    auto view = mWindow->getView();
+
+    mWindow->setView(mWindow->getDefaultView());
+  	mWindow->draw(mCoScore);
+  	mWindow->draw(mScore);
+  	mWindow->draw(mTime);
+    mWindow->setView(view);
+
 }
 
 void GraphicSystem::setPositionProvider(PositionProvider* pos)
@@ -190,4 +234,10 @@ void GraphicSystem::eraseFromScene(sf::Sprite* node)
         }
 
     }
+}
+
+void GraphicSystem::setScores(int score, int coscore)
+{
+	mScore.setString("J1 : " + std::to_string(score));
+	mCoScore.setString("J2 : " + std::to_string(coscore));
 }

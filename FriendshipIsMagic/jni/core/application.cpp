@@ -5,6 +5,7 @@
 #include "../states/splash-state.h"
 #include "../states/connectstate.h"
 #include "../states/waitingstate.h"
+#include "../states/endstate.h"
 
 Application::Application(State::Context& context)
 : mStateStack(context)
@@ -29,6 +30,7 @@ void Application::registerStates(State::Context& context)
     mStateStack.registerState(States::Settings, new SettingsState(mStateStack, context));
     mStateStack.registerState(States::Connect, new ConnectState(mStateStack, context));
     mStateStack.registerState(States::Waiting, new WaitingState(mStateStack, context));
+    mStateStack.registerState(States::End, new EndState(mStateStack, context));
 }
 
 void Application::processInput()
