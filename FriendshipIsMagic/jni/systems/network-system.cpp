@@ -83,14 +83,21 @@ void NetworkSystem::sendReady(){
 	mUDP->send(ReadyCommand::make());
 }
 void NetworkSystem::readyReceived(sf::Packet pkt){
+	if(mInitialized)
+		return;
+	std::cout <<"Server ready!"<<std::endl;
 	mUDP->send(AckReadyCommand::make());
 	mInitialized = true;
 	mContext.foundPlayer =true;
+	mGameWorld->initEntities();
 }
 void NetworkSystem::ackReadyReceived(sf::Packet pkt){
+	if(mInitialized)
+			return;
 	std::cout <<"Client ready!"<<std::endl;
 	mInitialized = true;
 	mContext.foundPlayer =true;
+	mGameWorld->initEntities();
 }
 
 void NetworkSystem::syncFromClient(sf::Packet pkt){
@@ -157,7 +164,7 @@ void NetworkSystem::update(sf::Time dt){
 		}
 		else if(mContext.UDPMode == UDPAgent::Mode::Server){
 			startUDPServer(UDPAgent::DEFAULT_PORT);
-			std::cout << "gameState: started as Server." << std::endl;
+			//std::cout << "gameState: started as Server." << std::endl;
 			return;
 		}
 	}
@@ -197,7 +204,7 @@ void NetworkSystem::update(sf::Time dt){
 		//std::cout << "Discover updated" << std::endl;
 		if(mContext.UDPMode == UDPAgent::Client && mDiscover->getDestPort() !=0){
 			startUDPClient(UDPAgent::DEFAULT_PORT+1,mDiscover->getDestIp(), mDiscover->getDestPort() );
-			std::cout << "Client started and connected to "<< mDiscover->getDestIp().toString() << " and port "<< mDiscover->getDestPort() << std::endl;
+			//std::cout << "Client started and connected to "<< mDiscover->getDestIp().toString() << " and port "<< mDiscover->getDestPort() << std::endl;
 			sendReady();
 		}
 	}

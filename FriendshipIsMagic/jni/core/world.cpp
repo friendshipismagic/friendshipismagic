@@ -59,6 +59,7 @@ void World::lookForServer(){
 }
 
 void World::initEntities(){
+	std::cout << "init entities called!" << std::endl;
 	createPlayer();
 	createCoPlayer();
 

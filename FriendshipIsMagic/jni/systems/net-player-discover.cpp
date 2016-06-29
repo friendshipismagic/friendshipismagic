@@ -24,12 +24,12 @@ mContext(context)
 	if(mContext.UDPMode == UDPAgent::Mode::Client){
 
 		discover.reset(new UDPAgent(mSrcPort));
-		std::cout << "client discover: listening port" << mSrcPort << std::endl;
+		//std::cout << "client discover: listening port" << mSrcPort << std::endl;
 	}
 	else if(mContext.UDPMode == UDPAgent::Mode::Server){
 		discover.reset(new UDPAgent(playerSrcPort+10,sf::IpAddress::Broadcast, srcPort));
 		//discover.reset(new UDPAgent(playerSrcPort+10,"localhost", srcPort));
-		std::cout << "server discover: broadcasting from port : "<< playerSrcPort << "and sending message at " << sf::IpAddress::Broadcast.toString() <<  " on port "<<srcPort<< std::endl;
+		//std::cout << "server discover: broadcasting from port : "<< playerSrcPort << "and sending message at " << sf::IpAddress::Broadcast.toString() <<  " on port "<<srcPort<< std::endl;
 
 	}
 	else{

@@ -90,9 +90,9 @@ bool WaitingState::update(sf::Time dt)
 {
 	//std::cout << "waiting state update with mode"<< mContext.UDPMode << std::endl;
 	if(mContext.foundPlayer){
-		std::cout << "found!"<< std::endl;
+		//std::cout << "found!"<< std::endl;
 		requestStackPop();
-		//requestStackPush(States::Game);
+		requestStackPush(States::Game);
 	}
     return true;
 }

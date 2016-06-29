@@ -28,7 +28,7 @@ void GameState::init()
 	else{
 		std::cout << "gameState: no mode found for UDPAgent, launching solo mode." << std::endl;
 	}
-	mWorld.initEntities();
+	//mWorld.initEntities();
 
 }
 

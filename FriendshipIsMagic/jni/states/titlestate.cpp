@@ -81,7 +81,7 @@ bool TitleState::handleEvent(const sf::Event& event)
 				return true;
 			}
         	requestStackPop();
-			requestStackPush(States::Game);
+			requestStackPush(States::Connect);
 			break;
         }
 
