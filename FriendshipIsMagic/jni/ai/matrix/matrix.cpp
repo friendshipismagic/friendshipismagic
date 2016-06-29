@@ -35,8 +35,8 @@ Matrix::Matrix(vector<char> mCharG, unsigned int x) {
 
 Matrix::~Matrix()
 {
-	for(auto ptr : mVertices)
-        delete ptr;
+	//for(auto ptr : mVertices)
+    //    delete ptr;
 	mVertices.clear();
 }
 

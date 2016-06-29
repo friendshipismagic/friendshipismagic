@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "state.h"
 #include "../core/world.h"
+#include <memory>
+
 
 class GameState: public State
 {
@@ -9,7 +11,7 @@ class GameState: public State
 
          sf::Font* mFont;
          sf::Text mText;
-         World mWorld;
+         std::unique_ptr<World> mWorld;
          sf::View mView;
          sf::Time mGameTime;
 
