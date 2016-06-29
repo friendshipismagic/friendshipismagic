@@ -67,7 +67,7 @@ public:
 	NetworkID getEntityNetworkID(Entity entity);
 	Entity getNetorkIDEntity( NetworkID netID);
 	bool isInitialized() const {return mInitialized;}
-	void lookforServer();
+	void lookForServer();
 
 private:
 	InputSystem* mInput;

@@ -55,7 +55,7 @@ void World::sendReady(){
 	mNetwork.sendReady();
 }
 void World::lookForServer(){
-	mNetwork.lookforServer();
+	mNetwork.lookForServer();
 }
 
 void World::initEntities(){

@@ -17,6 +17,7 @@
 class NetPlayerDiscover : public UDPListener{
 public:
 	NetPlayerDiscover(State::Context& context,  sf::Uint32 srcPort, sf::Uint32 playerSrcPort);
+
 	virtual ~NetPlayerDiscover();
 	void update();
 	sf::Time time;

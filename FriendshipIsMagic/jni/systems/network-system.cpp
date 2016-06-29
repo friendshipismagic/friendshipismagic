@@ -85,9 +85,11 @@ void NetworkSystem::sendReady(){
 void NetworkSystem::readyReceived(sf::Packet pkt){
 	mUDP->send(AckReadyCommand::make());
 	mInitialized = true;
+	mContext.foundPlayer =true;
 }
 void NetworkSystem::ackReadyReceived(sf::Packet pkt){
 	mInitialized = true;
+	mContext.foundPlayer =true;
 }
 
 void NetworkSystem::syncFromClient(sf::Packet pkt){
@@ -145,26 +147,21 @@ void NetworkSystem::syncFromServer(sf::Packet pkt){
 void NetworkSystem::update(sf::Time dt){
 
 	if(mUDP == nullptr){
-		std::cout << "UDP error"<< std::endl;
-		return;
+		if(mContext.UDPMode == UDPAgent::Mode::Client){
+			if(mDiscover == nullptr){
+				lookForServer();
+				std::cout << "launching server search" << std::endl;
+				return;
+			}
+		}
+		else if(mContext.UDPMode == UDPAgent::Mode::Server){
+			startUDPServer(UDPAgent::DEFAULT_PORT);
+			std::cout << "gameState: started as Server." << std::endl;
+			return;
+		}
 	}
 	//std::cout << "hello from network system update" << std::endl;
 	if(mInitialized){
-	/*
-		sf::Time time = clk.getElapsedTime();
-		//TO DO finir sync
-		if(time > periode){
-			if(mContext.UDPMode == UDPAgent::Mode::Server){
-				//std::cout<< "sync tick" <<std::endl;
-				mUDP->send(SyncCommand::make(
-						mPhysics->getPositions(),
-						mHealth->getCurrentHealth(),
-						mHealth->getMaxHealth())
-				);
-			}
-			clk.restart();
-		}
-		*/
 		static int cpt=0;
 		if(cpt++ >= DEFAULT_INPUT_SYNC_FRAME_COUNT){
 			cpt=0;
@@ -227,8 +224,8 @@ void NetworkSystem::startUDPServer(int srcPort){
 	}
 	mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, mUDP->getSrcPort()));
 }
-void NetworkSystem::lookforServer(){
-	mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, mUDP->getSrcPort()));
+void NetworkSystem::lookForServer(){
+	mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, 0));
 }
 //Client mode
 void NetworkSystem::startUDPClient(int srcPort, sf::IpAddress destIp, int destPort){

@@ -82,7 +82,6 @@ bool TitleState::handleEvent(const sf::Event& event)
 				requestStackPush(States::Settings);
 				return true;
 			}
-
         	requestStackPop();
 			requestStackPush(States::Connect);
 			break;

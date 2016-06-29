@@ -7,30 +7,19 @@ WaitingState::WaitingState(StateStack& mystack, Context& context)
 {
     mText.setFont(*context.fonts->get("font"));
 
-    if(mContext.UDPMode = UDPAgent::Mode::Client)
-        mText.setString("Waiting for a client");
-    else
-        mText.setString("Waiting for an host");
 
     mText.setPosition(200, 200);
 }
 
 void WaitingState::init()
 {
-
     mBackgroundSprite.setTexture(*getContext().textures->get("menu/main/background"));
-    /*
-    if(mContext.UDPMode == UDPAgent::Mode::Server){
-        //mText.setString("Waiting for a client");
-        std::cout << "server waiting............"<< std::endl;
-    }
-    else if(mContext.UDPMode == UDPAgent::Mode::Client){
-    	std::cout << "client waiting............"<< std::endl;
-        //mText.setString("Waiting for an host");
-    }
-    else
-    	mText.setString("Neither server or client. ERROR");
-    */
+    if(mContext.UDPMode == UDPAgent::Mode::Client){
+            mText.setString("Client mode\nWaiting for a host");
+        }
+        else if(mContext.UDPMode == UDPAgent::Mode::Server){
+            mText.setString("Server mode\nWaiting for a client");
+        }
 	updateRatio();
 }
 
@@ -85,6 +74,7 @@ bool WaitingState::handleEvent(const sf::Event& event)
 		}
 
         case sf::Event::Closed:
+            requestStackPop();
             requestStackPop();
             break;
 

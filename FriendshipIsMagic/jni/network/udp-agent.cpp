@@ -20,7 +20,7 @@ the_thread(&UDPAgent::AgentRoutine, this)
 	mode = Mode::Server;
 	mDestPort = 0;
 	running = false;
-	listener.setBlocking(false);
+	//listener.setBlocking(false);
 	mSrcPort = srcPort;
 }
 
@@ -88,6 +88,7 @@ void UDPAgent::AgentRoutine(){
 		st = listener.receive(pkt, tmpIP, tmpPort);
 		switch(st){
 			case sf::Socket::Done:
+				//agentPrintLn("destIp : "+mDestIPAddr.toString()+ " port : "+ std::to_string(mDestPort));
 				if(mode == Mode::Server){
 					mDestIPAddr= tmpIP;
 					mDestPort= tmpPort;

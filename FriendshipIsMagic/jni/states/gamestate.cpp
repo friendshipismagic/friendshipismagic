@@ -22,8 +22,7 @@ void GameState::init()
 		mWorld.lookForServer();
 	}
 	else if(mContext.UDPMode == UDPAgent::Mode::Server){
-		mWorld.startUDPServer(UDPAgent::DEFAULT_PORT);
-		std::cout << "gameState: started as Server." << std::endl;
+
 
 	}
 	else{
@@ -41,12 +40,15 @@ bool GameState::handleEvent(const sf::Event& event)
     {
         if (event.key.code == sf::Keyboard::Escape)
         {
+
             requestStackPop();
         }
     }
 
-    if(event.type == sf::Event::Closed)
-        requestStackPop();
+    if(event.type == sf::Event::Closed){
+
+    	requestStackPop();
+    }
 
     return true;
 }

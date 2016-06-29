@@ -63,10 +63,12 @@ bool ConnectState::handleEvent(const sf::Event& event)
         	if (event.mouseButton.button == sf::Mouse::Left)
             {
         		mContext.UDPMode = UDPAgent::Mode::Server;
+        		std::cout << "Server selected from connectState" << std::endl;
         	}
         	else if(event.mouseButton.button == sf::Mouse::Right)
         	{
         		mContext.UDPMode = UDPAgent::Mode::Client;
+        		std::cout << "Client selected from connectState" << std::endl;
 
         	}
         	requestStackPop();
