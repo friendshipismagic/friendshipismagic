@@ -500,6 +500,14 @@ void World::sigCollisionBullet(Entity entityBullet, Entity entityVictim)
 
             int damage = mWeapons.getDamage(weapon);
             mHealth.addToHealth(entityVictim, damage);
+
+            if((mHealth.getCurrentHealth(entityVictim)) == 0 && (mMasks[entityVictim] == Systems::Mask::MONSTER))
+            {
+            	if(owner == mPlayerID)
+            		mScores.addToScore(mPlayerID, 2000);
+            	else
+            		mScores.addToScore(mCoPlayerID, 2000);
+            }
         }
 
         if ((entityVictim == mPlayerID) || (entityVictim == mCoPlayerID))
