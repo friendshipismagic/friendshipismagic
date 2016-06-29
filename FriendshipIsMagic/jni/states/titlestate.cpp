@@ -74,15 +74,27 @@ bool TitleState::handleEvent(const sf::Event& event)
 			auto coords = getContext().window->mapPixelToCoords(coords_screen, mView);
 
 
+			bool is1PButtonPressed = mOnePlayerSprite.getGlobalBounds().contains(coords);
+
+			if(is1PButtonPressed){
+				requestStackPop();
+				requestStackPush(States::Game);
+				return true;
+			}
+			bool is2PButtonPressed = mTwoPlayersSprite.getGlobalBounds().contains(coords);
+
+			if(is2PButtonPressed){
+				requestStackPop();
+				requestStackPush(States::Connect);
+			return true;
+			}
 			bool isSettingsButtonPressed = mSettingsSprite.getGlobalBounds().contains(coords);
 
 			if(isSettingsButtonPressed){
 				requestStackPop();
 				requestStackPush(States::Settings);
-				return true;
+			return true;
 			}
-        	requestStackPop();
-			requestStackPush(States::Connect);
 			break;
         }
 

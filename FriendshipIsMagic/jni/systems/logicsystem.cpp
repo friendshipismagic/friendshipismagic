@@ -125,6 +125,34 @@ void LogicSystem::update(sf::Time dt)
 	//Solo mode
 	else{
 		//TO DO implement inputs from AI P2
+		mLogics[Logic::moveRight] = mInputs->getInputState(Input::right);
+		mLogics[Logic::moveLeft] = mInputs->getInputState(Input::left);
+		mLogics[Logic::fireOn] = mInputs->getInputState(Input::fire);
+		mLogics[Logic::isJumping] = mInputs->getInputState(Input::jump);
+		 if (mLogics[Logic::moveRight] && !mLogics[Logic::moveLeft])
+		{
+			if (mLogics[Logic::isFacingLeft])
+				mLogics[Logic::changeDirection] = true;
+			else
+				mLogics[Logic::changeDirection] = false;
+
+			mLogics[Logic::isFacingLeft] = false;
+			mLogics[Logic::isFacingRight] = true;
+		}
+		if (mLogics[Logic::moveLeft] && !mLogics[Logic::moveRight])
+		{
+			if (mLogics[Logic::isFacingRight])
+				mLogics[Logic::changeDirection] = true;
+			else
+				mLogics[Logic::changeDirection] = false;
+
+			mLogics[Logic::isFacingLeft] = true;
+			mLogics[Logic::isFacingRight] = false;
+		}
+		if (mLogics[Logic::moveLeft] && mLogics[Logic::moveRight])
+			mLogics[Logic::changeDirection] = false;
+		if (!mLogics[Logic::moveLeft] && !mLogics[Logic::moveRight])
+			mLogics[Logic::changeDirection] = false;
 	}
 
 

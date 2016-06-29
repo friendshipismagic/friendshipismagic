@@ -58,8 +58,10 @@ bool GameState::update(sf::Time dt)
     mWorld.update(dt);
     if(getContext().UDPMode == UDPAgent::Server)
     	mView.setCenter(mWorld.getPlayerPosition());
-    else
+    else if(getContext().UDPMode == UDPAgent::Client)
     	mView.setCenter(mWorld.getCoPlayerPosition());
+    else
+    	mView.setCenter(mWorld.getPlayerPosition());
     mView.setSize(590,590);
     return true;
 }

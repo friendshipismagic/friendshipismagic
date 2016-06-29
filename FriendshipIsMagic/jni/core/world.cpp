@@ -84,7 +84,7 @@ void World::handleEvent(const sf::Event& event)
 void World::update(sf::Time dt)
 {
 
-	if(mNetwork.isInitialized()){
+	if(mNetwork.isInitialized() || mContext.UDPMode == UDPAgent::None){
 		for(auto itr = mSystems.rbegin(); itr != mSystems.rend(); ++itr)
 		{
 			(*itr)->update(dt);
@@ -164,7 +164,7 @@ void World::update(sf::Time dt)
 		}
 	}
 	else
-		mNetwork.update( dt);
+		mNetwork.update(dt);
 
 }
 
