@@ -21,12 +21,7 @@ void TitleState::init()
 
 void TitleState::updateRatio() {
 
-	const float WORLD_HEIGHT = 1080;
-
     auto screenSize = getContext().window->getSize();
-	auto ratio = screenSize.x / static_cast<float>(screenSize.y);
-	mView.setSize(WORLD_HEIGHT, WORLD_HEIGHT); // no deformations
-    //sf::Vector2f screenSize = mView.getSize();
 
     sf::FloatRect screen(0,0,screenSize.x, screenSize.y) ;
 

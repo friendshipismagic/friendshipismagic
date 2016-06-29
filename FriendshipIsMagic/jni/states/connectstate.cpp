@@ -18,29 +18,27 @@ void ConnectState::init()
 
 void ConnectState::updateRatio()
 {
-	const float WORLD_HEIGHT = 1080;
-
     auto screenSize = getContext().window->getSize();
-	auto ratio = screenSize.x / static_cast<float>(screenSize.y);
-	mView.setSize(WORLD_HEIGHT, WORLD_HEIGHT); // no deformations
-    //sf::Vector2f screenSize = mView.getSize();
 
+    sf::FloatRect screen(0,0,screenSize.x, screenSize.y) ;
+    mView = sf::View(screen);
 	auto size = mView.getSize();
 
 	auto bgRect  = mBackgroundSprite.getLocalBounds();
 	auto bgScale = std::max(size.x/bgRect.width, size.y/bgRect.height);
-	auto bgSize  = sf::Vector2f(bgRect.width*bgScale, bgRect.height*bgScale);
-	auto bgShift = sf::Vector2f((size.x-bgSize.x)/2, (size.y-bgSize.y)/2);
+    mBackgroundSprite.setOrigin(bgRect.width/2., bgRect.height/2.);
 	mBackgroundSprite.setScale(bgScale,bgScale);
-	mBackgroundSprite.setPosition(bgShift);
+	mBackgroundSprite.setPosition(size.x/2., size.y/2.);
 
 	mServerModeSprite.setScale(2,2);
-	auto servRect = mServerModeSprite.getGlobalBounds();
-	mServerModeSprite.setPosition(size.x/3.-servRect.width/2.,size.y/2.-servRect.height/2.);
+	auto serverRect = mServerModeSprite.getLocalBounds();
+    mServerModeSprite.setOrigin(serverRect.width/2., serverRect.height/2.);
+	mServerModeSprite.setPosition(size.x/3.,size.y/2.);
 
 	mClientModeSprite.setScale(2,2);
-	auto clienRect = mServerModeSprite.getGlobalBounds();
-	mServerModeSprite.setPosition(2*size.x/3.-clienRect.width/2.,size.y/2.-4.1*clienRect.height/2.);
+	auto clientRect = mServerModeSprite.getLocalBounds();
+    mClientModeSprite.setOrigin(clientRect.width/2, clientRect.height/2);
+	mClientModeSprite.setPosition(2*size.x/3.,size.y/2.);
 
 }
 
