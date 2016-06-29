@@ -85,7 +85,7 @@ void NetworkSystem::sendReady(){
 void NetworkSystem::readyReceived(sf::Packet pkt){
 	if(mInitialized)
 		return;
-	std::cout <<"Server ready!"<<std::endl;
+	//std::cout <<"Server ready!"<<std::endl;
 	mUDP->send(AckReadyCommand::make());
 	mInitialized = true;
 	mContext.foundPlayer =true;
@@ -94,7 +94,7 @@ void NetworkSystem::readyReceived(sf::Packet pkt){
 void NetworkSystem::ackReadyReceived(sf::Packet pkt){
 	if(mInitialized)
 			return;
-	std::cout <<"Client ready!"<<std::endl;
+	//std::cout <<"Client ready!"<<std::endl;
 	mInitialized = true;
 	mContext.foundPlayer =true;
 	mGameWorld->initEntities();
@@ -157,8 +157,9 @@ void NetworkSystem::update(sf::Time dt){
 	if(mUDP == nullptr){
 		if(mContext.UDPMode == UDPAgent::Mode::Client){
 			if(mDiscover == nullptr){
+
 				lookForServer();
-				//std::cout << "launching server search" << std::endl;
+				//std::cout << "Look for server" << std::endl;
 				return;
 			}
 		}
@@ -203,7 +204,7 @@ void NetworkSystem::update(sf::Time dt){
 		mDiscover->update();
 		//std::cout << "Discover updated" << std::endl;
 		if(mContext.UDPMode == UDPAgent::Client && mDiscover->getDestPort() !=0){
-			startUDPClient(UDPAgent::DEFAULT_PORT+1,mDiscover->getDestIp(), mDiscover->getDestPort() );
+			startUDPClient(sf::Socket::AnyPort,mDiscover->getDestIp(), mDiscover->getDestPort() );
 			//std::cout << "Client started and connected to "<< mDiscover->getDestIp().toString() << " and port "<< mDiscover->getDestPort() << std::endl;
 			sendReady();
 		}
@@ -227,7 +228,7 @@ void NetworkSystem::startUDPServer(int srcPort){
 	running = true;
 	}
 	catch(UDPException* e){
-		std::cout << "Can't bind socket to port " << srcPort << std::endl;
+		std::cout << "UDP Server Can't bind socket to port " << srcPort << std::endl;
 		exit(-1);
 	}
 	mDiscover.reset(new NetPlayerDiscover(mContext, UDPAgent::DEFAULT_DISCOVER_PORT, mUDP->getSrcPort()));
@@ -243,8 +244,8 @@ void NetworkSystem::startUDPClient(int srcPort, sf::IpAddress destIp, int destPo
 		mUDP->start();
 		running = true;
 	}
-	catch(UDPException* e){
-		std::cout << "Can't bind socket to port " << srcPort << std::endl;
+	catch(UDPException e){
+		std::cout << "UDP Client Can't bind socket to port " << srcPort << std::endl;
 		exit(-1);
 	}
 }

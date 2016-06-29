@@ -47,8 +47,11 @@ UDPAgent::~UDPAgent() {
 
 //***** Function to call after creating ServerThread object
 void UDPAgent::start() {
-	if (listener.bind(mSrcPort) != sf::Socket::Done)
-		throw UDPException();
+	auto status = listener.bind(mSrcPort);
+	if (status != sf::Socket::Done) {
+
+		throw UDPException(status);
+	}
 
 	// This will start the thread by running the serverRoutine function
 	running  = true;

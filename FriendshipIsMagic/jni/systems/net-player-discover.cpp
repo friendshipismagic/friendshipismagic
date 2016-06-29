@@ -22,14 +22,15 @@ mContext(context)
 
 
 	if(mContext.UDPMode == UDPAgent::Mode::Client){
-
+		std::cout << "client discover: listening port" << mSrcPort << std::endl;
 		discover.reset(new UDPAgent(mSrcPort));
-		//std::cout << "client discover: listening port" << mSrcPort << std::endl;
+
 	}
 	else if(mContext.UDPMode == UDPAgent::Mode::Server){
-		discover.reset(new UDPAgent(playerSrcPort+10,sf::IpAddress::Broadcast, srcPort));
+		//std::cout << "server discover: listening port" << mSrcPort << std::endl;
+		discover.reset(new UDPAgent(sf::Socket::AnyPort,sf::IpAddress::Broadcast, mSrcPort));
 		//discover.reset(new UDPAgent(playerSrcPort+10,"localhost", srcPort));
-		//std::cout << "server discover: broadcasting from port : "<< playerSrcPort << "and sending message at " << sf::IpAddress::Broadcast.toString() <<  " on port "<<srcPort<< std::endl;
+		std::cout << "server discover: broadcasting from port : "<< discover->getSrcPort() << " and sending message at " << sf::IpAddress::Broadcast.toString() <<  " on port "<<mSrcPort<< std::endl;
 
 	}
 	else{
@@ -40,8 +41,10 @@ mContext(context)
 	try{
 		discover->start();
 	}
-	catch(UDPException* e){
-		std::cout << "Can't bind socket to port " << srcPort << std::endl;
+	catch(UDPException e){
+		if(mContext.UDPMode == UDPAgent::Mode::Client){
+			std::cout << "Client discovery Can't bind socket to port " << srcPort << std::endl;
+		}
 		exit(-1);
 	}
 

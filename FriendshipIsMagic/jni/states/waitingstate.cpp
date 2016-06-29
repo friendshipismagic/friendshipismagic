@@ -55,7 +55,7 @@ bool WaitingState::handleEvent(const sf::Event& event)
 			sf::Vector2i coords_screen;
 			if (event.type == sf::Event::TouchBegan)
                 {
-				std::cout << "touch" << std::endl;
+				//std::cout << "touch" << std::endl;
 				coords_screen.x = event.touch.x;
 				coords_screen.y = event.touch.y;
 			}
@@ -63,7 +63,7 @@ bool WaitingState::handleEvent(const sf::Event& event)
 			{
 				coords_screen.x = event.mouseButton.x;
 				coords_screen.y = event.mouseButton.y;
-				std::cout << "mouse" << std::endl;
+				//std::cout << "mouse" << std::endl;
 			}
 
 			auto coords = getContext().window->mapPixelToCoords(coords_screen, mView);

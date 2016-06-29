@@ -29,7 +29,7 @@ public:
 	const bool debug = false;
 
 	static const unsigned short DEFAULT_PORT = 54000;
-	static const unsigned short DEFAULT_DISCOVER_PORT = 55000;
+	static const unsigned short DEFAULT_DISCOVER_PORT = 56000;
 	static const unsigned short DEFAULT_DISCOVER_PERIODE = 1000;
 
 	UDPAgent(unsigned short port);
