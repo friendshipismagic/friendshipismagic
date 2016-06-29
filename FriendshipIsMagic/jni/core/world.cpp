@@ -58,6 +58,7 @@ void World::sendReady(){
 
 
 void World::initEntities(){
+
 	//std::cout << "init entities called!" << std::endl;
 	createPlayer();
 	createCoPlayer();
@@ -75,6 +76,8 @@ void World::initEntities(){
 
     mAi.setMatrix("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEWEEEEEEEEEEEEWWWWWWWWWWWWWWWW",16);
     mAi.insertMonster(mob);
+
+    mContext.running = true;
 }
 
 void World::handleEvent(const sf::Event& event)
@@ -168,7 +171,8 @@ void World::update(sf::Time dt)
 	else
 		mNetwork.update(dt);
 
-	mGraphics.setScores(mScores.getScore(mPlayerID), mScores.getScore(mCoPlayerID));
+    if (mContext.running == true)
+    	mGraphics.setScores(mScores.getScore(mPlayerID), mScores.getScore(mCoPlayerID));
 
 }
 
@@ -363,12 +367,17 @@ void World::destroyEntity(Entity entity)
     {
         mAi.deleteMonster(entity);
     }
+    if ((mask & Systems::Component::SCORE) == Systems::Component::SCORE)
+    {
+        mScores.deleteScore(entity);
+    }
     mMasks[entity] = Systems::Mask::NONE;
 
     if (mSons.find(entity) != mSons.end())
     {
         mSons.erase(entity);
     }
+
 }
 
 Systems::Mask World::getMask(Entity entity) const

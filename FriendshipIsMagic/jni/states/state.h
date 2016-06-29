@@ -40,7 +40,7 @@ class State
                 sounds = &s;
                 UDPMode = UDPAgent::Mode::None;
                 foundPlayer = false;
-
+                running = false;
             }
 
             struct ModeDebug {
@@ -62,6 +62,7 @@ class State
             SoundBufferHolder* sounds;
             ModeDebug UDPMode;
             bool foundPlayer;
+            bool running;
 
         };
 
