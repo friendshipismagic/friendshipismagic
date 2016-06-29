@@ -11,6 +11,7 @@ class GameState: public State
          sf::Text mText;
          World mWorld;
          sf::View mView;
+         sf::Time mGameTime;
 
          void updateRatio();
 

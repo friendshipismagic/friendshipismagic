@@ -5,6 +5,7 @@ GameState::GameState(StateStack& mystack, State::Context& context)
 , mFont()
 , mText()
 , mWorld(context)
+, mGameTime(sf::Time::Zero)
 {
     mFont = mContext.fonts->get("font");
     mText.setFont(*mFont);
@@ -55,6 +56,13 @@ bool GameState::update(sf::Time dt)
     mWorld.update(dt);
     mView.setCenter(mWorld.getPlayerPosition());
 	mView.setSize(590,590);
+	mGameTime += dt;
+	if(mGameTime.asSeconds() > 60)
+	{
+		requestStackPop();
+		requestStackPush(States::End);
+	}
+
     return true;
 }
 
