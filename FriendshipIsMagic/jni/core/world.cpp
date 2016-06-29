@@ -174,6 +174,8 @@ void World::update(sf::Time dt)
 	//else
 	//	mNetwork.update( dt);
 
+	mGraphics.setScore(mScore.getScore(mPlayerID), mScore.getScore(mCoPlayerID));
+
 }
 
 void World::draw()

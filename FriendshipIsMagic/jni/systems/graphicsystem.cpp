@@ -11,12 +11,19 @@ GraphicSystem::GraphicSystem(World* world, State::Context& context, PhysicSystem
 , mWindow(context.window)
 , mPhysics(physics)
 , mLogics(logics)
+, mTimer(sf::Time(60))
 {
     sf::Texture*  t = mContext.textures->get("Background");
     background = new sf::Sprite();
     background->setTexture(*t);
     background->setPosition(-100, 0);
     addToScene(background, 0);
+    mScore.setString(0);
+    mCoScore.setString(0);
+    mTime.setString(0);
+    mScore.setPosition(0, 0);
+    mCoScore.setPosition(10, 0);
+    mTime.setPosition(20, 0);
 }
 
 void GraphicSystem::update(sf::Time dt)
@@ -40,6 +47,9 @@ void GraphicSystem::update(sf::Time dt)
     {
         mirror(mGameWorld->getCoPlayerID(), -1);
     }
+
+    mTimer -= dt;
+    mTime.setString(mTimer.asSecond());
 }
 
 void GraphicSystem::draw()
@@ -53,6 +63,11 @@ void GraphicSystem::draw()
             mWindow->draw(*sprite);
         }
     }
+
+  	mWindow->draw(mScore);
+  	mWindow->draw(mCoScore);
+  	mWindow->draw(mTime);
+
 }
 
 void GraphicSystem::setPositionProvider(PositionProvider* pos)
@@ -190,4 +205,9 @@ void GraphicSystem::eraseFromScene(sf::Sprite* node)
         }
 
     }
+}
+
+void GraphicSystem:setScores(int score, int coscore)
+{
+
 }
