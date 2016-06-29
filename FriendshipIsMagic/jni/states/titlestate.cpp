@@ -33,7 +33,7 @@ void TitleState::updateRatio() {
 	auto bgRect  = mBackgroundSprite.getLocalBounds();
 	auto bgScale = std::max(size.x/bgRect.width, size.y/bgRect.height);
 	auto bgSize  = sf::Vector2f(bgRect.width*bgScale, bgRect.height*bgScale);
-	auto bgShift = sf::Vector2f((size.x-bgSize.x)/2, (size.y-bgSize.y)/2);
+	auto bgShift = sf::Vector2f(-(size.x-bgSize.x)/2, -(size.y-bgSize.y)/2);
 	mBackgroundSprite.setScale(bgScale,bgScale);
 	mBackgroundSprite.setPosition(bgShift);
 
@@ -41,12 +41,12 @@ void TitleState::updateRatio() {
 
 	mOnePlayerSprite.setScale(2,2);
 	auto OP1rect = mOnePlayerSprite.getGlobalBounds();
-	mOnePlayerSprite.setPosition(size.x/3-OP1rect.width/2,size.y/2-OP1rect.height/2);
+	mOnePlayerSprite.setPosition(size.x/3.-OP1rect.width/2.,size.y/2.-OP1rect.height/2.);
 
 
 	mTwoPlayersSprite.setScale(2,2);
 	auto TP2rect = mTwoPlayersSprite.getGlobalBounds();
-	mTwoPlayersSprite.setPosition(2*size.x/3-TP2rect.width/2,size.y/2-TP2rect.height/2);
+	mTwoPlayersSprite.setPosition(2*size.x/3.-TP2rect.width/2.,size.y/2.-TP2rect.height/2.);
 
 
 	auto settingsRect = mSettingsSprite.getGlobalBounds();
@@ -69,13 +69,11 @@ bool TitleState::handleEvent(const sf::Event& event)
 			//if SettingsButton is pressed go to
 			sf::Vector2i coords_screen;
 			if (event.type == sf::Event::TouchBegan) {
-				std::cout << "touch" << std::endl;
 				coords_screen.x = event.touch.x;
 				coords_screen.y = event.touch.y;
 			} else {
 				coords_screen.x = event.mouseButton.x;
 				coords_screen.y = event.mouseButton.y;
-				std::cout << "mouse" << std::endl;
 			}
 
 			auto coords = getContext().window->mapPixelToCoords(coords_screen, mView);
