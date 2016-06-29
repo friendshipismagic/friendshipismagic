@@ -28,23 +28,26 @@ void TitleState::updateRatio() {
 	mView.setSize(WORLD_HEIGHT, WORLD_HEIGHT); // no deformations
     //sf::Vector2f screenSize = mView.getSize();
 
+    sf::FloatRect screen(0,0,screenSize.x, screenSize.y) ;
 
+    mView = sf::View(screen);
 	auto size = mView.getSize();
 
 	auto bgRect  = mBackgroundSprite.getLocalBounds();
 	auto bgScale = std::max(size.x/bgRect.width, size.y/bgRect.height);
-	auto bgSize  = sf::Vector2f(bgRect.width*bgScale, bgRect.height*bgScale);
-	auto bgShift = sf::Vector2f(-(size.x-bgSize.x)/2, -(size.y-bgSize.y)/2);
+    mBackgroundSprite.setOrigin(bgRect.width/2., bgRect.height/2.);
 	mBackgroundSprite.setScale(bgScale,bgScale);
-	mBackgroundSprite.setPosition(bgShift);
+	mBackgroundSprite.setPosition(size.x/2., size.y/2.);
 
 	mOnePlayerSprite.setScale(2,2);
-	auto OP1rect = mOnePlayerSprite.getGlobalBounds();
-	mOnePlayerSprite.setPosition(size.x/3.-OP1rect.width/2.,size.y/2.-OP1rect.height/2.);
+	auto OP1rect = mOnePlayerSprite.getLocalBounds();
+    mOnePlayerSprite.setOrigin(OP1rect.width/2., OP1rect.height/2.);
+	mOnePlayerSprite.setPosition(size.x/3.,size.y/2.);
 
 	mTwoPlayersSprite.setScale(2,2);
-	auto TP2rect = mTwoPlayersSprite.getGlobalBounds();
-	mTwoPlayersSprite.setPosition(2*size.x/3.-TP2rect.width/2.,size.y/2.-TP2rect.height/2.);
+	auto TP2rect = mTwoPlayersSprite.getLocalBounds();
+    mTwoPlayersSprite.setOrigin(TP2rect.width/2., TP2rect.height/2.);
+	mTwoPlayersSprite.setPosition(2*size.x/3.,size.y/2.);
 
 	auto settingsRect = mSettingsSprite.getGlobalBounds();
 	mSettingsSprite.setPosition(size.x/2. - settingsRect.width/2.,0);
