@@ -34,7 +34,7 @@ class GraphicSystem : public System
 
         void addToScene(sf::Sprite* node, int layer);
         void eraseFromScene(sf::Sprite* node);
-        void setScore(int score, int coscore);
+        void setScores(int score, int coscore);
 
     private:
 

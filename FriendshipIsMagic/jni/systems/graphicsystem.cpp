@@ -207,7 +207,8 @@ void GraphicSystem::eraseFromScene(sf::Sprite* node)
     }
 }
 
-void GraphicSystem:setScores(int score, int coscore)
+void GraphicSystem::setScores(int score, int coscore)
 {
-
+	mScore.setString(score);
+	mCoScore.setString(coscore);
 }

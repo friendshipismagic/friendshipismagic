@@ -21,7 +21,7 @@ namespace States
 		Settings,
 		Connect,
 		Waiting,
-		end
+		End
     };
 }
 
